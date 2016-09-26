@@ -1,1 +1,35 @@
-Hello World!
+{% extends 'WideBundle:Default:base_layout.html.twig' %}
+
+{% block content %}
+    {% include 'WideBundle:Default:navbar.html.twig' %}
+    <div id="homepage-content-container" class="container">
+        <div id="landing-page-header" class="container-fluid">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="page-header">
+                    <h3>Create lexical & syntax analyzers using flex and bison</h3>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div> <!-- landing-page-header end -->
+        <div id="landing-page-content" class="container-fluid">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <!-- Here goes the login form -->
+                <form id="login-form" action="{{ path('login') }}" method="post">
+                    <div class="form-group">
+                        <label for="ceid_email">Email address</label>
+                        <input type="email" class="form-control" id="ceid_email" placeholder="email@ceid.upatras.gr" autocomplete="off" data-toggle="tooltip" data-placement="left" title="Here goes your CEID email">
+                    </div>
+                    <div class="form-group">
+                        <label for="ceid_pass">Password</label>
+                        <input type="password" class="form-control" id="ceid_pass" placeholder="password" data-toggle="tooltip" data-placement="left" title="Here goes your password">
+                    </div>
+                    <button type="submit" id="login-form-button" class="btn btn-primary">Login <i class="fa fa-sign-in"></i></button>
+                </form> <!-- login-form end -->
+            </div>
+            <div class="col-md-4"></div>
+        </div> <!-- landing-page-content end -->
+    </div> <!-- homepage-content-container end -->
+    {% include 'WideBundle:Default:footer.html.twig' %}
+{% endblock %}

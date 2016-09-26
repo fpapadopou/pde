@@ -1,0 +1,20 @@
+<nav id="main-navbar" class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Here goes the logo of the project -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="">
+                <i class="fa fa-chevron-left"></i>
+                Web Interpreter Development Environment
+                <i class="fa fa-chevron-right"></i>
+            </a>
+        </div> <!-- navbar-header end -->
+        {% if username is defined %}
+            <div class="nav navbar-right">
+                <span id="logged-in-as">Logged in as <strong>{{ username }}</strong></span>
+                <a href="{{ path('logout') }}" class="btn btn-danger btn-sm" role="button">
+                    <i class="fa fa-sign-out"></i> Logout
+                </a>
+            </div> <!-- nav navbar-nav navbar-right end -->
+        {% endif %}
+    </div> <!-- container-fluid end -->
+</nav> <!-- navbar-default end -->
