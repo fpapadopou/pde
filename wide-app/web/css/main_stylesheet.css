@@ -64,6 +64,7 @@ footer > div {
 }
 
 .tooltip-inner {
+    /* A note: bootstrap tooltips are hidden if placed within elements with a "relative" position attribute */
     max-width: 250px;
     white-space: pre;
 }
