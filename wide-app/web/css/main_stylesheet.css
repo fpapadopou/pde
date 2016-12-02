@@ -67,3 +67,127 @@ footer > div {
     max-width: 250px;
     white-space: pre;
 }
+
+/** Editor page content **/
+#editor-page-content {
+    display: block;
+    padding: 0;
+    height: 600px;
+    width: 100%;
+    margin: 0;
+}
+
+/** Editor left and right panes **/
+#editor-left-side {
+    display: inline-block;
+    height: 100%;
+}
+
+#editor-right-side {
+    display: inline-block;
+    height: 100%;
+}
+/** Editor left and right panes end **/
+
+/** Left pane controls & buttons **/
+#workspace-name {
+    text-align: center;
+    text-shadow: 1px 1px #ddd;
+}
+
+#controls {
+    height: 84%;
+}
+.ctrl-group {
+    display: block;
+    width: 140px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ctrl-group-btn {
+    width: 140px;
+    margin-bottom: 5px;
+}
+
+.ctrl-btn {
+    display: block;
+    width: 140px;
+    margin: 0 auto 5px auto;
+}
+
+#toggle-on-icon {
+    display: none;
+}
+
+#toggle-off-icon {
+    display: inline-block;
+}
+
+#trigger-modal-btn {
+    display: block;
+    margin: 0 auto;
+}
+
+.has-shadow {
+    box-shadow: 1px 1px 1px 1px #ddd;
+}
+/** Left pane controls & buttons end **/
+
+/** File navigation (nav list) **/
+#file-tab-list {
+    background: #BCC9D6;
+    border-radius: 5px 5px 0 0;
+    /* The properties below will make the tab list scrollable when there are many files in it */
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: -webkit-box;
+    display: -moz-box;
+}
+
+.nav-tabs > li {
+    float: none;
+}
+
+.nav-tabs > li > a {
+    color: #62615C;
+}
+
+.nav-tabs > li > a:hover {
+    background-color: #D5DBDB;
+}
+
+.nav-tabs > li.active > a:hover {
+    background-color: #D5DBDB;
+}
+
+.nav-tabs > li.active > a {
+    background-color: #D5DBDB;
+}
+/** File navigation (nav list) end **/
+
+/** Ace editor section **/
+#editor-container {
+    display: block;
+    height: 95%;
+}
+
+#editor {
+    height: 95%;
+    border-radius: 0 0 5px 5px;
+}
+
+#output-section.active {
+    position: relative;
+    bottom: 35%;
+    height: 34%;
+    width: 100%;
+    overflow: scroll;
+    z-index: 4;
+    border-radius: 0 0 5px 5px;
+}
+
+#output-section.inactive {
+    display: none;
+}
+/** Ace editor section end **/

@@ -1,0 +1,22 @@
+<!--
+    The following modal allows the user to select a workspace.
+    It pops up when the editor page is loaded for the first time,
+    as well as whenever the user tried to return to one of their existing workspaces.
+-->
+<div class="modal fade" id="wpsace-selection-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Select a workspace or create a new one</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group" id="wspace-selection"></ul>
+                <button class="btn btn-success btn-small" title="Create a new workspace">
+                    <i class="fa fa-plus"></i>
+                    Create workspace
+                </button>
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->

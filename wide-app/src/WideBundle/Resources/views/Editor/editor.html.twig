@@ -1,0 +1,62 @@
+{% extends 'WideBundle:Default:base_layout.html.twig' %}
+{% block title %}Editor{% endblock %}
+
+{% block content %}
+    {% include 'WideBundle:Default:navbar.html.twig' %}
+    <div class="row" id="editor-page-content">
+        <div class="col-md-2" id="editor-left-side">
+            {% include 'WideBundle:Editor:editor_controls.html.twig' %}
+        </div>
+        <div class="col-md-10" id="editor-right-side">
+            <ul id="file-tab-list" class="nav nav-tabs">
+                <li role="presentation"><a><i class="fa fa-plus"></i></a></li>
+            </ul>
+            <div id="editor-container">
+                <pre id="editor"></pre>
+                <div id="output-section" class="inactive well"></div>
+            </div>
+        </div>
+        {% include 'WideBundle:Editor:workspace_selection_modal.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- include functionality from parent template -->
+    {{ parent() }}
+    <!-- Fetch CDN documents for ace editor (core, mode and themes) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/mode-c_cpp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/snippets/c_cpp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-textmate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-ambiance.js"></script>
+    <!-- Javascript used for workspaces management -->
+    {% include 'WideBundle:Editor:workspace_manager.html.twig' %}
+    {% include 'WideBundle:Editor:file_manager.html.twig' %}
+    {% include 'WideBundle:Editor:utilities.html.twig' %}
+    <!-- Initialize the editor and workspaces list-->
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/textmate");
+        editor.getSession().setMode("ace/mode/c_cpp");
+        editor.$blockScrolling = Infinity; // Suppresses a JS warning (suggested by documentation)
+        editor.session.setUseWrapMode(true);
+
+        var FileManager = new FileManager();
+        var WorkspaceManager = new WorkspaceManager();
+
+        $.get("{{ url('getusercontent') }}").done(function (data) {
+                WorkspaceManager.setWorkspaces(data);
+                createWorkspaceList(data);
+            });
+
+        $(document).ready(function() {
+            $('#wpsace-selection-modal').modal('show');
+            $('#trigger-modal-btn').click(function () {
+                $('#wpsace-selection-modal').modal('show');
+            });
+            $('#toggle-output-btn').click(function () {
+                toggleOutput();
+            });
+        });
+    </script>
+{% endblock %}

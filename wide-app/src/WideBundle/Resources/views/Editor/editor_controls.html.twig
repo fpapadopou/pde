@@ -1,0 +1,49 @@
+<!--
+    This section contains the controls necessary for manipulating files
+    and workspaces in the editor page.
+ -->
+<p class="lead" id="workspace-name">Workspace name</p>
+<div id="controls">
+    <div class="btn-group ctrl-group" role="group">
+        <button type="button" class="ctrl-group-btn has-shadow btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-file-code-o"></i>
+            File
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="new-file-btn">New</a></li>
+            <li><a id="rename-file-btn">Rename</a></li>
+            <li><a id="delete-file-btn">Delete</a></li>
+            <li><a id="rename-wpsace-btn">Rename workspace</a></li>
+        </ul>
+    </div>
+    <button id="save-wpsace-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Save current workspace">
+        <i class="fa fa-floppy-o"></i>
+        Save
+    </button>
+    <button id="reload-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Restore workspace to last saved state">
+        <i class="fa fa-refresh"></i>
+        Reload
+    </button>
+    <div class="btn-group ctrl-group" role="group">
+        <button type="button" class="ctrl-group-btn has-shadow btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-gears"></i>
+            Tools
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a id="bison-btn">Bison</a></li>
+            <li><a id="flex-btn">Flex</a></li>
+            <li><a id="gcc-btn">Test with GCC</a></li>
+        </ul>
+    </div>
+    <button id="toggle-output-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Restore workspace to last saved state">
+        <i id="toggle-on-icon" class="fa fa-toggle-on"></i>
+        <i id="toggle-off-icon" class="fa fa-toggle-off"></i>
+        Toggle log
+    </button>
+</div>
+<button id="trigger-modal-btn" class="btn btn-primary btn-small has-shadow" title="Select or create a workspace">
+    <i class="fa fa-eject"></i>
+    Select workspace
+</button>
