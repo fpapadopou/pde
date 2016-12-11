@@ -9,6 +9,16 @@
                 <div class="page-header">
                     <h3>Create lexical & syntax analyzers using flex and bison</h3>
                 </div>
+                {% if last_username is defined and last_username is not empty %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <i class="fa fa-exclamation-circle"></i> Login failed for user <strong>{{ last_username }}</strong>.
+                        {% if last_error is defined and last_error is not empty %}
+                            <br/>
+                            Error: {{ last_error }}
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
             <div class="col-md-2"></div>
         </div> <!-- landing-page-header end -->
