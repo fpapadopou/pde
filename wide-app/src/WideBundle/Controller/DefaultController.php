@@ -17,21 +17,4 @@ class DefaultController extends Controller
         return $this->render('WideBundle:Index:index.html.twig');
     }
 
-    /**
-     * @Route("/login", name="login")
-     * @Method("POST")
-     */
-    public function loginAction()
-    {
-        return new JsonResponse(['success' => true, 'message' => 'User logged out.']);
-    }
-
-    /**
-     * @Route("/logout", name="logout")
-     * @Method("GET")
-     */
-    public function logoutAction()
-    {
-        return new JsonResponse(['success' => true, 'message' => 'User logged out.']);
-    }
 }
