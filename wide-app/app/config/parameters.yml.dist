@@ -1,6 +1,4 @@
-# This file is a "template" of what your parameters.yml file should look like
-# Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
-# http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
+# Application default parameters
 parameters:
     database_host:     127.0.0.1
     database_port:     ~
@@ -8,5 +6,12 @@ parameters:
     database_user:     root
     database_password: ~
 
+    # The path where all users' workspace files should be stored
+    files_directory: /path/to/persistent/storage
+
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    # The IMAP server host:port combination. Users will be authenticated against their mailbox.
+    imap_server_host: mail.server.com
+    imap_server_port: 993
