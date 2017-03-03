@@ -1,4 +1,12 @@
+# Application routing registry
+
+# All actions and pages of the app use the same prefix.
+# The parameters of each route are specified in the code using annotations, which is faster and more
+# convenient for small scale apps.
 wide:
     resource: "@WideBundle/Controller/"
     type:     annotation
     prefix:   /
+# The logout action is handled by Symfony's firewall.
+logout:
+    path: /logout
