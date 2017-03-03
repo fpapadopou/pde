@@ -12,6 +12,10 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
+    # The domain where the users' email addresses belong
+    # No https/https protocol or www prefix should be used.
+    webmail_domain: domain.com
+
     # The IMAP server host:port combination. Users will be authenticated against their mailbox.
     imap_server_host: mail.server.com
     imap_server_port: 993
