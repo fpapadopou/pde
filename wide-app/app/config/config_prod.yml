@@ -16,12 +16,12 @@ imports:
 monolog:
     handlers:
         main:
-            type:         fingers_crossed
-            action_level: error
-            handler:      nested
-        nested:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
+            # Production log files are rotated on a daily basis under a 30-day cycle.
+            # This way we can avoid having huge log files, considering logs stale after 30 days.
+            type:      rotating_file
+            level:     notice
+            path:      "%kernel.logs_dir%/%kernel.environment%.log"
+            max_files: 30
         console:
             type:  console
+            level: debug
