@@ -14,8 +14,7 @@
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         <i class="fa fa-exclamation-circle"></i> Login failed for user <strong>{{ last_username }}</strong>.
                         {% if last_error is defined and last_error is not empty %}
-                            <br/>
-                            Error: {{ last_error }}
+                            {{ last_error }}
                         {% endif %}
                     </div>
                 {% endif %}
