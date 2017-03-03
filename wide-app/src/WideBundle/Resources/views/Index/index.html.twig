@@ -25,14 +25,14 @@
             <div class="col-md-4"></div>
             <div class="col-md-4">
                 <!-- Here goes the login form -->
-                <form id="login-form" action="{{ path('login') }}" method="post">
+                <form id="login-form" action="{{ path('security_login_check') }}" method="post">
                     <div class="form-group">
                         <label for="ceid_email">Email address</label>
-                        <input type="email" class="form-control" id="ceid_email" placeholder="email@ceid.upatras.gr" autocomplete="off" data-toggle="tooltip" data-placement="left" title="Here goes your CEID email">
+                        <input type="email" class="form-control" name="_email" id="ceid_email" placeholder="email@ceid.upatras.gr" data-toggle="tooltip" required data-placement="left" title="Here goes your CEID email">
                     </div>
                     <div class="form-group">
                         <label for="ceid_pass">Password</label>
-                        <input type="password" class="form-control" id="ceid_pass" placeholder="password" data-toggle="tooltip" data-placement="left" title="Here goes your password">
+                        <input type="password" class="form-control" name="_password" id="ceid_pass" placeholder="password" data-toggle="tooltip" required data-placement="left" title="Here goes your password">
                     </div>
                     <button type="submit" id="login-form-button" class="btn btn-primary">Login <i class="fa fa-sign-in"></i></button>
                 </form> <!-- login-form end -->
