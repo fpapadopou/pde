@@ -4,4 +4,10 @@ services:
         arguments: ["%imap_server_host%", "%imap_server_port%", "@logger"]
     wide.authenticator:
         class: WideBundle\Authentication\Authenticator
-        arguments: ["@wide.webmailauthenticator", "@router", "%webmail_domain%"]
+        arguments: ["@wide.webmailauthenticator", "@router", "@wide.registrationmanager", "%webmail_domain%"]
+    wide.storagemanager:
+        class: WideBundle\FileSystemUtilities\StorageManager
+        arguments: ["%files_directory%", "@logger"]
+    wide.registrationmanager:
+        class: WideBundle\Registration\RegistrationManager
+        arguments: ["@doctrine.orm.entity_manager", "@logger", "@wide.storagemanager"]

@@ -13,6 +13,7 @@ use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Security;
 use WideBundle\Entity\User;
+use WideBundle\Registration\RegistrationManager;
 
 /**
  * Class Authenticator
@@ -26,10 +27,13 @@ use WideBundle\Entity\User;
 class Authenticator implements GuardAuthenticatorInterface
 {
     /** @var  WebmailAuthenticator $webmailAuthenticator */
-    protected $webmailAuthenticator;
+    private $webmailAuthenticator;
 
     /** @var  Router $router */
-    protected $router;
+    private $router;
+
+    /** @var RegistrationManager $registrationManager */
+    private $registrationManager;
 
     /** The domain of the email addresses used during authentication */
     private $webmailDomain;
@@ -38,12 +42,19 @@ class Authenticator implements GuardAuthenticatorInterface
      * Authenticator constructor.
      * @param WebmailAuthenticator $webmailAuthenticator
      * @param Router $router
+     * @param RegistrationManager $registrationManager
      * @param string $webmailDomain
      */
-    public function __construct(WebmailAuthenticator $webmailAuthenticator, Router $router, $webmailDomain)
+    public function __construct(
+        WebmailAuthenticator $webmailAuthenticator,
+        Router $router,
+        RegistrationManager $registrationManager,
+        $webmailDomain
+    )
     {
         $this->webmailAuthenticator = $webmailAuthenticator;
         $this->router = $router;
+        $this->registrationManager = $registrationManager;
         $this->webmailDomain = $webmailDomain;
     }
 
@@ -89,10 +100,12 @@ class Authenticator implements GuardAuthenticatorInterface
 
     /**
      * This method is intended to retrieve the user from the database by their username and then pass the User
-     * object to the next method. Since no database is used for authentication, the method returns a blank user.
+     * object to the next method. Since no database is used for authentication, the method either returns
+     * an existing user or attempts to create a new one.
      * @param mixed $credentials
      * @param UserProviderInterface $userProvider
      * @return UserInterface
+     * @throws AuthenticationException
      */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
@@ -101,12 +114,16 @@ class Authenticator implements GuardAuthenticatorInterface
             return $userProvider->loadUserByUsername($credentials['username']);
         } catch (\Exception $exception) {
             // The user is trying to authenticate for the first time
-            return new User();
+            $newUser = $this->registrationManager->createUser($credentials);
+            if ($newUser === false) {
+                throw new AuthenticationException('Failed to create your account. Try again.');
+            }
+            return $newUser;
         }
     }
 
     /**
-     * Makes sure the provided password matches the user's email.
+     * Makes sure the provided password matches the user's email. If the user is new, finalize the account creation.
      * @param mixed $credentials
      * @param UserInterface $user
      * @return bool
@@ -116,11 +133,12 @@ class Authenticator implements GuardAuthenticatorInterface
         // If the authentication fails, an exception is thrown
         $this->webmailValidation($credentials['email'], $credentials['password']);
 
-        // If it's the user's first login, a new User is created.
-        // TODO: Better check for new User?
-        if (empty($user->getUsername())) {
-            //create the user (to be added)
+        // If the user has just been created, finalize the process
+        /** @var User $user */
+        if ($user->getEnabled() === false && $this->registrationManager->persistUser($user) === false) {
+            throw new AuthenticationException('Failed to create your account. Try again.');
         }
+
         return true;
     }
 
