@@ -52,7 +52,6 @@ class RegistrationManager
             $user->setEmail($credentials['email']);
             $user->setEnabled(false);
             $user->setRoles(); // default roles used
-            $user->setWorkingDirectory(); // the directory is set internally
         } catch (\Exception $exception) {
             $this->logger->addError('User creation failed - ' . $exception->getMessage());
             return false;
@@ -62,7 +61,7 @@ class RegistrationManager
     }
 
     /**
-     * Finalizes an account, creating its directory and flushing the user object to the database.
+     * Finalizes an account, flushing the user object to the database.
      * @param User $user
      * @return bool
      */
@@ -70,14 +69,6 @@ class RegistrationManager
     {
         // Enable the user before moving on
         $user->setEnabled(true);
-
-        // Create a dedicated directory for the user
-        $directory = $user->getWorkingDirectory();
-        if ($this->storageManager->createUserDirectory($directory) === false) {
-            $this->logger->addError('Failed to create user directory for ' . $user->getUsername());
-            return false;
-        }
-
         // Flush the user's data to the db
         $this->entityManager->persist($user);
         $this->entityManager->flush();

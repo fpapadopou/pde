@@ -53,16 +53,17 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="working_directory_path", type="string", length=255)
-     */
-    private $workingDirectoryPath;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="roles", type="string", length=255)
      */
     private $roles;
+
+    /**
+     * One or more Users belong to one Team.
+     *
+     * @ORM\ManyToOne(targetEntity="Team", inversedBy="members")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
+     */
+    private $team;
 
     /**
      * User constructor
@@ -148,25 +149,6 @@ class User implements UserInterface
     }
 
     /**
-     * Creates a user's working directory, where their workspaces are stored.
-     */
-    public function setWorkingDirectory()
-    {
-        $this->workingDirectoryPath = md5($this->username);
-
-        return $this;
-    }
-
-    /**
-     * Returns a user's working directory.
-     * @return string
-     */
-    public function getWorkingDirectory()
-    {
-        return $this->workingDirectoryPath;
-    }
-
-    /**
      * No password stored in the application database.
      * @return null
      */
@@ -228,6 +210,15 @@ class User implements UserInterface
     public function getEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * Returns the user's team or null if they belong to no team.
+     * @return null|mixed
+     */
+    public function getTeam()
+    {
+        return $this->team;
     }
 }
 

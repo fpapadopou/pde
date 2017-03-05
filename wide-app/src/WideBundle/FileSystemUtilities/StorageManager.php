@@ -37,13 +37,20 @@ class StorageManager
     }
 
     /**
-     * Creates a user's main directory. All workspaces are stored in this folder.
-     * @param $directory
-     * @return bool
+     * Creates the main folder where a team's workspaces are stored. Returns the folder's fullpath.
+     *
+     * @param $seedString
+     * @return string
+     * @throws \Exception
      */
-    public function createUserDirectory($directory)
+    public function createTeamSpace($seedString)
     {
-        return mkdir($this->storageRoot . '/' . $directory, 0755);
+        $folderName = $this->storageRoot . '/' . md5($seedString) . rand(10000, 99999);
+        if (!mkdir($folderName)) {
+            throw  new \Exception('Failed to create your main directory.');
+        }
+
+        return $folderName;
     }
 
 }
