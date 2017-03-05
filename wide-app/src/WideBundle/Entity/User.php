@@ -115,9 +115,13 @@ class User implements UserInterface
      * @param string $email
      *
      * @return User
+     * @throws \InvalidArgumentException
      */
     public function setEmail($email)
     {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException('Invalid email address.');
+        }
         $this->email = $email;
 
         return $this;
