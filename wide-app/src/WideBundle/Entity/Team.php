@@ -155,7 +155,7 @@ class Team
         }
 
         if ($user->getTeam() !== null) {
-            throw new \Exception('This user already has a team.');
+            throw new \Exception('This specified user already has a team.');
         }
 
         $this->members->add($user);

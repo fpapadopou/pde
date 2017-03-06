@@ -60,6 +60,8 @@ class User implements UserInterface
     /**
      * One or more Users belong to one Team.
      *
+     * @var Team
+     *
      * @ORM\ManyToOne(targetEntity="Team", inversedBy="members")
      * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
      */
@@ -150,6 +152,7 @@ class User implements UserInterface
 
     /**
      * No password stored in the application database.
+     *
      * @return null
      */
     public function getPassword()
@@ -159,6 +162,7 @@ class User implements UserInterface
 
     /**
      * Sets the roles a user has in the application context.
+     *
      * @param array $roles
      */
     public function setRoles(array $roles = ['ROLE_USER'])
@@ -168,6 +172,7 @@ class User implements UserInterface
 
     /**
      * Returns a user's roles.
+     *
      * @return mixed
      */
     public function getRoles()
@@ -177,6 +182,7 @@ class User implements UserInterface
 
     /**
      * Not used. Must be implemented because it's part of the UserInterface.
+     *
      * @return $this
      */
     public function eraseCredentials()
@@ -186,6 +192,7 @@ class User implements UserInterface
 
     /**
      * The users' passwords are not stored in the database, so no salt is used.
+     *
      * @return null
      */
     public function getSalt()
@@ -195,6 +202,7 @@ class User implements UserInterface
 
     /**
      * Sets a value for the `enabled` property of the User.
+     *
      * @param $isEnabled
      */
     public function setEnabled($isEnabled)
@@ -205,6 +213,7 @@ class User implements UserInterface
 
     /**
      * Returns the 'enabled' property of the User.
+     *
      * @return bool
      */
     public function getEnabled()
@@ -214,7 +223,8 @@ class User implements UserInterface
 
     /**
      * Returns the user's team or null if they belong to no team.
-     * @return null|mixed
+     *
+     * @return null|Team
      */
     public function getTeam()
     {
