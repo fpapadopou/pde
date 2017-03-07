@@ -6,7 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use WideBundle\Entity\User;
+use WideBundle\Entity\Team;
 
 /**
  * Class DefaultController
@@ -15,20 +18,21 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 class DefaultController extends Controller
 {
     /**
-     * Renders the landing page of the application page. If a user previously tried to
-     * log in but failed, the error will be rendered too.
+     * Renders the landing page of the application. If a user previously tried to
+     * log in but failed, the login error will be rendered too.
      *
      * @Route("/", name="index_page")
      * @Method({"GET"})
      */
     public function indexAction()
     {
-        $current_user = $this->getUser();
+        /** @var User $user */
+        $user = $this->getUser();
 
-        if (is_a($current_user, 'WideBundle\Entity\User')) {
+        if (is_a($user, 'WideBundle\Entity\User')) {
             /** @var Router $router */
             $router = $this->get('router');
-            return new RedirectResponse($router->generate('editor'));
+            return new RedirectResponse($router->generate('account_page'));
         }
 
         // Since the login form is rendered in the index page, all data from the last failed login attempt (if any),
@@ -47,4 +51,34 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * Renders the user account page.
+     *
+     * @Route("/account", name="account_page")
+     * @Method({"GET"})
+     *
+     * @return Response
+     */
+    public function accountPageAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        /** @var Team $Team */
+        $team = $user->getTeam();
+        $hasTeam = false;
+        if ($team !== null) {
+            $hasTeam = true;
+        }
+
+        return $this->render(
+            'WideBundle:Accounts:account.html.twig',
+            [
+                'username' => $user->getUsername(),
+                'has_team' => $hasTeam,
+                'email' => $user->getEmail(),
+                'registration_date' => $user->getCreated()->format('l jS F Y'),
+            ]
+        );
+    }
 }
