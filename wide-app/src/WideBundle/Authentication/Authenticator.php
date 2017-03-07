@@ -180,8 +180,8 @@ class Authenticator implements GuardAuthenticatorInterface
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        // If the authentication process is successful, redirect the user to the editor.
-        $target = $this->router->generate('editor');
+        // If the authentication process is successful, redirect the user to the user's account page.
+        $target = $this->router->generate('account_page');
         return new RedirectResponse($target);
     }
 
