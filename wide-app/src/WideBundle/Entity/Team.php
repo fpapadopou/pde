@@ -43,10 +43,12 @@ class Team
 
     /**
      * A Team can have one or more members.
+     * Using cascade persist option in order to persists both Team and User objects at once,
+     * whenever a user is added to or removed from a team.
      *
      * @var \Doctrine\Common\Collections\ArrayCollection $members
      *
-     * @ORM\OneToMany(targetEntity="User", mappedBy="team")
+     * @ORM\OneToMany(targetEntity="User", mappedBy="team", cascade={"persist"})
      */
     private $members;
 
@@ -159,6 +161,7 @@ class Team
         }
 
         $this->members->add($user);
+        $user->setTeam($this);
         return $this;
     }
 
@@ -176,6 +179,7 @@ class Team
         }
 
         $this->members->removeElement($user);
+        $user->setTeam(null);
         return $this;
     }
 }

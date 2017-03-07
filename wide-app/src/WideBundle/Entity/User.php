@@ -58,12 +58,13 @@ class User implements UserInterface
     private $roles;
 
     /**
-     * One or more Users belong to one Team.
+     * One or more Users belong to one Team. The onDelete option is applied on a the database tables.
+     * This enables set the `team` property of all team members (if any) to NULL when a team is deleted.
      *
      * @var Team
      *
      * @ORM\ManyToOne(targetEntity="Team", inversedBy="members")
-     * @ORM\JoinColumn(name="team_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="team_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $team;
 
@@ -219,6 +220,18 @@ class User implements UserInterface
     public function getEnabled()
     {
         return $this->enabled;
+    }
+
+    /**
+     * Sets a user's team.
+     *
+     * @param Team
+     * @return User
+     */
+    public function setTeam(Team $team = null)
+    {
+        $this->team = $team;
+        return $this;
     }
 
     /**

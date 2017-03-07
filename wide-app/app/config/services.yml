@@ -11,3 +11,6 @@ services:
     wide.registrationmanager:
         class: WideBundle\Registration\RegistrationManager
         arguments: ["@doctrine.orm.entity_manager", "@logger", "@wide.storagemanager"]
+    wide.teammanager:
+        class: WideBundle\Teams\TeamManager
+        arguments: ["@doctrine.orm.entity_manager", "@wide.storagemanager", "@logger"]
