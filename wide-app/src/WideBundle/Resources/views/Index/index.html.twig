@@ -42,3 +42,8 @@
     </div> <!-- homepage-content-container end -->
     {% include 'WideBundle:Default:footer.html.twig' %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent }}
+    <script src="{{ asset('js/index.js') }}"></script>
+{% endblock %}

@@ -1,20 +1,19 @@
 /**
- * This file contains several functions that will be
- * used across the application frontend.
+ * Miscellaneous functions that are used across the application.
  */
 
-function validateLoginForm() {
-    var emailInput = $('#ceid_email');
-    var providedEmail = emailInput.val();
-
-    if (providedEmail.indexOf('@ceid.upatras.gr') === -1) {
-        emailInput.parent().addClass('has-error');
-        $('#login-form-button').attr('disabled', 'disabled');
-        return;
-    }
-
-    emailInput.parent().removeClass('has-error').addClass('has-success');
-    $('#login-form-button').removeAttr('disabled');
+function doAjaxRequest(url, method, callback, data) {
+    // data is an optional parameter
+    data = data || {};
+    $.ajax({
+        url: url,
+        method: method,
+        data: data
+    }).done(function (response) {
+        callback(response);
+    }).fail(function () {
+        $('#info-modal-body').html('<i class="fa fa-times"></i><p>An error occurred. Please try again.</p>');
+    });
 }
 
 $( document ).ready(function() {
