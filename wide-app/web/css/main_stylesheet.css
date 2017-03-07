@@ -192,3 +192,47 @@ footer > div {
     display: none;
 }
 /** Ace editor section end **/
+
+/** Account page **/
+.team-action {
+    display: none;
+    /** TODO: might have to review this **/
+    margin-top: -3%;
+    margin-bottom: 2%;
+}
+
+#team-container {
+    padding-top: 5%;
+}
+
+#add-to-team-input {
+    display: inline;
+    width: 60%;
+}
+
+#add-member-btn {
+    display: inline;
+    margin-bottom: 2px; /** Not sure about this **/
+}
+
+#account-container {
+    padding-top: 12%;
+    padding-left: 10%;
+}
+
+.info-modal-dialog {
+    top: 30%;
+}
+
+#info-modal-body {
+    text-align: center;
+}
+
+#go-to-editor-btn {
+    width: 130px;
+}
+
+#delete-account-message {
+    padding: 7%;
+}
+/** Account page end **/
