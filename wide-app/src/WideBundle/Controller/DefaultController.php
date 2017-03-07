@@ -81,4 +81,27 @@ class DefaultController extends Controller
             ]
         );
     }
+
+    /**
+     * Renders the editor of the application.
+     *
+     * @Route("/editor", name="editor")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function editorAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        // A user must have a team before they can use the editor.
+        if ($user->getTeam() === null) {
+            return $this->redirect($this->generateUrl('account_page'));
+        }
+
+        return $this->render(
+            'WideBundle:Editor:editor.html.twig',
+            ['username' => $user->getUsername()]
+        );
+    }
 }
