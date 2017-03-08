@@ -53,4 +53,24 @@ class StorageManager
         return $folderName;
     }
 
+    /**
+     * Permanently deletes a team's directory and all of its contents.
+     *
+     * @param $directory
+     * @return bool
+     */
+    public function deleteTeamSpace($directory)
+    {
+        try {
+            $this->deleteDirectoryRecursively($directory);
+        } catch(\Exception $exception) {
+            $this->logger->addError(
+                'Failed to delete directory ' . $directory . ' with error: ' . $exception->getMessage()
+            );
+            return false;
+        }
+
+        return true;
+    }
+
 }
