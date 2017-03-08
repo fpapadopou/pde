@@ -10,7 +10,7 @@ services:
         arguments: ["%files_directory%", "@logger"]
     wide.registrationmanager:
         class: WideBundle\Registration\RegistrationManager
-        arguments: ["@doctrine.orm.entity_manager", "@logger", "@wide.storagemanager"]
+        arguments: ["@doctrine.orm.entity_manager", "@logger",]
     wide.teammanager:
         class: WideBundle\Teams\TeamManager
         arguments: ["@doctrine.orm.entity_manager", "@wide.storagemanager", "@logger"]

@@ -5,7 +5,6 @@ namespace WideBundle\Registration;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
 use WideBundle\Entity\User;
-use WideBundle\FileSystemUtilities\StorageManager;
 
 /**
  * Class RegistrationManager
@@ -20,20 +19,15 @@ class RegistrationManager
     /** @var Logger $logger */
     private $logger;
 
-    /** @var StorageManager $storageManager */
-    private $storageManager;
-
     /**
      * RegistrationManager constructor.
      * @param EntityManager $entityManager
      * @param Logger $logger
-     * @param StorageManager $storageManager
      */
-    public function __construct(EntityManager $entityManager, Logger $logger, StorageManager $storageManager)
+    public function __construct(EntityManager $entityManager, Logger $logger)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
-        $this->storageManager = $storageManager;
     }
 
     /**
