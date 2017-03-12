@@ -44,6 +44,6 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent }}
+    {{ parent() }}
     <script src="{{ asset('js/index.js') }}"></script>
 {% endblock %}
