@@ -14,3 +14,7 @@ services:
     wide.teammanager:
         class: WideBundle\Teams\TeamManager
         arguments: ["@doctrine.orm.entity_manager", "@wide.storagemanager", "@logger"]
+    wide.directory.handler:
+        class: WideBundle\FileSystemHandler\DirectoryHandler
+    wide.file.handler:
+        class: WideBundle\FileSystemHandler\FileHandler
