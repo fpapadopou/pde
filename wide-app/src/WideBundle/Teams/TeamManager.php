@@ -3,14 +3,14 @@
 namespace WideBundle\Teams;
 
 use Doctrine\ORM\EntityManager;
-use WideBundle\FileSystemUtilities\StorageManager;
 use Monolog\Logger;
 use WideBundle\Entity\User;
 use WideBundle\Entity\Team;
+use WideBundle\FileSystemHandler\DirectoryHandler;
 
 /**
  * Class TeamManager
- * Implements team-related operations.
+ * Implements team-related operations. Handles teams space allocation and de-allocation.
  *
  * @package WideBundle\Teams
  */
@@ -19,23 +19,40 @@ class TeamManager
     /** @var EntityManager $entityManager */
     private $entityManager;
 
-    /** @var StorageManager $storageManager */
-    private  $storageManager;
+    /** @var DirectoryHandler $directoryHandler */
+    private $directoryHandler;
 
     /** @var Logger $logger */
     private $logger;
 
+    /** @var string $storageRoot */
+    private $storageRoot;
+
     /**
      * TeamController constructor.
+     *
      * @param EntityManager $entityManager
-     * @param StorageManager $storageManager
+     * @param DirectoryHandler $directoryHandler
      * @param Logger $logger
+     * @param string $storageRoot
+     * @throws \ErrorException
      */
-    public function __construct(EntityManager $entityManager, StorageManager $storageManager, Logger $logger)
+    public function __construct(
+        EntityManager $entityManager,
+        DirectoryHandler $directoryHandler,
+        Logger $logger,
+        $storageRoot
+    )
     {
         $this->entityManager = $entityManager;
-        $this->storageManager = $storageManager;
+        $this->directoryHandler = $directoryHandler;
         $this->logger = $logger;
+        // Create the directory if it does not already exist
+        if (!is_dir($storageRoot) && !mkdir($storageRoot, 0755)) {
+            $this->logger->addCritical('Failed to create storage for team spaces.');
+            throw new \ErrorException('Failed to create application file system.');
+        }
+        $this->storageRoot = $storageRoot;
     }
 
     /**
@@ -54,9 +71,12 @@ class TeamManager
         $team = new Team();
         try {
             $team->addMember($user);
-            $team->setTeamFolder($this->storageManager->createTeamSpace($user->getUsername()));
+            $folderName = md5($user->getUsername()) . rand(10000, 99999);
+            $this->directoryHandler->createDirectory($this->storageRoot, $folderName);
+            $team->setTeamFolder($this->storageRoot . DIRECTORY_SEPARATOR . $folderName);
         } catch (\Exception $exception) {
-            return ['success' => false, 'error' => $exception->getMessage()];
+            $this->logger->addError('Team space creation failed - ' . $exception->getMessage());
+            return ['success' => false, 'error' => 'Team creation failed. Try again.'];
         }
 
         $this->entityManager->persist($team);
@@ -80,7 +100,12 @@ class TeamManager
                 'error' => 'The rest of the members must leave the team before it can be deleted.'
             ];
         }
-        if ($this->storageManager->deleteTeamSpace($team->getTeamFolder()) !== true) {
+        try {
+            $this->directoryHandler->deleteDirectory($team->getTeamFolder());
+        } catch (\Exception $exception) {
+            $this->logger->addError(
+                'Failed to delete directory of team ' . $team->getId() . ' with error: ' . $exception->getMessage()
+            );
             return ['success' => false, 'error' => 'Failed to delete team. Try again.'];
         }
 

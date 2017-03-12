@@ -5,15 +5,12 @@ services:
     wide.authenticator:
         class: WideBundle\Authentication\Authenticator
         arguments: ["@wide.webmailauthenticator", "@router", "@wide.registrationmanager", "%webmail_domain%"]
-    wide.storagemanager:
-        class: WideBundle\FileSystemUtilities\StorageManager
-        arguments: ["%files_directory%", "@logger"]
     wide.registrationmanager:
         class: WideBundle\Registration\RegistrationManager
         arguments: ["@doctrine.orm.entity_manager", "@logger",]
     wide.teammanager:
         class: WideBundle\Teams\TeamManager
-        arguments: ["@doctrine.orm.entity_manager", "@wide.storagemanager", "@logger"]
+        arguments: ["@doctrine.orm.entity_manager", "@wide.directory.handler", "@logger", "%files_directory%"]
     wide.directory.handler:
         class: WideBundle\FileSystemHandler\DirectoryHandler
     wide.file.handler:
