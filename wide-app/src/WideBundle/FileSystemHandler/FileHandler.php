@@ -102,7 +102,7 @@ class FileHandler extends BaseHandler
         }
 
         $this->checkFileExists($filepath);
-        if (!file_put_contents($filepath, $content)) {
+        if (!file_put_contents($filepath, $content, LOCK_EX)) {
             throw new \ErrorException('Failed to add content to ' . $filepath . ' file.');
         }
 
