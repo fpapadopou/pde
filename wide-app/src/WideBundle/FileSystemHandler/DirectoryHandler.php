@@ -64,7 +64,7 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Returns a list of the subfolders of a given directory along with their last modification dates.
+     * Returns a list of the subfolders of a given directory.
      *
      * @param $directory
      * @return array
@@ -81,10 +81,7 @@ class DirectoryHandler extends BaseHandler
             if ($path->isFile()) {
                 continue;
             }
-            $contents[] = [
-                'name' => $path->getPathname(),
-                'modified' => filemtime($path->getPathname() . DIRECTORY_SEPARATOR . '.')
-            ];
+            $contents[] = $path->getPathname();
         }
         return $contents;
     }
