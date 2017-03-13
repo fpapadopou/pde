@@ -2,6 +2,8 @@
 
 namespace WideBundle\FileSystemHandler;
 
+use Monolog\Logger;
+
 /**
  * Class DirectoryHandler
  * Low level directory operations. Restrictions related to the app context apply.
@@ -11,20 +13,38 @@ namespace WideBundle\FileSystemHandler;
 class DirectoryHandler extends BaseHandler
 {
     /**
+     * DirectoryHandler constructor.
+     *
+     * @param Logger $logger
+     */
+    public function __construct(Logger $logger)
+    {
+        parent::__construct($logger);
+    }
+
+    /**
      * Creates a directory, setting the same permissions with the directory's parent.
      *
      * @param $parent
      * @param $directory
-     * @throws \ErrorException
+     * @return array
      */
     public function createDirectory($parent, $directory)
     {
-        $path = $parent . DIRECTORY_SEPARATOR . $directory;
-        $this->checkNoSuchDirectory($path);
-        $parentPermissions = fileperms($parent);
-        if (!mkdir($path, $parentPermissions)) {
-            throw new \ErrorException('Failed to create directory ' . $path);
+        try {
+            $this->validateDirectoryName($directory);
+            $path = $parent . DIRECTORY_SEPARATOR . $directory;
+            $this->checkNoSuchDirectory($path);
+            $parentPermissions = fileperms($parent);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
         }
+        if (!mkdir($path, $parentPermissions)) {
+            $this->logger->addError('createDirectory error - ' . error_get_last()['message']);
+            return ['success' => false, 'error' => 'Failed to create directory ' . $directory];
+        }
+
+        return ['success' => true];
     }
 
     /**
@@ -45,12 +65,27 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Deletes a folder and its contents recursively.
+     * Deletes a folder and its contents recursively. Wrapper function.
      *
      * @param $directory
-     * @throws \InvalidArgumentException|\ErrorException
+     * @return array
      */
     public function deleteDirectory($directory)
+    {
+        try {
+            $this->deleteDirectoryContents($directory);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+        return ['success' => true];
+    }
+
+    /**
+     * Does the actual deletion of a directory and its contents.
+     *
+     * @param $directory
+     */
+    private function deleteDirectoryContents($directory)
     {
         $this->checkDirectoryExists($directory);
 
@@ -60,7 +95,7 @@ class DirectoryHandler extends BaseHandler
         foreach ($directoryHandle as $element) {
             $path = $element->getPathname();
             if (is_dir($path)) {
-                $this->deleteDirectory($path);
+                $this->deleteDirectoryContents($path);
                 continue;
             }
             $this->safeDeleteFile($path);
@@ -76,6 +111,7 @@ class DirectoryHandler extends BaseHandler
      */
     private function safeDeleteDirectory($path) {
         if (!rmdir($path)) {
+            $this->logger->addError('safeDeleteDirectory error - ' . error_get_last()['message']);
             throw new \ErrorException('Failed to delete directory ' . $path);
         }
     }
@@ -88,9 +124,12 @@ class DirectoryHandler extends BaseHandler
      */
     public function getSubdiretoriesList($directory)
     {
-        $this->checkDirectoryExists($directory);
-
-        $contents = [];
+        try {
+            $this->checkDirectoryExists($directory);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+        $list = [];
         /** @var \FilesystemIterator $iterator */
         $iterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
         foreach ($iterator as $path) {
@@ -98,9 +137,9 @@ class DirectoryHandler extends BaseHandler
             if ($path->isFile()) {
                 continue;
             }
-            $contents[] = $path->getPathname();
+            $list[] = $path->getPathname();
         }
-        return $contents;
+        return ['success' => true, 'list' => $list];
     }
 
     /**
@@ -123,14 +162,13 @@ class DirectoryHandler extends BaseHandler
             if ($iterator->isDir()) {
                 continue;
             }
-            $contents['files'][] = array_merge(
-                [
-                    'filename' => $iterator->getFilename(),
-                    'extension' => $iterator->getExtension(),
-                    'modified' => filemtime($iterator)
-                ],
-                $this->readFileData($finfo, $iterator->getPathName())
-            );
+            $data = [
+                'filename' => $iterator->getFilename(),
+                'extension' => $iterator->getExtension(),
+                'modified' => filemtime($iterator)
+            ];
+            $this->readFileData($finfo, $iterator->getPathName());
+            $contents['files'][] = $data;
         }
         finfo_close($finfo);
         return $contents;
@@ -139,21 +177,27 @@ class DirectoryHandler extends BaseHandler
     /**
      * Renames a directory.
      *
-     * @param string $parent
-     * @param string $currentName
-     * @param string $newName
-     * @throws \ErrorException
+     * @param $parent
+     * @param $currentName
+     * @param $newName
+     * @return array
      */
     public function renameDirectory($parent, $currentName, $newName)
     {
-        $currentPath = $parent . DIRECTORY_SEPARATOR . $currentName;
-        $this->checkDirectoryExists($currentPath);
-        $newPath = $parent . DIRECTORY_SEPARATOR . $newName;
-        $this->checkNoSuchDirectory($newPath);
+        try {
+            $currentPath = $parent . DIRECTORY_SEPARATOR . $currentName;
+            $this->checkDirectoryExists($currentPath);
+            $newPath = $parent . DIRECTORY_SEPARATOR . $newName;
+            $this->checkNoSuchDirectory($newPath);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
 
         if (!rename($currentPath, $newPath)) {
-            throw new \ErrorException('Failed to rename ' . $currentPath . ' directory to '  . $newPath);
+            $this->logger->addError('renameDirectory error - ' . error_get_last()['message']);
+            ['success' => false, 'error' => 'Failed to rename ' . $currentName . ' directory to '  . $newName];
         }
+        return ['success' => true];
     }
 
 }

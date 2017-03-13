@@ -2,6 +2,8 @@
 
 namespace WideBundle\FileSystemHandler;
 
+use Monolog\Logger;
+
 /**
  * Class FileHandler
  * Low level file operations. Restrictions related to the app context apply.
@@ -11,27 +13,49 @@ namespace WideBundle\FileSystemHandler;
 class FileHandler extends BaseHandler
 {
     /**
+     * FileHandler constructor.
+     *
+     * @param Logger $logger
+     */
+    public function __construct(Logger $logger)
+    {
+        parent::__construct($logger);
+    }
+
+    /**
      * Creates a file in the specified directory.
      *
      * @param $directory
      * @param $filename
+     * @return array
      */
     public function createFile($directory, $filename)
     {
-        $this->checkDirectoryExists($directory);
-        $this->validateFilename($filename);
-        $this->safeCreateFile($directory . DIRECTORY_SEPARATOR . $filename);
+        try {
+            $this->checkDirectoryExists($directory);
+            $this->validateFilename($filename);
+            $this->safeCreateFile($directory . DIRECTORY_SEPARATOR . $filename);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+        return ['success' => true];
     }
 
     /**
      * Deletes the specified file.
      *
      * @param $filepath
+     * @return array
      */
     public function deleteFile($filepath)
     {
-        $this->checkFileExists($filepath);
-        $this->safeDeleteFile($filepath);
+        try {
+            $this->checkFileExists($filepath);
+            $this->safeDeleteFile($filepath);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+        return ['success' => true];
     }
 
     /**
@@ -40,24 +64,30 @@ class FileHandler extends BaseHandler
      * @param $directory
      * @param $currentFilename
      * @param $newFilename
-     * @throws \ErrorException
+     * @return array
      */
     public function renameFile($directory, $currentFilename, $newFilename)
     {
 
-        $this->validateFilename($newFilename);
-        $currentPath = $directory . DIRECTORY_SEPARATOR . $currentFilename;
-        $this->checkFileExists($currentPath);
-
+        try {
+            $this->validateFilename($newFilename);
+            $currentPath = $directory . DIRECTORY_SEPARATOR . $currentFilename;
+            $this->checkFileExists($currentPath);
+            $newPath = $directory . DIRECTORY_SEPARATOR . $newFilename;
+            $this->checkNoSuchFile($newPath);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
         if (!$this->sameExtension([$currentFilename, $newFilename])) {
-            throw new \ErrorException('File cannot be renamed. Extensions don\'t match.');
+            return ['success' => false, 'error' => 'File cannot be renamed. Extensions don\'t match.'];
         }
 
-        $newPath = $directory . DIRECTORY_SEPARATOR . $newFilename;
-        $this->checkNoSuchFile($newPath);
         if (!rename($currentPath, $newPath)) {
-            throw new \ErrorException("Failed to rename file $currentPath to $newFilename");
+            $this->logger->addError('renameFile error - ' . error_get_last()['message']);
+            return ['success' => false, 'error' => "Failed to rename file $currentFilename to $newFilename"];
         }
+
+        return ['success' => true];
     }
 
     /**
@@ -88,25 +118,31 @@ class FileHandler extends BaseHandler
      *
      * @param $filepath
      * @param $content
-     * @throws \InvalidArgumentException|\ErrorException
+     * @return array
      */
     public function addFileContent($filepath, $content)
     {
-        $this->checkFileExists($filepath);
+        try {
+            $this->checkFileExists($filepath);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+
+        $filename = pathinfo($filepath, PATHINFO_BASENAME);
         $finfo = finfo_open(FILEINFO_MIME);
         $mimetype = finfo_file($finfo, $filepath);
         finfo_close($finfo);
         if (substr($mimetype, 0, 4) != 'text') {
-            throw new \InvalidArgumentException('Cannot add contents to non-text files.');
+            return ['success' => false, 'error' => "Cannot add contents to $filename - non text file."];
         }
 
         if (!mb_check_encoding($content, 'UTF-8')) {
-            throw new \InvalidArgumentException('Invalid file contents.');
+            return ['success' => false, 'error' => "Invalid file contents provided for $filename."];
         }
 
-        $this->checkFileExists($filepath);
         if (!file_put_contents($filepath, $content, LOCK_EX)) {
-            throw new \ErrorException('Failed to add content to ' . $filepath . ' file.');
+            $this->logger->addError('addFileContent error - ' . error_get_last()['message']);
+            return ['success' => false, 'error' => "Failed to add content to $filename file."];
         }
 
     }

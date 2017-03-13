@@ -2,15 +2,29 @@
 
 namespace WideBundle\FileSystemHandler;
 
+use Monolog\Logger;
+
 /**
  * Class BaseHandler
  * Provides methods for safe file creation and deletion and filename/directory validation.
- * All handler methods throw exceptions upon failure in order to avoid complicating higher level code.
  *
  * @package WideBundle\FileSystemHandler
  */
 class BaseHandler
 {
+    /** @var Logger $logger */
+    protected $logger;
+
+    /**
+     * BaseHandler constructor.
+     *
+     * @param Logger $logger
+     */
+    public function __construct(Logger $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * Makes sure the provided directory exists.
      *
@@ -20,7 +34,7 @@ class BaseHandler
     protected function checkDirectoryExists($directory)
     {
         if (!is_dir($directory)) {
-            throw new \InvalidArgumentException('Invalid folder path - ' . $directory);
+            throw new \InvalidArgumentException('Directory does not exist.');
         }
     }
 
@@ -33,7 +47,7 @@ class BaseHandler
     protected function checkNoSuchDirectory($directory)
     {
         if (is_dir($directory)) {
-            throw new \InvalidArgumentException('Directory already exists - ' . $directory);
+            throw new \InvalidArgumentException('Directory already exists.');
         }
     }
 
@@ -45,7 +59,8 @@ class BaseHandler
     protected function checkFileExists($filepath)
     {
         if (!file_exists($filepath) || is_dir($filepath)) {
-            throw new \InvalidArgumentException('No such file.');
+            $filename = pathinfo($filepath, PATHINFO_BASENAME);
+            throw new \InvalidArgumentException("File $filename does not exist.");
         }
     }
 
@@ -57,7 +72,8 @@ class BaseHandler
     protected function checkNoSuchFile($filepath)
     {
         if (file_exists($filepath)) {
-            throw new \InvalidArgumentException('File already exists - ' . $filepath);
+            $filename = pathinfo($filepath, PATHINFO_BASENAME);
+            throw new \InvalidArgumentException("File $filename already exists.");
         }
     }
 
@@ -77,7 +93,7 @@ class BaseHandler
         }
         $filename = $this->getFilename($basename);
         preg_match('/^\w+$/', $filename, $output);
-        // If the filename is valid, only one the regular expression should return only one match
+        // If the filename is valid, the regular expression should return only one match
         if (empty($output)) {
             throw new \InvalidArgumentException('File names must consist of [a-z], [A-Z], [0-9] and \'_\' characters.');
         }
@@ -145,7 +161,8 @@ class BaseHandler
         }
 
         if (file_put_contents($filepath, $content, LOCK_EX) === false) {
-            throw new \ErrorException('Failed to create file.');
+            $this->logger->addError('safeCreateFile error - ' . error_get_last()['message']);
+            throw new \ErrorException('Failed to create file ' . pathinfo($filepath, PATHINFO_BASENAME));
         }
     }
 
@@ -153,14 +170,13 @@ class BaseHandler
      * Deletes a file. Throws an exception if the operation fails.
      *
      * @param $filepath
-     * @return bool
      * @throws \ErrorException
      */
     protected function safeDeleteFile($filepath) {
         if (!unlink($filepath)) {
-            throw new \ErrorException('Failed to delete file ' . $filepath);
+            $this->logger->addError('safeDeleteFile error - ' . error_get_last()['message']);
+            throw new \ErrorException('Failed to delete file ' . pathinfo($filepath, PATHINFO_BASENAME));
         }
-        return true;
     }
 
     /**
@@ -192,6 +208,7 @@ class BaseHandler
     {
         $content = file_get_contents($filePath);
         if ($content === false) {
+            $this->logger->addError('safeReadFileContent error - ' . error_get_last()['message']);
             throw new \ErrorException('Failed to read file ' . pathinfo($filePath, PATHINFO_BASENAME));
         }
         return $content;
