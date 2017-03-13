@@ -28,6 +28,23 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
+     * Validates the basename of a directory
+     *
+     * @param $directory
+     * @throws \InvalidArgumentException
+     */
+    private function validateDirectoryName($directory)
+    {
+        preg_match('/^\w+$/', $directory, $output);
+        // If the directory name is valid, the regular expression should return only one match
+        if (empty($output)) {
+            throw new \InvalidArgumentException(
+                'Directory names must consist of [a-z], [A-Z], [0-9] and \'_\' characters.'
+            );
+        }
+    }
+
+    /**
      * Deletes a folder and its contents recursively.
      *
      * @param $directory
