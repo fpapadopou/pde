@@ -114,6 +114,30 @@ class FileHandler extends BaseHandler
     }
 
     /**
+     * Updates the contents of multiple files. The files must already exist.
+     *
+     * @param $directory
+     * @param $files
+     * @return array
+     */
+    public function updateMultipleFiles($directory, $files)
+    {
+        try {
+            $this->checkDirectoryExists($directory);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+
+        foreach ($files as $file) {
+            $result = $this->addFileContent($directory . DIRECTORY_SEPARATOR . $file['name'], $file['content']);
+            if ($result['success'] !== true) {
+                return ['success' => false, 'error' => 'Multiple file update failed. ' . $result['error'] . ' Try again.'];
+            }
+        }
+        return ['success' => true];
+    }
+
+    /**
      * Updates the contents of a specified file.
      *
      * @param $filepath
