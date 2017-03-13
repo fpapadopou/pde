@@ -54,7 +54,7 @@ class FileHandler extends BaseHandler
         }
 
         $newPath = $directory . DIRECTORY_SEPARATOR . $newFilename;
-        $this->checkNosSuchFile($newPath);
+        $this->checkNoSuchFile($newPath);
         if (!rename($currentPath, $newPath)) {
             throw new \ErrorException("Failed to rename file $currentPath to $newFilename");
         }

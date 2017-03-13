@@ -54,7 +54,7 @@ class BaseHandler
      *
      * @param $filepath
      */
-    protected function checkNosSuchFile($filepath)
+    protected function checkNoSuchFile($filepath)
     {
         if (file_exists($filepath)) {
             throw new \InvalidArgumentException('File already exists - ' . $filepath);
