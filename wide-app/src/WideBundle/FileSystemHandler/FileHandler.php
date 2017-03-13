@@ -93,8 +93,11 @@ class FileHandler extends BaseHandler
     public function addFileContent($filepath, $content)
     {
         $this->checkFileExists($filepath);
-        if ($this->getFileExtension($filepath) == 'out') {
-            throw new \InvalidArgumentException('Cannot add contents to \'.out\' files.');
+        $finfo = finfo_open(FILEINFO_MIME);
+        $mimetype = finfo_file($finfo, $filepath);
+        finfo_close($finfo);
+        if (substr($mimetype, 0, 4) != 'text') {
+            throw new \InvalidArgumentException('Cannot add contents to non-text files.');
         }
 
         if (!mb_check_encoding($content, 'UTF-8')) {
