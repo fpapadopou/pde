@@ -88,7 +88,7 @@ class FileHandler extends BaseHandler
      *
      * @param $filepath
      * @param $content
-     * @throws \ErrorException
+     * @throws \InvalidArgumentException|\ErrorException
      */
     public function addFileContent($filepath, $content)
     {
