@@ -157,24 +157,74 @@ class DirectoryHandler extends BaseHandler
             return ['success' => false, 'error' => $exception->getMessage()];
         }
 
-        $fileIterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
         $contents = [
             'name' => pathinfo($directory, PATHINFO_BASENAME),
             'modified' => filemtime($directory . DIRECTORY_SEPARATOR . '.'),
             'files' => []
         ];
 
-        foreach ($fileIterator as $iterator) {
-            /** @var \SplFileInfo $iterator */
-            if ($iterator->isDir()) {
-                continue;
-            }
-
+        foreach ($this->getFileList($directory) as $file) {
             try {
                 $contents['files'][] = [
+                    'filename' => $file['filename'],
+                    'extension' => $file['extension'],
+                    'content' => $this->readTextFile($file['pathname'])
+                ];
+            } catch (\Exception $exception) {
+                return ['success' => false, 'error' => $exception->getMessage()];
+            }
+        }
+        return ['success' => true, 'contents' => $contents];
+    }
+
+    /**
+     * Returns list of the provided directory's file and metadata for each file.
+     *
+     * @param $directory
+     * @return array
+     */
+    private function getFileList($directory)
+    {
+        $files = [];
+        $fileIterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
+        foreach ($fileIterator as $iterator) {
+            /** @var \SplFileInfo $iterator */
+            if ($iterator->isFile()) {
+                $files[] = [
                     'filename' => $iterator->getFilename(),
                     'extension' => $iterator->getExtension(),
-                    'content' => $this->readTextFile($iterator->getPathname())
+                    'basename' => $iterator->getBasename(),
+                    'pathname' => $iterator->getPathName()
+                ];
+            }
+        }
+        return $files;
+    }
+
+    /**
+     * Returns a list with the contents of all files (binary safe) of the provided directory.
+     *
+     * @param $directory
+     * @return array
+     */
+    public function getFilesContents($directory)
+    {
+        try {
+            $this->checkDirectoryExists($directory);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+
+        $contents = [
+            'name' => pathinfo($directory, PATHINFO_BASENAME),
+            'files' => []
+        ];
+
+        foreach ($this->getFileList($directory) as $file) {
+            try {
+                $contents['files'][] = [
+                    'filename' => $file['basename'],
+                    'content' => $this->readFile($file['pathname'])
                 ];
             } catch (\Exception $exception) {
                 return ['success' => false, 'error' => $exception->getMessage()];
