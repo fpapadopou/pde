@@ -117,7 +117,7 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Returns a list of the subfolders of a given directory.
+     * Returns a list of the subfolders of a given directory. For each subfolder, the full path is returned.
      *
      * @param $directory
      * @return array
