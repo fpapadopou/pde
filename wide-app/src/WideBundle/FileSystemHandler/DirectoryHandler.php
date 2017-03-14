@@ -137,7 +137,7 @@ class DirectoryHandler extends BaseHandler
             if ($path->isFile()) {
                 continue;
             }
-            $list[] = $path->getPathname();
+            $list[] = $path->getBasename();
         }
         return ['success' => true, 'list' => $list];
     }
