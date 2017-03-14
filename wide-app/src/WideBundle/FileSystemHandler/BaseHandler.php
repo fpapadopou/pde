@@ -198,6 +198,34 @@ class BaseHandler
     }
 
     /**
+     * Binary safe read file operation. Can open binary files in both *nix and Windows systems.
+     *
+     * @param $filepath
+     * @return string
+     * @throws \ErrorException
+     */
+    protected function binarySafeReadFile($filepath)
+    {
+        $this->checkFileExists($filepath);
+        // `b` is for binary files in Windows, which distinguish binary from other files
+        /** @var resource $handle */
+        $handle = fopen($filepath, 'rb');
+        if ($handle === false) {
+            $this->logger->addError('binarySafeReadFile error - ' . error_get_last()['message']);
+            throw new \ErrorException('Failed to open file - ' . pathinfo($filepath, PATHINFO_BASENAME));
+        }
+        $content = fread($handle, filesize($filepath));
+        if ($content === false) {
+            $this->logger->addError('binarySafeReadFile error - ' . error_get_last()['message']);
+            throw new \ErrorException('Failed to read file - ' . pathinfo($filepath, PATHINFO_BASENAME));
+        }
+        if (!fclose($handle)) {
+            $this->logger->addError('binarySafeReadFile error - ' . error_get_last()['message']);
+        }
+        return $content;
+    }
+
+    /**
      * Reads a file contents. Throws exception if the file cannot be read.
      *
      * @param $filePath
