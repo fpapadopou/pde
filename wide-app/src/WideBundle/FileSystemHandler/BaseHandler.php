@@ -180,21 +180,32 @@ class BaseHandler
     }
 
     /**
-     * Retrieves the contents and last modification time for a given file.
+     * Reads text files, rejects binary and resource files.
      *
-     * @param $finfoResource
-     * @param $filePath
-     * @return array
+     * @param $filepath
+     * @return string
      */
-    protected function readFileData($finfoResource, $filePath)
+    protected function readTextFile($filepath)
     {
-        $mimetype = finfo_file($finfoResource, $filePath);
-        $content = 'Binary file.';
-        if (substr($mimetype, 0, 4) == 'text') {
-            $content = $this->safeReadFileContent($filePath);
-        }
+        $fileInfoResource = finfo_open(FILEINFO_MIME);
+        $mimeType = finfo_file($fileInfoResource, $filepath);
+        finfo_close($fileInfoResource);
 
-        return ['mimetype' => $mimetype, 'content' => $content];
+        if (substr($mimeType, 0, 4) != 'text') {
+            return 'Binary file.';
+        }
+        return $this->binarySafeReadFile($filepath);
+    }
+
+    /**
+     * Reads binary files.
+     *
+     * @param $filepath
+     * @return string
+     */
+    protected function readFile($filepath)
+    {
+        return $this->binarySafeReadFile($filepath);
     }
 
     /**
@@ -221,23 +232,6 @@ class BaseHandler
         }
         if (!fclose($handle)) {
             $this->logger->addError('binarySafeReadFile error - ' . error_get_last()['message']);
-        }
-        return $content;
-    }
-
-    /**
-     * Reads a file contents. Throws exception if the file cannot be read.
-     *
-     * @param $filePath
-     * @return string
-     * @throws \ErrorException
-     */
-    protected function safeReadFileContent($filePath)
-    {
-        $content = file_get_contents($filePath);
-        if ($content === false) {
-            $this->logger->addError('safeReadFileContent error - ' . error_get_last()['message']);
-            throw new \ErrorException('Failed to read file ' . pathinfo($filePath, PATHINFO_BASENAME));
         }
         return $content;
     }

@@ -143,13 +143,20 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Reads the files of the provided directory. Subdirectories are ignored.
+     * Reads the files of the provided directory. Subdirectories are ignored. Non text files' content is replaced with
+     * a default text.
      *
      * @param $directory
      * @return array
      */
-    public function getDirectoryContents($directory)
+    public function getTextFilesContents($directory)
     {
+        try {
+            $this->checkDirectoryExists($directory);
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+
         $fileIterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
         $contents = [
             'name' => pathinfo($directory, PATHINFO_BASENAME),
@@ -157,21 +164,23 @@ class DirectoryHandler extends BaseHandler
             'files' => []
         ];
 
-        $finfo = finfo_open(FILEINFO_MIME);
         foreach ($fileIterator as $iterator) {
+            /** @var \SplFileInfo $iterator */
             if ($iterator->isDir()) {
                 continue;
             }
-            $data = [
-                'filename' => $iterator->getFilename(),
-                'extension' => $iterator->getExtension(),
-                'modified' => filemtime($iterator)
-            ];
-            $this->readFileData($finfo, $iterator->getPathName());
-            $contents['files'][] = $data;
+
+            try {
+                $contents['files'][] = [
+                    'filename' => $iterator->getFilename(),
+                    'extension' => $iterator->getExtension(),
+                    'content' => $this->readTextFile($iterator->getPathname())
+                ];
+            } catch (\Exception $exception) {
+                return ['success' => false, 'error' => $exception->getMessage()];
+            }
         }
-        finfo_close($finfo);
-        return $contents;
+        return ['success' => true, 'contents' => $contents];
     }
 
     /**
