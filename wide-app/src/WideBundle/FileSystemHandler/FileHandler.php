@@ -34,6 +34,7 @@ class FileHandler extends BaseHandler
         try {
             $this->checkDirectoryExists($directory);
             $this->validateFilename($filename);
+            $this->canCreateFile($directory, $filename);
             $this->safeCreateFile($directory . DIRECTORY_SEPARATOR . $filename);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];

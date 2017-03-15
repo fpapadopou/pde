@@ -236,4 +236,28 @@ class BaseHandler
         return $content;
     }
 
+    /**
+     * Throws an exception if file creation limits are reached. A workspace can't have more than 10 files in total,
+     * .out files can't be manually created only one of each of the allowed extensions can exist, except for .input
+     * files.
+     *
+     * @param $directory
+     * @param $filename
+     * @throws \InvalidArgumentException|\ErrorException
+     */
+    protected function canCreateFile($directory, $filename)
+    {
+        $extension = $this->getFileExtension($filename);
+        if ($extension == 'out') {
+            throw new \InvalidArgumentException('Cannot create .out files.');
+        }
+        $totalFileCountRegex = $directory . DIRECTORY_SEPARATOR . '*.*';
+        if (count(glob($totalFileCountRegex)) > 10) {
+            throw new \ErrorException('Cannot create any more files in this directory.');
+        }
+        $extensionRegex = $directory . DIRECTORY_SEPARATOR . '*.' . $extension;
+        if ($extension != 'input' && count(glob($extensionRegex)) > 1) {
+            throw new \ErrorException("Cannot create any more .$extension files here.");
+        }
+    }
 }
