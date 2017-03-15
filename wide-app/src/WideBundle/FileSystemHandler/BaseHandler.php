@@ -252,11 +252,13 @@ class BaseHandler
             throw new \InvalidArgumentException('Cannot create .out files.');
         }
         $totalFileCountRegex = $directory . DIRECTORY_SEPARATOR . '*.*';
-        if (count(glob($totalFileCountRegex)) > 10) {
+        $files = glob($totalFileCountRegex);
+        if ($files !== false && count($files) > 10) {
             throw new \ErrorException('Cannot create any more files in this directory.');
         }
         $extensionRegex = $directory . DIRECTORY_SEPARATOR . '*.' . $extension;
-        if ($extension != 'input' && count(glob($extensionRegex)) > 1) {
+        $files = glob($extensionRegex);
+        if ($extension != 'input' && $files !== false && count($files) > 1) {
             throw new \ErrorException("Cannot create any more .$extension files here.");
         }
     }
