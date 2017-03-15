@@ -115,13 +115,14 @@ class FileHandler extends BaseHandler
     }
 
     /**
-     * Updates the contents of multiple files. The files must already exist.
+     * Updates the contents of multiple files. The files must already exist. Some of the files can be skipped.
      *
      * @param $directory
      * @param $files
+     * @param $ignoredExtensions
      * @return array
      */
-    public function updateMultipleFiles($directory, $files)
+    public function updateMultipleFiles($directory, $files, $ignoredExtensions = [])
     {
         try {
             $this->checkDirectoryExists($directory);
@@ -130,6 +131,9 @@ class FileHandler extends BaseHandler
         }
 
         foreach ($files as $file) {
+            if (in_array($this->getFileExtension($file), $ignoredExtensions)) {
+                continue;
+            }
             $result = $this->addFileContent($directory . DIRECTORY_SEPARATOR . $file['name'], $file['content']);
             if ($result['success'] !== true) {
                 return ['success' => false, 'error' => 'Multiple file update failed. ' . $result['error'] . ' Try again.'];
