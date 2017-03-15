@@ -177,4 +177,29 @@ class FileHandler extends BaseHandler
         return ['success' => true];
     }
 
+    /**
+     * Returns a file path that is requested by extension.
+     *
+     * @param $directory
+     * @param $extension
+     * @return array
+     */
+    public function getFileByExtension($directory, $extension)
+    {
+        try {
+            $this->checkDirectoryExists($directory);
+            $file = glob($directory . DIRECTORY_SEPARATOR . '*.' . $extension);
+            if ($file === false) {
+                return ['success' => false, 'error' => 'An error occurred, try again.'];
+            }
+            if (count($file) != 1) {
+                return ['success' => false, 'error' => "One .$extension file needed for this operation."];
+            }
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+
+        return ['success' => true, 'file' => $file[0]];
+    }
+
 }
