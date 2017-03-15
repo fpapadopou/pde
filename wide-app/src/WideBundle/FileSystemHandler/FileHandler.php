@@ -169,6 +169,7 @@ class FileHandler extends BaseHandler
             return ['success' => false, 'error' => "Failed to add content to $filename file."];
         }
 
+        return ['success' => true];
     }
 
 }
