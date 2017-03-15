@@ -89,7 +89,7 @@ class BaseHandler
         $extension = $this->getFileExtension($basename);
 
         if (!in_array($extension, ['input', 'y', 'l', 'tab.c', 'tab.h', 'yy.c', 'out'])) {
-            throw new \InvalidArgumentException("Extension '$extension' is not allowed.");
+            throw new \InvalidArgumentException("Extension '.$extension' is not allowed.");
         }
         $filename = $this->getFilename($basename);
         preg_match('/^\w+$/', $filename, $output);
