@@ -35,11 +35,14 @@ class FileHandler extends BaseHandler
             $this->checkDirectoryExists($directory);
             $this->validateFilename($filename);
             $this->canCreateFile($directory, $filename);
-            $this->safeCreateFile($directory . DIRECTORY_SEPARATOR . $filename);
+            // Add some content in order to avoid empty files being recognised as octet/stream files
+            $date = new \DateTime('now');
+            $content = "/*\n * File created on " . $date->format('F jS, Y') . " at " . $date->format('g:i a') . "\n */\n";
+            $this->safeCreateFile($directory . DIRECTORY_SEPARATOR . $filename, $content);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];
         }
-        return ['success' => true];
+        return ['success' => true, 'content' => $content];
     }
 
     /**
@@ -131,10 +134,10 @@ class FileHandler extends BaseHandler
         }
 
         foreach ($files as $file) {
-            if (in_array($this->getFileExtension($file), $ignoredExtensions)) {
+            if (in_array($this->getFileExtension($file['filename']), $ignoredExtensions)) {
                 continue;
             }
-            $result = $this->addFileContent($directory . DIRECTORY_SEPARATOR . $file['name'], $file['content']);
+            $result = $this->addFileContent($directory . DIRECTORY_SEPARATOR . $file['filename'], $file['content']);
             if ($result['success'] !== true) {
                 return ['success' => false, 'error' => 'Multiple file update failed. ' . $result['error'] . ' Try again.'];
             }
@@ -202,4 +205,41 @@ class FileHandler extends BaseHandler
         return ['success' => true, 'file' => $file[0]];
     }
 
+    /**
+     * Creates a zip with the provided files and returns its content, name and length (used in headers).
+     *
+     * @param $folderName
+     * @param $files
+     * @return array
+     */
+    public function createZipFromFiles($folderName, $files)
+    {
+        if (empty($files)) {
+            return ['success' => false];
+        }
+        // Create the archive and set its name
+        $archive = new \ZipArchive();
+        $date = new \DateTime('now');
+        $date = $date->format('Y_m_d');
+        $archiveName = $folderName . '_' . $date . '.zip';
+        $archivePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $archiveName;
+        $result = $archive->open($archivePath, \ZipArchive::CREATE);
+        if ($result !== true) {
+            return ['success' => false];
+        }
+        // Add the files
+        foreach ($files as $file) {
+            $archive->addFromString($file['filename'], $file['content']);
+        }
+        $archive->close();
+        $content = file_get_contents($archivePath);
+        $contentLength = filesize($archivePath);
+        // Delete the temporary file
+        if (!unlink($archivePath)) {
+            $this->logger->addError('createZipFromFiles error - ' . error_get_last()['message']);
+            return ['success' => false];
+        }
+
+        return ['success' => true, 'name' => $archiveName, 'content' => $content, 'length' => $contentLength];
+    }
 }
