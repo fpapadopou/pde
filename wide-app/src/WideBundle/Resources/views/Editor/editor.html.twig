@@ -9,14 +9,22 @@
         </div>
         <div class="col-md-10" id="editor-right-side">
             <ul id="file-tab-list" class="nav nav-tabs">
-                <li role="presentation"><a><i class="fa fa-plus"></i></a></li>
+                <li role="presentation"><a>No files</a></li>
             </ul>
             <div id="editor-container">
-                <pre id="editor"></pre>
+                <span id="generated-file-note" class="label label-default">Generated file - can't edit</span>
+                <pre id="editor" class="full-size"></pre>
                 <div id="output-section" class="inactive well"></div>
             </div>
         </div>
+        <!-- Modals used in editor -->
         {% include 'WideBundle:Editor:workspace_selection_modal.html.twig' %}
+        {% include 'WideBundle:Editor:create_file_modal.html.twig' %}
+        {% include 'WideBundle:Editor:rename_file_modal.html.twig' %}
+        {% include 'WideBundle:Editor:delete_file_modal.html.twig' %}
+        {% include 'WideBundle:Editor:delete_workspace_modal.html.twig' %}
+        {% include 'WideBundle:Editor:rename_workspace_modal.html.twig' %}
+        {% include 'WideBundle:Editor:unsaved_changes_modal.html.twig' %}
     </div>
 {% endblock %}
 

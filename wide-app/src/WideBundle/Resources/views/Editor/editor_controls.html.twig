@@ -4,32 +4,37 @@
  -->
 <p class="lead" id="workspace-name">Workspace name</p>
 <div id="controls">
-    <div class="btn-group ctrl-group" role="group">
+    <div class="btn-group ctrl-group disabled" role="group">
         <button type="button" class="ctrl-group-btn has-shadow btn btn-default btn-block dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-file-code-o"></i>
             File
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li><a class="new-file-btn">New</a></li>
+            <li><a id="new-file-btn">New</a></li>
             <li><a id="rename-file-btn">Rename</a></li>
             <li><a id="delete-file-btn">Delete</a></li>
             <li><a id="rename-wpsace-btn">Rename workspace</a></li>
         </ul>
     </div>
-    <button id="save-wpsace-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Save current workspace">
+    <button id="save-wpsace-btn" class="ctrl-btn has-shadow btn btn-default btn-small disabled" title="Save current workspace">
         <i class="fa fa-floppy-o"></i>
         Save
+        <i id="save-success" class="fa fa-check"></i>
     </button>
-    <button id="reload-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Restore workspace to last saved state">
+    <button id="reload-btn" class="ctrl-btn has-shadow btn btn-default btn-small disabled" title="Restore workspace to last saved state">
         <i class="fa fa-refresh"></i>
         Reload
     </button>
-    <button id="download-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Download workspace zip archive">
+    <button id="download-btn" class="ctrl-btn has-shadow btn btn-default btn-small disabled" title="Download workspace zip archive">
         <i class="fa fa-cloud-download"></i>
         Download
     </button>
-    <div class="btn-group ctrl-group" role="group">
+    <button id="delete-wpsace-btn" class="ctrl-btn has-shadow btn btn-default btn-small disabled" title="Delete current workspace">
+        <i class="fa fa-trash"></i>
+        Delete
+    </button>
+    <div class="btn-group ctrl-group disabled" role="group">
         <button type="button" class="ctrl-group-btn has-shadow btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fa fa-gears"></i>
             Tools
@@ -38,16 +43,24 @@
         <ul class="dropdown-menu">
             <li><a id="bison-btn">Bison</a></li>
             <li><a id="flex-btn">Flex</a></li>
-            <li><a id="gcc-btn">Test with GCC</a></li>
+            <li><a id="gcc-btn">Compile with GCC</a></li>
+            <li><a id="simulation-btn">Test with an input</a></li>
         </ul>
     </div>
-    <button id="toggle-output-btn" class="ctrl-btn has-shadow btn btn-default btn-small" title="Restore workspace to last saved state">
+    <button id="toggle-output-btn" class="ctrl-btn has-shadow btn btn-default btn-small disabled" title="Restore workspace to last saved state">
         <i id="toggle-on-icon" class="fa fa-toggle-on"></i>
         <i id="toggle-off-icon" class="fa fa-toggle-off"></i>
         Toggle log
     </button>
+    <span id="working-indication"><b>Working<span id="dots"></span></b></span>
 </div>
-<button id="trigger-modal-btn" class="btn btn-primary btn-small has-shadow" title="Select or create a workspace">
-    <i class="fa fa-eject"></i>
-    Select workspace
-</button>
+<div id="editor-lower-left">
+    <button id="trigger-modal-btn" class="btn btn-primary btn-small has-shadow lower-left-btn disabled" title="Select or create a workspace">
+        <i class="fa fa-eject"></i>
+        Select workspace
+    </button>
+    <a class="btn btn-default btn-small has-shadow lower-left-btn disabled" title="Go to account page"  href="{{ url('account_page') }}">
+        <i class="fa fa-user"></i>
+        Go to account
+    </a>
+</div>
