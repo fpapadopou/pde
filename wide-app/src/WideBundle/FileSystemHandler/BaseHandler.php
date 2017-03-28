@@ -88,8 +88,11 @@ class BaseHandler
     {
         $extension = $this->getFileExtension($basename);
 
-        if (!in_array($extension, ['input', 'y', 'l', 'tab.c', 'tab.h', 'yy.c', 'out'])) {
-            throw new \InvalidArgumentException("Extension '.$extension' is not allowed.");
+        $allowedExtensions = ['input', 'y', 'l', 'tab.c', 'tab.h', 'yy.c', 'out'];
+        if (!in_array($extension, $allowedExtensions)) {
+            throw new \InvalidArgumentException(
+                "Extension '$extension' is not allowed. Use one of '" . implode('\', \'', $allowedExtensions) . '\''
+            );
         }
         $filename = $this->getFilename($basename);
         preg_match('/^\w+$/', $filename, $output);
@@ -248,8 +251,8 @@ class BaseHandler
     protected function canCreateFile($directory, $filename)
     {
         $extension = $this->getFileExtension($filename);
-        if ($extension == 'out') {
-            throw new \InvalidArgumentException('Cannot create .out files.');
+        if (!in_array($extension, ['y', 'l', 'input'])) {
+            throw new \InvalidArgumentException('Cannot manually create .' . $extension . ' files.');
         }
         $totalFileCountRegex = $directory . DIRECTORY_SEPARATOR . '*.*';
         $files = glob($totalFileCountRegex);
