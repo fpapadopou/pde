@@ -19,3 +19,9 @@ parameters:
     # The IMAP server host:port combination. Users will be authenticated against their mailbox.
     imap_server_host: mail.server.com
     imap_server_port: 993
+
+    # A list of the paths to the bison/flex/gcc tools.
+    resource_map:
+        bison: /path/to/flex/binary
+        flex: /path/to/flex/binary
+        gcc: /path/to/gcc/binary

@@ -16,3 +16,7 @@ services:
         arguments: ["@logger"]
     wide.file.handler:
         class: WideBundle\FileSystemHandler\FileHandler
+        arguments: ["@logger"]
+    wide.utility.handler:
+        class: WideBundle\Utility\UtilityHandler
+        arguments: ["@wide.file.handler", "@wide.directory.handler", "%resource_map%"]
