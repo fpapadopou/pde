@@ -20,3 +20,13 @@ services:
     wide.utility.handler:
         class: WideBundle\Utility\UtilityHandler
         arguments: ["@wide.file.handler", "@wide.directory.handler", "%resource_map%"]
+    wide.auth_listener:
+        class: WideBundle\EventListener\AuthListener
+        arguments: ["@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 1}
+    wide.team_resource_listener:
+        class: WideBundle\EventListener\TeamResourceListener
+        arguments: ["@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 0}
