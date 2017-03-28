@@ -13,5 +13,6 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@wide.directory.handler", "@logger", "%files_directory%"]
     wide.directory.handler:
         class: WideBundle\FileSystemHandler\DirectoryHandler
+        arguments: ["@logger"]
     wide.file.handler:
         class: WideBundle\FileSystemHandler\FileHandler
