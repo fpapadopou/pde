@@ -1,0 +1,23 @@
+<!-- Modal used in file creation -->
+<div class="modal fade" id="file-creation-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create a new file</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Allowed file extensions are <b>.y</b> (GNU Bison files), <b>.l</b> (Flex files),
+                    and <b>.input</b> (interpreter input files).
+                </p>
+                <input style="width: 60%;" type="text" id="file-creation-modal-input" class="form-control" placeholder="file name">
+            </div>
+            <div class="modal-footer">
+                <button id="file-creation-modal-btn" class="btn btn-success btn-small">
+                    <i class="fa fa-plus"></i>Create file
+                </button>
+                <button class="btn btn-default btn-small" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->

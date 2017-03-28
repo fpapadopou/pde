@@ -1,0 +1,23 @@
+<!-- Modal that pops up when a user tries to select another workspace without having saved the current one -->
+<div class="modal fade" id="unsaved-changes-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    There are unsaved changes in this workspace
+                </h4>
+            </div>
+            <div class="modal-body">
+                <p>Any unsaved changes in the current workspace will be lost, unless you go back and save them.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="unsaved-changes-leave-btn" class="btn btn-small">
+                    Leave anyway
+                </button>
+                <button class="btn btn-default btn-small" data-dismiss="modal">
+                    Go back
+                </button>
+            </div>
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
