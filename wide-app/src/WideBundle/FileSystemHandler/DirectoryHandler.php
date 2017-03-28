@@ -35,6 +35,7 @@ class DirectoryHandler extends BaseHandler
             $this->validateDirectoryName($directory);
             $path = $parent . DIRECTORY_SEPARATOR . $directory;
             $this->checkNoSuchDirectory($path);
+            $this->canCreateDirectory($parent);
             $parentPermissions = fileperms($parent);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];
@@ -62,6 +63,49 @@ class DirectoryHandler extends BaseHandler
                 'Directory names must consist of [a-z], [A-Z], [0-9] and \'_\' characters.'
             );
         }
+    }
+
+    /**
+     * Copies a directory and its contents to a folder with the same name in the system temp directory.
+     *
+     * @param $parent
+     * @param $directory
+     * @param $directoryPath
+     * @return array
+     */
+    public function copyDirectoryToTemp($parent, $directory, $directoryPath)
+    {
+        $temp = sys_get_temp_dir();
+        $separator = DIRECTORY_SEPARATOR;
+        $workingDirectory = $temp . $separator . $parent . $separator . $directory;
+        if (!mkdir($workingDirectory, 0755, true)) {
+            return ['success' => 'false', 'error' => 'Cannot copy directory to temporary directory.'];
+        }
+
+        $copyResult = $this->copyDirectory($directoryPath, $workingDirectory);
+        return array_merge($copyResult, ['temp-directory' => $workingDirectory]);
+    }
+
+    /**
+     * Copies the contents (preserving file permissions) from source directory to destination.
+     * @param $source
+     * @param $destination
+     * @return array
+     */
+    public function copyDirectory($source, $destination)
+    {
+        $files = $this->getFileList($source);
+        foreach ($files as $file) {
+            $sourceFile = $source . DIRECTORY_SEPARATOR . $file['basename'];
+            $destinationFile = $destination . DIRECTORY_SEPARATOR . $file['basename'];
+            if (!copy($sourceFile, $destinationFile)) {
+                $this->logger->addError('copyDirectoryToTemp error - ' . error_get_last()['message']);
+                $this->deleteDirectory($destination);
+                return ['success' => false, 'error' => 'Failed to copy files to working directory. Try again.'];
+            }
+            chmod($destinationFile, fileperms($sourceFile));
+        }
+        return ['success' => true];
     }
 
     /**
@@ -192,7 +236,7 @@ class DirectoryHandler extends BaseHandler
             if ($iterator->isFile()) {
                 $files[] = [
                     'filename' => $iterator->getFilename(),
-                    'extension' => $iterator->getExtension(),
+                    'extension' => $this->getFileExtension($iterator->getBasename()),
                     'basename' => $iterator->getBasename(),
                     'pathname' => $iterator->getPathName()
                 ];
@@ -247,6 +291,7 @@ class DirectoryHandler extends BaseHandler
             $currentPath = $parent . DIRECTORY_SEPARATOR . $currentName;
             $this->checkDirectoryExists($currentPath);
             $newPath = $parent . DIRECTORY_SEPARATOR . $newName;
+            $this->validateDirectoryName($newName);
             $this->checkNoSuchDirectory($newPath);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];
@@ -259,4 +304,18 @@ class DirectoryHandler extends BaseHandler
         return ['success' => true];
     }
 
+    /**
+     * Throws an exception if no more sub-directories can be created.
+     *
+     * @param $directory
+     * @throws \ErrorException
+     */
+    private function canCreateDirectory($directory)
+    {
+        /** @var \FilesystemIterator $iterator */
+        $iterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
+        if (iterator_count($iterator) > 4) {
+            throw new \ErrorException('Cannot create any more directories here.');
+        }
+    }
 }
