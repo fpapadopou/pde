@@ -37,6 +37,13 @@ body {
     font-size: small;
 }
 
+#flash-error {
+    text-align: center;
+    margin: 0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
 footer {
     background-color: #004d66;
     position: fixed;
@@ -73,14 +80,26 @@ footer > div {
 #editor-page-content {
     display: block;
     padding: 0;
-    height: 600px;
     width: 100%;
     margin: 0;
+}
+
+@media (max-height: 850px) {
+    #editor-page-content {
+        height: 600px;
+    }
+}
+
+@media(min-height: 850px){
+    #editor-page-content {
+        height: 90%;
+    }
 }
 
 /** Editor left and right panes **/
 #editor-left-side {
     display: inline-block;
+    position: relative;
     height: 100%;
 }
 
@@ -94,10 +113,11 @@ footer > div {
 #workspace-name {
     text-align: center;
     text-shadow: 1px 1px #ddd;
+    word-break: break-all;
 }
 
 #controls {
-    height: 84%;
+    height: auto;/*80%;*/
 }
 .ctrl-group {
     display: block;
@@ -125,15 +145,42 @@ footer > div {
     display: inline-block;
 }
 
-#trigger-modal-btn {
+#editor-lower-left {
     display: block;
+    position: absolute;
+    bottom: 2%;
+    left: 0;
+    right: 0;
     margin: 0 auto;
+}
+
+.lower-left-btn {
+    display: block;
+    width: 80%;
+    margin: 0 auto 5px auto;
 }
 
 .has-shadow {
     box-shadow: 1px 1px 1px 1px #ddd;
 }
+
+#save-success {
+    display: none;
+}
+
+#working-indication {
+    display: none;
+    width: 140px;
+    text-align: center;
+    margin: auto;
+}
 /** Left pane controls & buttons end **/
+
+/** Modals position **/
+.modal-dialog {
+    top: 20%;
+}
+/** Modals position end **/
 
 /** File navigation (nav list) **/
 #file-tab-list {
@@ -170,19 +217,34 @@ footer > div {
 /** Ace editor section **/
 #editor-container {
     display: block;
+    position: inherit;
     height: 96%;
 }
 
-#editor {
-    height: 96%;
+#generated-file-note {
+    position: absolute;
+    display: none;
+    top: 5%;
+    right: 0;
+    z-index: 5;
+}
+
+#editor.full-size {
+    height: 100%;
     border-radius: 0 0 5px 5px;
 }
 
+#editor.half-size {
+    height: 65%;
+    border-radius: 0;
+}
+
 #output-section.active {
-    position: relative;
-    bottom: 35%;
-    height: 34%;
+    position: absolute;
+    bottom: 0;
+    height: 35%;
     width: 100%;
+    margin: 0;
     overflow: scroll;
     z-index: 4;
     border-radius: 0 0 5px 5px;
