@@ -29,42 +29,39 @@
 {% endblock %}
 
 {% block javascripts %}
-    <!-- include functionality from parent template -->
+    <!-- Functionality from parent template -->
     {{ parent() }}
-    <!-- Fetch CDN documents for ace editor (core, mode and themes) -->
+    <!-- CDN documents for ace editor (core, mode and themes) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/mode-c_cpp.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/snippets/c_cpp.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-textmate.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-ambiance.js"></script>
-    <!-- Javascript used for workspaces management -->
-    {% include 'WideBundle:Editor:workspace_manager.html.twig' %}
-    {% include 'WideBundle:Editor:file_manager.html.twig' %}
-    {% include 'WideBundle:Editor:utilities.html.twig' %}
-    <!-- Initialize the editor and workspaces list-->
+    <!-- Initialization of the ajax endpoint used in the editor -->
+    {% include 'WideBundle:Editor:endpoints.html.twig' %}
+
+    <!-- Javascript used for workspace and file management -->
+    <script src="{{ asset('js/workspace_manager.js') }}"></script>
+    <script src="{{ asset('js/user_interface_utilities.js') }}"></script>
+    <script src="{{ asset('js/editor.js') }}"></script>
+    <script src="{{ asset('js/editor_button_bindings.js') }}"></script>
+    <script src="{{ asset('js/workspace_control_bindings.js') }}"></script>
+    <script src="{{ asset('js/tools_bindings.js') }}"></script>
     <script>
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/textmate");
-        editor.getSession().setMode("ace/mode/c_cpp");
-        editor.$blockScrolling = Infinity; // Suppresses a JS warning (suggested by documentation)
-        editor.session.setUseWrapMode(true);
-
-        var FileManager = new FileManager();
-        var WorkspaceManager = new WorkspaceManager();
-
-        $.get("{{ url('getusercontent') }}").done(function (data) {
-                WorkspaceManager.setWorkspaces(data);
-                createWorkspaceList(data);
-            });
-
         $(document).ready(function() {
-            $('#wpsace-selection-modal').modal('show');
-            $('#trigger-modal-btn').click(function () {
+            // Notify the user if there are any unsaved changes in the current workspace, in case they try to
+            // leave - the actual dialog text will most likely be replaced by the browser
+            window.onbeforeunload = onBeforeUnloadFunction;
+
+            // Initialize the editor and workspaces list
+            refreshWorkspaces(function () {
+                createWorkspaceList(WorkspaceManager.getWorkspaces());
                 $('#wpsace-selection-modal').modal('show');
             });
-            $('#toggle-output-btn').click(function () {
-                toggleOutput();
-            });
+
+            // The document has loaded successfully, all buttons can now be enabled
+            $('.btn').removeClass('disabled');
+            $('.btn-group').removeClass('disabled');
         });
     </script>
 {% endblock %}
