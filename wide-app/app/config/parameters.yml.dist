@@ -22,6 +22,6 @@ parameters:
 
     # A list of the paths to the bison/flex/gcc tools.
     resource_map:
-        bison: /path/to/flex/binary
+        bison: /path/to/bison/binary
         flex: /path/to/flex/binary
         gcc: /path/to/gcc/binary
