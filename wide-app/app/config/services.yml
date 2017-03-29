@@ -10,7 +10,7 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@logger",]
     wide.teammanager:
         class: WideBundle\Teams\TeamManager
-        arguments: ["@doctrine.orm.entity_manager", "@wide.directory.handler", "@logger", "%files_directory%"]
+        arguments: ["@doctrine.orm.entity_manager", "@wide.directory.handler", "@logger", "@@vbee.manager.setting"]
     wide.directory.handler:
         class: WideBundle\FileSystemHandler\DirectoryHandler
         arguments: ["@logger"]

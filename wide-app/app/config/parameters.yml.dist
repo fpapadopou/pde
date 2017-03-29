@@ -6,9 +6,6 @@ parameters:
     database_user:     root
     database_password: ~
 
-    # The path where all users' workspace files should be stored
-    files_directory: /path/to/persistent/storage
-
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
@@ -34,3 +31,5 @@ parameters:
         registrations_enabled: 1
         # Users are allowed to create/delete/join/leave teams
         team_modifications_enabled: 1
+        # The path where all users' workspace files should be stored
+        storage_root: /path/to/persistent/storage

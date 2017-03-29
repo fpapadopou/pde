@@ -7,6 +7,7 @@ use Monolog\Logger;
 use WideBundle\Entity\User;
 use WideBundle\Entity\Team;
 use WideBundle\FileSystemHandler\DirectoryHandler;
+use VBee\SettingBundle\Manager\SettingDoctrineManager;
 
 /**
  * Class TeamManager
@@ -34,19 +35,20 @@ class TeamManager
      * @param EntityManager $entityManager
      * @param DirectoryHandler $directoryHandler
      * @param Logger $logger
-     * @param string $storageRoot
+     * @param SettingDoctrineManager $settingsManager
      * @throws \ErrorException
      */
     public function __construct(
         EntityManager $entityManager,
         DirectoryHandler $directoryHandler,
         Logger $logger,
-        $storageRoot
+        SettingDoctrineManager $settingsManager
     )
     {
         $this->entityManager = $entityManager;
         $this->directoryHandler = $directoryHandler;
         $this->logger = $logger;
+        $storageRoot = $settingsManager->get('storage_root');
         // Create the directory if it does not already exist
         if (!is_dir($storageRoot) && !mkdir($storageRoot, 0755)) {
             $this->logger->addCritical('Failed to create storage for team spaces.');
