@@ -17,21 +17,30 @@ parameters:
 
     # Default values for configurable application settings. Only admins have access to these through the admin panel.
     default_settings:
-        # Maximum number of team members.
-        team_members: 4
-        # Maximum number of workspaces per team.
-        max_team_workspaces: 5
-        # Maximum number of files per workspace
-        max_workspace_files: 10
-        # The IMAP server host:port combination. Users will be authenticated against their mailbox.
-        imap_server_host: mail.server.com
-        imap_server_port: 993
-        # The domain where the users' email addresses belong
-        # No https/https protocol or www prefix should be used.
-        webmail_domain: domain.com
-        # New users allowed to the system.
-        registrations_enabled: 1
-        # Users are allowed to create/delete/join/leave teams
-        team_modifications_enabled: 1
-        # The path where all users' workspace files should be stored
-        storage_root: /path/to/persistent/storage
+        team_members:
+            value: 4
+            description: "Maximum number of team members"
+        max_team_workspaces:
+            value: 5
+            description: "Maximum number of workspaces per team"
+        max_workspace_files:
+            value: 10
+            description: "Maximum number of files per workspace"
+        imap_server_host:
+            value: mail.server.com
+            description: "The IMAP server host against which users are authenticated"
+        imap_server_port:
+            value: 993
+            description: "The IMAP server port (must be set to 993 for SSL connection)"
+        webmail_domain:
+            value: domain.com
+            description: "The domain of the users' email addresses (no https/https protocol or www prefix should be used)"
+        registrations_enabled:
+            value: 1,
+            description: "Setting for enabling/disabling new registrations"
+        team_modifications_enabled:
+            value: 1
+            description: "Setting enabling/disabling create/delete/join/leave team operations"
+        storage_root:
+            value: "/path/to/persistent/storage"
+            description: "File system path where all users' workspace files are stored"

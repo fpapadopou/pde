@@ -68,20 +68,21 @@ class DefaultSettingsCommand extends ContainerAwareCommand
      */
     private function addSetting($name, $value)
     {
+        /** @var SettingDoctrineManager $settingsManager */
         $settingsManager = $this->getContainer()->get('vbee.manager.setting');
         // Setting in the context of this app are either
         $type = SettingTypeEnum::STRING;
-        if (is_numeric($value)) {
+        if (is_numeric($value['value'])) {
             $type = SettingTypeEnum::INTEGER;
         }
 
         $currentValue = $settingsManager->get($name);
         if ($currentValue !== null) {
-            $settingsManager->set($name, $value, $type);
+            $settingsManager->set($name, $value['value'], $type);
             return;
         }
 
-        $settingsManager->create($name, $value, $type);
+        $settingsManager->create($name, $value['value'], $type, $value['description']);
 
     }
 }
