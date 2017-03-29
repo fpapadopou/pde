@@ -12,16 +12,25 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    # The domain where the users' email addresses belong
-    # No https/https protocol or www prefix should be used.
-    webmail_domain: domain.com
-
-    # The IMAP server host:port combination. Users will be authenticated against their mailbox.
-    imap_server_host: mail.server.com
-    imap_server_port: 993
-
     # A list of the paths to the bison/flex/gcc tools.
     resource_map:
         bison: /path/to/bison/binary
         flex: /path/to/flex/binary
         gcc: /path/to/gcc/binary
+
+    # Default values for configurable application settings. Only admins have access to these through the admin panel.
+    default_settings:
+        # Maximum number of team members.
+        team_members: 4
+        # Maximum number of workspaces per team.
+        team_workspaces: 5
+        # The IMAP server host:port combination. Users will be authenticated against their mailbox.
+        imap_server_host: mail.server.com
+        imap_server_port: 993
+        # The domain where the users' email addresses belong
+        # No https/https protocol or www prefix should be used.
+        webmail_domain: domain.com
+        # New users allowed to the system.
+        registrations_enabled: 1
+        # Users are allowed to create/delete/join/leave teams
+        team_modifications_enabled: 1
