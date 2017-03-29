@@ -14,11 +14,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Team
 {
     /**
-     * Teams are allowed to have up to 4 members.
-     */
-    const MAX_TEAM_MEMBER_COUNT = 4;
-
-    /**
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -53,10 +48,18 @@ class Team
     private $members;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="max_members", type="integer")
+     */
+    private $maxMemberCount;
+
+    /**
      * Team constructor.
      */
-    public function __construct()
+    public function __construct($maxMembers)
     {
+        $this->maxMemberCount = $maxMembers;
         $this->created = new \DateTime('now');
         $this->members = new \Doctrine\Common\Collections\ArrayCollection();
         return $this;
@@ -152,7 +155,7 @@ class Team
      */
     public function addMember(User $user)
     {
-        if ($this->members->count() == $this::MAX_TEAM_MEMBER_COUNT) {
+        if ($this->members->count() == $this->maxMemberCount) {
             throw new \Exception('This team is full.');
         }
 

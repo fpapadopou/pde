@@ -29,6 +29,9 @@ class TeamManager
     /** @var string $storageRoot */
     private $storageRoot;
 
+    /** @var int $maxTeamMembers */
+    private $maxTeamMembers;
+
     /**
      * TeamController constructor.
      *
@@ -55,6 +58,7 @@ class TeamManager
             throw new \ErrorException('Failed to create application file system.');
         }
         $this->storageRoot = $storageRoot;
+        $this->maxTeamMembers = $settingsManager->get('team_members');
     }
 
     /**
@@ -70,7 +74,7 @@ class TeamManager
         }
 
         /** @var Team $team */
-        $team = new Team();
+        $team = new Team($this->maxTeamMembers);
         try {
             $team->addMember($user);
             $folderName = md5($user->getUsername()) . rand(10000, 99999);
