@@ -3,6 +3,7 @@
 namespace WideBundle\Authentication;
 
 use Monolog\Logger;
+use VBee\SettingBundle\Manager\SettingDoctrineManager;
 
 /**
  * Class WebmailAuthenticator
@@ -25,14 +26,14 @@ class WebmailAuthenticator
      * WebmailAuthenticator constructor.
      * Using the mailserver's IP address instead of the hostname will speed up the IMAP functions.
      * If no port is specified, the default SSL/TLS encrypted IMAP port (993) will be used.
-     * @param string $imapServerHost
-     * @param int $imapServerPort
+     * 
+     * @param SettingDoctrineManager $settingsManager
      * @param mixed $logger
      */
-    public function __construct($imapServerHost, $imapServerPort = 993, Logger $logger)
+    public function __construct(SettingDoctrineManager $settingsManager, Logger $logger)
     {
-        $this->imapServerHost = $imapServerHost;
-        $this->imapServerPort = $imapServerPort;
+        $this->imapServerHost = $settingsManager->get('imap_server_host');
+        $this->imapServerPort = $settingsManager->get('imap_server_port', 993);
         $this->logger = $logger;
     }
 

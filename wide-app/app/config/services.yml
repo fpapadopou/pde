@@ -1,10 +1,10 @@
 services:
     wide.webmailauthenticator:
         class: WideBundle\Authentication\WebmailAuthenticator
-        arguments: ["%imap_server_host%", "%imap_server_port%", "@logger"]
+        arguments: ["@vbee.manager.setting", "@logger"]
     wide.authenticator:
         class: WideBundle\Authentication\Authenticator
-        arguments: ["@wide.webmailauthenticator", "@router", "@wide.registrationmanager", "%webmail_domain%"]
+        arguments: ["@wide.webmailauthenticator", "@router", "@wide.registrationmanager", "@vbee.manager.setting"]
     wide.registrationmanager:
         class: WideBundle\Registration\RegistrationManager
         arguments: ["@doctrine.orm.entity_manager", "@logger",]

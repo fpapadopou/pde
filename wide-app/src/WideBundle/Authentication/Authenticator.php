@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Guard\Token\PostAuthenticationGuardToken;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\Security;
+use VBee\SettingBundle\Manager\SettingDoctrineManager;
 use WideBundle\Entity\User;
 use WideBundle\Registration\RegistrationManager;
 
@@ -43,19 +44,19 @@ class Authenticator implements GuardAuthenticatorInterface
      * @param WebmailAuthenticator $webmailAuthenticator
      * @param Router $router
      * @param RegistrationManager $registrationManager
-     * @param string $webmailDomain
+     * @param SettingDoctrineManager $settingsManager
      */
     public function __construct(
         WebmailAuthenticator $webmailAuthenticator,
         Router $router,
         RegistrationManager $registrationManager,
-        $webmailDomain
+        SettingDoctrineManager $settingsManager
     )
     {
         $this->webmailAuthenticator = $webmailAuthenticator;
         $this->router = $router;
         $this->registrationManager = $registrationManager;
-        $this->webmailDomain = $webmailDomain;
+        $this->webmailDomain = $settingsManager->get('webmail_domain');
     }
 
     /**
