@@ -2,8 +2,6 @@
 
 namespace WideBundle\FileSystemHandler;
 
-use Monolog\Logger;
-
 /**
  * Class FileHandler
  * Low level file operations. Restrictions related to the app context apply.
@@ -12,16 +10,6 @@ use Monolog\Logger;
  */
 class FileHandler extends BaseHandler
 {
-    /**
-     * FileHandler constructor.
-     *
-     * @param Logger $logger
-     */
-    public function __construct(Logger $logger)
-    {
-        parent::__construct($logger);
-    }
-
     /**
      * Creates a file in the specified directory.
      *

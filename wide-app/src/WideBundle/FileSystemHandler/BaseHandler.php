@@ -3,6 +3,7 @@
 namespace WideBundle\FileSystemHandler;
 
 use Monolog\Logger;
+use VBee\SettingBundle\Manager\SettingDoctrineManager;
 
 /**
  * Class BaseHandler
@@ -15,14 +16,23 @@ class BaseHandler
     /** @var Logger $logger */
     protected $logger;
 
+    /** @var int $maxDirectoryFiles */
+    protected $maxDirectoryFiles;
+
+    /** @var int $maxSubDirectories */
+    protected $maxSubDirectories;
+
     /**
      * BaseHandler constructor.
      *
      * @param Logger $logger
+     * @param SettingDoctrineManager $settingsManager
      */
-    public function __construct(Logger $logger)
+    public function __construct(Logger $logger, SettingDoctrineManager $settingsManager)
     {
         $this->logger = $logger;
+        $this->maxDirectoryFiles = $settingsManager->get('max_workspace_files');
+        $this->maxSubDirectories = $settingsManager->get('max_team_workspaces');
     }
 
     /**
@@ -256,7 +266,7 @@ class BaseHandler
         }
         $totalFileCountRegex = $directory . DIRECTORY_SEPARATOR . '*.*';
         $files = glob($totalFileCountRegex);
-        if ($files !== false && count($files) > 10) {
+        if ($files !== false && count($files) > $this->maxDirectoryFiles) {
             throw new \ErrorException('Cannot create any more files in this directory.');
         }
         $extensionRegex = $directory . DIRECTORY_SEPARATOR . '*.' . $extension;

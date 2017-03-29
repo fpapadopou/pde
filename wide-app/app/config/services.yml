@@ -13,10 +13,10 @@ services:
         arguments: ["@doctrine.orm.entity_manager", "@wide.directory.handler", "@logger", "@@vbee.manager.setting"]
     wide.directory.handler:
         class: WideBundle\FileSystemHandler\DirectoryHandler
-        arguments: ["@logger"]
+        arguments: ["@logger", "@vbee.manager.setting"]
     wide.file.handler:
         class: WideBundle\FileSystemHandler\FileHandler
-        arguments: ["@logger"]
+        arguments: ["@logger", "@vbee.manager.setting"]
     wide.utility.handler:
         class: WideBundle\Utility\UtilityHandler
         arguments: ["@wide.file.handler", "@wide.directory.handler", "%resource_map%"]

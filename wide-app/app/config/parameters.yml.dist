@@ -20,7 +20,9 @@ parameters:
         # Maximum number of team members.
         team_members: 4
         # Maximum number of workspaces per team.
-        team_workspaces: 5
+        max_team_workspaces: 5
+        # Maximum number of files per workspace
+        max_workspace_files: 10
         # The IMAP server host:port combination. Users will be authenticated against their mailbox.
         imap_server_host: mail.server.com
         imap_server_port: 993

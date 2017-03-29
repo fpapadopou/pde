@@ -2,8 +2,6 @@
 
 namespace WideBundle\FileSystemHandler;
 
-use Monolog\Logger;
-
 /**
  * Class DirectoryHandler
  * Low level directory operations. Restrictions related to the app context apply.
@@ -12,16 +10,6 @@ use Monolog\Logger;
  */
 class DirectoryHandler extends BaseHandler
 {
-    /**
-     * DirectoryHandler constructor.
-     *
-     * @param Logger $logger
-     */
-    public function __construct(Logger $logger)
-    {
-        parent::__construct($logger);
-    }
-
     /**
      * Creates a directory, setting the same permissions with the directory's parent.
      *
@@ -314,7 +302,7 @@ class DirectoryHandler extends BaseHandler
     {
         /** @var \FilesystemIterator $iterator */
         $iterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
-        if (iterator_count($iterator) > 4) {
+        if (iterator_count($iterator) > $this->maxSubDirectories) {
             throw new \ErrorException('Cannot create any more directories here.');
         }
     }
