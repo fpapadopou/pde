@@ -94,7 +94,7 @@ class SettingHandler
         if (!is_numeric($value) && $type === SettingTypeEnum::INTEGER) {
             throw new \InvalidArgumentException($message);
         }
-        if ($type === SettingTypeEnum::INTEGER && intval($value) <=0) {
+        if ($type === SettingTypeEnum::INTEGER && intval($value) < 0) {
             throw new \InvalidArgumentException('Settings must have non-negative values.');
         }
         if (!is_string($value) && $type === SettingTypeEnum::STRING) {
