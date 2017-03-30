@@ -104,7 +104,7 @@ class UtilityHandler
             return ['success' => false, 'error' => 'Something went wrong. Try again.'];
         }
 
-        return$commandResult;
+        return $commandResult;
     }
 
     /**
