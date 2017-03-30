@@ -97,7 +97,7 @@ class UtilityHandler
             default:
                 return['success' => false, 'error' => 'Invalid operation requested.'];
         }
-        // Move all updated files back to the workspace and delete the temporary folder that used during the operation.
+        // Move all updated files back to the workspace and delete the temporary folder that was used during the operation.
         $copyResult = $this->directoryHandler->copyDirectory($workingDirectory, $workspacePath);
         $tempDeleteResult = $this->directoryHandler->deleteDirectory($workingDirectory);
         if ($copyResult['success'] !== true || $tempDeleteResult['success'] !== true) {
