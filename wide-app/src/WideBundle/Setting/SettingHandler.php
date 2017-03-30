@@ -58,7 +58,7 @@ class SettingHandler
             throw new \InvalidArgumentException('Null values not allowed.');
         }
         $this->checkTypeOfValue($value, $setting->getType());
-        if (strpos($value, '_enabled') !== false && !in_array($value, [0,1])) {
+        if (strpos($settingName, '_enabled') !== false && !in_array($value, ['0', '1'])) {
             throw new \InvalidArgumentException('Invalid value for boolean setting. Must be set to either 0 or 1.');
         }
     }
@@ -91,8 +91,11 @@ class SettingHandler
     private function checkTypeOfValue($value, $type)
     {
         $message = 'Setting type does not match the type of value stored in database.';
-        if (!is_int($value) && $type === SettingTypeEnum::INTEGER) {
+        if (!is_numeric($value) && $type === SettingTypeEnum::INTEGER) {
             throw new \InvalidArgumentException($message);
+        }
+        if ($type === SettingTypeEnum::INTEGER && intval($value) <=0) {
+            throw new \InvalidArgumentException('Settings must have non-negative values.');
         }
         if (!is_string($value) && $type === SettingTypeEnum::STRING) {
             throw new \InvalidArgumentException($message);
