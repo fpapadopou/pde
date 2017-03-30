@@ -20,6 +20,9 @@ services:
     wide.utility.handler:
         class: WideBundle\Utility\UtilityHandler
         arguments: ["@wide.file.handler", "@wide.directory.handler", "%resource_map%"]
+    wide.setting.handler:
+        class: WideBundle\Setting\SettingHandler
+        arguments: ["@vbee.manager.setting"]
     wide.auth_listener:
         class: WideBundle\EventListener\AuthListener
         arguments: ["@security.token_storage", "@router"]
