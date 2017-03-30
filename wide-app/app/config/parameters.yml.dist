@@ -34,7 +34,7 @@ parameters:
             description: "The IMAP server port (must be set to 993 for SSL connection)"
         webmail_domain:
             value: domain.com
-            description: "The domain of the users' email addresses (no https/https protocol or www prefix should be used)"
+            description: "The domain of the users' email addresses (no http/https protocol or www prefix should be used)"
         registrations_enabled:
             value: 1,
             description: "Setting for enabling/disabling new registrations"
