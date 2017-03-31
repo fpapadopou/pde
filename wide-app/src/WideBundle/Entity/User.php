@@ -243,5 +243,19 @@ class User implements UserInterface
     {
         return $this->team;
     }
+
+    /**
+     * Returns whether a user has administrative privileges  or not.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        $roles = $this->getRoles();
+        if (in_array('ROLE_ADMIN', $roles)) {
+            return true;
+        }
+        return false;
+    }
 }
 

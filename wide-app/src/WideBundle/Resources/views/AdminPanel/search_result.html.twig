@@ -1,0 +1,19 @@
+<div class="list-group-item team-list-group-item" style="display: block;">
+    <h3 class="list-group-item-heading center-heading">
+        Team {{ team.id }} - <small>created at {{ team.created | date("Y-M-d") }} </small>
+    </h3>
+    <div class="row">
+        <div class="col-md-8">
+            <p class="list-group-item-text"><b>Members:</b></p>
+            <ul class="email-list">
+                {% for member in team.members  %}
+                    <li>{{ member }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ path('admin_editor', {'team' : team.id}) }}" target="_blank" class="btn btn-default team-editor-link">Jump to team editor</a>
+        </div>
+    </div>
+    <p class="list-group-item-text"><b>Directory:</b> {{ team.folder }}</p>
+</div>

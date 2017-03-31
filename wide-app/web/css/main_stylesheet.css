@@ -298,3 +298,42 @@ footer > div {
     padding: 7%;
 }
 /** Account page end **/
+
+/** Admin page **/
+.setting-well {
+    display: none;
+    margin: 0;
+}
+
+.setting-input-int {
+    display: inline;
+    width: 15%;
+}
+
+.setting-input-string {
+    display: inline;
+    width: 40%;
+}
+
+.submit-setting {
+    display: inline;
+}
+
+.search-text-input {
+    display: inline;
+    width: 30%;
+}
+
+.search-date-input {
+    display: inline;
+    width: 20%;
+}
+
+.center-heading {
+    text-align: center;
+}
+
+.team-editor-link {
+    float: right;
+}
+/** Admin page end **/

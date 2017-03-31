@@ -1,0 +1,71 @@
+{% extends 'WideBundle:Default:base_layout.html.twig' %}
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+    {% include 'WideBundle:Default:navbar.html.twig' %}
+    <div>
+        <h2 class="center-heading">Application management</h2>
+        <div class="row">
+            <h3 class="center-heading">Settings configuration</h3>
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="list-group">
+                        {% for setting in settings %}
+                            {% set button_title = setting.name | replace({"_": " "}) | capitalize %}
+                            <button class="list-group-item" data-btn="{{ setting.name }}"><b>{{ button_title }}</b> - <small>{{ setting.description }}</small></button>
+                            <div class="well setting-well" id="{{ setting.name }}-well">
+                                <span><b>Current value:</b> <span id="{{ setting.name }}-current">{{ setting.value }}</span></span>
+                                <form>
+                                    {% if setting.type == "int" %}
+                                        {% if "_enabled" in setting.name %}
+                                            <label for="{{ setting.name }}-input">int</label>
+                                            <input type="number" class="form-control setting-input-int" id="{{ setting.name }}-input" min="0" max="1">
+                                        {% else %}
+                                            <label for="{{ setting.value }}-input">int</label>
+                                            <input type="number" class="form-control setting-input-int" id="{{ setting.name }}-input" >
+                                        {% endif %}
+                                    {% else %}
+                                        <input type="text" class="form-control setting-input-string" placeholder="new value" id="{{ setting.name }}-input">
+                                    {% endif %}
+                                    <button class="btn btn-success submit-setting" data-setting="{{ setting.name }}">Update</button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h3>Find teams <small>use either or both criteria</small></h3>
+
+                <form id="search-form">
+                    <label for="search-email">Team has member </label>
+                    &nbsp;
+                    <input type="email" class="form-control search-text-input" id="search-email" placeholder="user email">
+                    &nbsp;
+                    <label for="search-date"> or is created after </label>
+                    &nbsp;
+                    <input type="date" class="form-control search-date-input" id="search-date">
+                    <button class="btn btn-default" id="team-search-btn">Search</button>
+                </form>
+                <br>
+                <div class="list-group" id="teams-list-group"></div>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <!-- TODO: Add element for logs -->
+        {% include 'WideBundle:Accounts:output_modal.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Functionality from parent template -->
+    {{ parent() }}
+    <!-- Admin page specific javascript -->
+    <script src="{{ asset('js/admin_panel.js') }}"></script>
+{% endblock %}

@@ -8,6 +8,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use VBee\SettingBundle\Entity\Setting;
+use VBee\SettingBundle\Manager\SettingDoctrineManager;
 use WideBundle\Entity\User;
 use WideBundle\Entity\Team;
 
@@ -102,6 +104,44 @@ class DefaultController extends Controller
         return $this->render(
             'WideBundle:Editor:editor.html.twig',
             ['username' => $user->getUsername()]
+        );
+    }
+
+    /**
+     * Renders the admin panel, where an admin can modify some application settings.
+     *
+     * @Route("/admin-panel", name="admin_panel")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function adminPanelAction()
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        // Reject non admin users.
+        if (!$user->isAdmin()) {
+            $this->addFlash('error', 'You are not allowed to access this page.');
+            return $this->redirect($this->generateUrl('account_page'));
+        }
+
+        /** @var SettingDoctrineManager $settingsManager */
+        $settingsManager = $this->get('vbee.manager.setting');
+        $settingsEntities = $settingsManager->all();
+        $settings = [];
+        foreach ($settingsEntities as $setting) {
+            /** @var Setting $setting */
+            $settings[] = [
+                'name' => $setting->getName(),
+                'value' => $setting->getValue(),
+                'description' => $setting->getDescription(),
+                'type' => $setting->getType()
+            ];
+        }
+
+        return $this->render(
+            'WideBundle:AdminPanel:admin_panel.html.twig',
+            ['username' => $user->getUsername(), 'settings' => $settings]
         );
     }
 }
