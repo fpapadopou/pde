@@ -56,4 +56,9 @@ $(document).ready(function() {
         event.preventDefault();
         doAjaxRequest(addMemberUrl, 'POST', modalResponseHandler, {'email' : $('#add-to-team-input').val()});
     });
+
+    // Account deletion modal trigger
+    $('#delete-account-btn').click(function () {
+        $('#account-delete-modal').modal('show');
+    });
 });

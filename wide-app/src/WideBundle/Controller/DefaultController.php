@@ -79,7 +79,8 @@ class DefaultController extends Controller
                 'username' => $user->getUsername(),
                 'has_team' => $hasTeam,
                 'email' => $user->getEmail(),
-                'registration_date' => $user->getCreated()->format('l jS F Y'),
+                'team' => $user->getTeam()->getMembersEmails(),
+                'deadline' => 'April 1st 2017' // TODO Add configurable setting
             ]
         );
     }

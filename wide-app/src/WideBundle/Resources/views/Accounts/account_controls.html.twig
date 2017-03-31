@@ -1,18 +1,25 @@
-<!-- Account management section -->
+<!-- Account management & info section -->
 <div>
-    <p> Registered on {{ registration_date }}</p>
-    <p> Your email adddress is {{ email }}</p>
+    <p> Registered as {{ username }}  ({{ email }})</p>
+    {% if team is defined %}
+        <span>Your team: </span>
+        <ul>
+            {% for member in team %}
+                <li> {{ member }} </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% if deadline is defined %}
+        <p>You have an active deadline: {{ deadline }}</p>
+    {% endif %}
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <a class="btn btn-default has-shadow" href="{{ url('admin_panel') }}">Admin page</a>
+        <br/><br/>
+    {% endif %}
+
 </div>
-<div class="btn-group">
-    <button type="button" class="btn btn-danger dropdown-toggle has-shadow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Delete account
-    </button>
-    <ul class="dropdown-menu">
-        <li>
-            <p>There is no going back. You will lose access to your account and your team.</p>
-        </li>
-        <li role="separator" class="divider"></li>
-        <li><a class="btn btn-danger"> Delete my account </a></li>
-    </ul>
-</div>
-<!-- End account management section -->
+<button type="button" id="delete-account-btn" class="btn btn-danger has-shadow">
+    Delete account
+</button>
+<!-- End account management & info section -->
