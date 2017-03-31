@@ -6,7 +6,6 @@ use WideBundle\Entity\User;
 use WideBundle\Entity\Team;
 use WideBundle\FileSystemHandler\FileHandler;
 use WideBundle\FileSystemHandler\DirectoryHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @package WideBundle\Controller
  * @Route("/workspace")
  */
-class WorkspaceController extends Controller
+class WorkspaceController extends BaseController
 {
     /**
      * Returns the current users workspaces and their contents.
@@ -37,24 +36,7 @@ class WorkspaceController extends Controller
         /** @var Team $team */
         $team = $user->getTeam();
 
-        $workspaces = [];
-        /** @var DirectoryHandler $directoryHandler */
-        $directoryHandler = $this->get('wide.directory.handler');
-        $teamFolder = $team->getTeamFolder();
-        $directories = $directoryHandler->getSubdiretoriesList($teamFolder);
-        if ($directories['success'] !== true) {
-            return new JsonResponse($directories);
-        }
-
-        foreach ($directories['list'] as $workspace) {
-            $files = $directoryHandler->getTextFilesContents($teamFolder . DIRECTORY_SEPARATOR . $workspace);
-            if ($files['success'] !== true) {
-                return new JsonResponse($files);
-            }
-            $workspaces[] = $files['contents'];
-        }
-
-        return new JsonResponse(['success' => true, 'workspaces' => $workspaces]);
+        return new JsonResponse($this->getTeamWorkspaces($team));
     }
 
     /**
@@ -177,22 +159,11 @@ class WorkspaceController extends Controller
         $user = $this->getUser();
         /** @var Team $team */
         $team = $user->getTeam();
-        /** @var DirectoryHandler $directoryHandler */
-        $directoryHandler = $this->get('wide.directory.handler');
-        /** @var FileHandler $fileHandler */
-        $fileHandler = $this->get('wide.file.handler');
 
-        $directory = $team->getTeamFolder() . DIRECTORY_SEPARATOR . $request->get('workspace');
-        $directoryContents = $directoryHandler->getFilesContents($directory);
-        if ($directoryContents['success'] !== true) {
-            return new Response($directoryContents['error'], 500);
-        }
-        $zipFile = $fileHandler->createZipFromFiles(
-            $directoryContents['contents']['name'],
-            $directoryContents['contents']['files']
-        );
-        if ($zipFile['success'] !== true) {
-            return new Response('Failed to create zip archive.', 500);
+        try {
+            $zipFile = $this->getDownloadContent($team, $request->get('workspace'));
+        } catch (\Exception $exception) {
+            return new Response($exception->getMessage(), 500);
         }
 
         $response = new Response();
