@@ -23,6 +23,9 @@ services:
     wide.setting.handler:
         class: WideBundle\Setting\SettingHandler
         arguments: ["@vbee.manager.setting"]
+    wide.search.manager:
+        class: WideBundle\Search\SearchManager
+        arguments: ["@doctrine.orm.entity_manager"]
     wide.auth_listener:
         class: WideBundle\EventListener\AuthListener
         arguments: ["@security.token_storage", "@router"]
