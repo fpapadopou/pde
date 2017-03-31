@@ -20,7 +20,7 @@ $(document).ready(function () {
         var setting = $(this).attr('data-setting');
         var value = $('#' + setting + '-input').val();
         doAjaxRequest(
-            "{{ url('update_setting') }}",
+            updateSettingUrl,
             'POST',
             function () {
                 $('#' + setting + '-current').html(value + ' <span class="label label-success">Updated</span>');
@@ -39,7 +39,7 @@ $(document).ready(function () {
         var date = $('#search-date').val();
 
         doAjaxRequest(
-            "{{ url('admin_search') }}",
+            adminSearchUrl,
             'POST',
             function (response) {
                 var resultsList = $('#teams-list-group');

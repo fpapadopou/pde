@@ -67,5 +67,9 @@
     <!-- Functionality from parent template -->
     {{ parent() }}
     <!-- Admin page specific javascript -->
+    <script>
+        var updateSettingUrl = "{{ url('update_setting') }}";
+        var adminSearchUrl = "{{ url('admin_search') }}";
+    </script>
     <script src="{{ asset('js/admin_panel.js') }}"></script>
 {% endblock %}
