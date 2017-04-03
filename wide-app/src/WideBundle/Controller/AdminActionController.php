@@ -20,7 +20,7 @@ use Knp\Component\Pager\Paginator;
  * @package WideBundle\Controller
  * @Route("/admin")
  */
-class AdminActionController extends BaseController
+class AdminActionController extends BaseController implements SecureResourceInterface, AdminResourceInterface
 {
     /**
      * Loads the editor with administrative privileges. An admin can load any team's content in the editor.

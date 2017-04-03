@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 /**
@@ -48,5 +49,22 @@ class BaseListener
 
         $request->getSession()->getFlashBag()->add('error', $message);
         return new RedirectResponse($this->router->generate('index_page'));
+    }
+
+    /**
+     * Gets the controller of the current event.
+     *
+     * @param FilterControllerEvent $event
+     * @return mixed|null
+     */
+    protected function getEventController(FilterControllerEvent $event)
+    {
+        $controller = $event->getController();
+        // Controllers must be in array format
+        if (!is_array($controller)) {
+            return null;
+        }
+
+        return $controller[0];
     }
 }

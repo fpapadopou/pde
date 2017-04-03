@@ -18,7 +18,7 @@ use WideBundle\Utility\UtilityHandler;
  * @package WideBundle\Controller
  * @Route("/utility")
  */
-class UtilityController extends Controller
+class UtilityController extends Controller implements SecureResourceInterface, TeamResourceInterface
 {
     /**
      * All bison/flex/gcc/simulation requests are handled here.

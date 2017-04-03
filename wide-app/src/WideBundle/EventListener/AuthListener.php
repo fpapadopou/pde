@@ -3,11 +3,12 @@
 namespace WideBundle\EventListener;
 
 use WideBundle\Entity\User;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use WideBundle\Controller\AdminResourceInterface;
+use WideBundle\Controller\SecureResourceInterface;
+use WideBundle\Exception\ApplicationControlException;
 
 /**
  * Class RequestListener
@@ -20,29 +21,32 @@ class AuthListener extends BaseListener
     /**
      * Changes the response of the current request, depending on whether the user is logged in or not.
      *
-     * @param GetResponseEvent $event
+     * @param FilterControllerEvent $event
+     * @throws ApplicationControlException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
-        /** @var Request $request */
-        $request = $event->getRequest();
-        $requestPathInfo = $request->getRequestUri();
-        $ignoredRoutes = [
-            $this->router->generate('index_page'),
-            $this->router->generate('security_login_check'),
-            $this->router->generate('logout')
-        ];
-
-        if (in_array($requestPathInfo, $ignoredRoutes)) {
+        $controller = $this->getEventController($event);
+        // User needs to be logged in
+        if (!($controller instanceof SecureResourceInterface)) {
             return;
         }
-
         /** @var TokenInterface $token */
         $token = $this->tokenStorage->getToken();
         $message = 'Session expired. You need to log into your account in order to access this resource.';
         if ($token === null || !is_object($token->getUser())) {
-            $event->setResponse($this->createEventResponse($request, $message));
+            throw new ApplicationControlException($message);
+        }
+
+        // Admin access control
+        if (!($controller instanceof AdminResourceInterface)) {
             return;
+        }
+        /** @var User $user */
+        $user = $token->getUser();
+        if (!$user->isAdmin()) {
+            $message = 'You need administrative privileges in order to access this resource.';
+            throw new ApplicationControlException($message);
         }
     }
 

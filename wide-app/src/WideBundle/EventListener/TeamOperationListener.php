@@ -2,11 +2,11 @@
 
 namespace WideBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use VBee\SettingBundle\Manager\SettingDoctrineManager;
+use WideBundle\Exception\ApplicationControlException;
 
 /**
  * Class TeamOperationListener
@@ -32,21 +32,19 @@ class TeamOperationListener extends BaseListener
     /**
      * Rejects team operations if team modifications are not allowed by the application admin.
      *
-     * @param GetResponseEvent $event
+     * @param FilterControllerEvent $event
+     * @throws ApplicationControlException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
-        /** @var Request $request */
-        $request = $event->getRequest();
-        $requestPathInfo = $request->getPathInfo();
-
-        if (substr($requestPathInfo, 0, 5) != '/team') {
+        $controller = $this->getEventController($event);
+        if (!($controller instanceof TeamOperationInterface)) {
             return;
         }
 
         if ($this->teamsEnabled != 1) {
             $message = 'Team changes are not allowed at the moment.';
-            $event->setResponse($this->createEventResponse($request, $message));
+            throw new ApplicationControlException($message);
         }
     }
 }

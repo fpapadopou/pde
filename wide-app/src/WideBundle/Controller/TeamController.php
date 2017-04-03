@@ -18,7 +18,7 @@ use WideBundle\Teams\TeamManager;
  * @package WideBundle\Controller
  * @Route("/team")
  */
-class TeamController extends Controller
+class TeamController extends Controller implements SecureResourceInterface, TeamOperationInterface
 {
     /**
      * Creates a new team and adds the current user to it.

@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @package WideBundle\Controller
  * @Route("/workspace")
  */
-class WorkspaceController extends BaseController
+class WorkspaceController extends BaseController implements SecureResourceInterface, TeamResourceInterface
 {
     /**
      * Returns the current users workspaces and their contents.

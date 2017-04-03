@@ -3,11 +3,11 @@
 namespace WideBundle\EventListener;
 
 use WideBundle\Entity\User;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use WideBundle\Controller\TeamResourceInterface;
+use WideBundle\Exception\ApplicationControlException;
 
 /**
  * Class TeamResourceListener
@@ -18,17 +18,15 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class TeamResourceListener extends BaseListener
 {
     /**
-     * Changes the response of the current request, depending on whether the user belongs to a team or not.
+     * Ensures that only users that are members of a team can access team resource.
      *
-     * @param GetResponseEvent $event
+     * @param FilterControllerEvent $event
+     * @throws ApplicationControlException
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelController(FilterControllerEvent $event)
     {
-        /** @var Request $request */
-        $request = $event->getRequest();
-        $requestPathInfo = $request->getPathInfo();
-
-        if (!in_array($requestPathInfo, ['/utility/', '/editor']) && substr($requestPathInfo, 0, 10) != '/workspace') {
+        $controller = $this->getEventController($event);
+        if (!($controller instanceof TeamResourceInterface)) {
             return;
         }
 
@@ -37,7 +35,7 @@ class TeamResourceListener extends BaseListener
 
         if ($currentUser->getTeam() === null) {
             $message = 'You need a team in order to complete this operation. Create a team and retry.';
-            $event->setResponse($this->createEventResponse($request, $message));
+            throw new ApplicationControlException($message);
         }
     }
 

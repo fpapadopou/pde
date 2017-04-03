@@ -5,6 +5,7 @@ namespace WideBundle\EventListener;
 use Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
@@ -37,20 +38,32 @@ class ExceptionListener extends BaseListener
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseEvent $event)
     {
         /** @var Request $request */
         $request = $event->getRequest();
+        $exception = $event->getException();
         // If it's just a `page not found` exception, report it to the user.
-        if (is_a($event->getException(), '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException')) {
+        if (is_a($exception, '\Symfony\Component\HttpKernel\Exception\NotFoundHttpException')) {
             $message = 'The resource you tried to access does not exist.';
             $event->setResponse($this->createEventResponse($request, $message));
             return;
         }
 
-        // Otherwise, report a generic message and log the real cause of the exception.
+        // Same applies to custom ApplicationControlException exceptions.
+        if (is_a($exception, 'WideBundle\Exception\ApplicationControlException')) {
+            $response = $this->createEventResponse($request, $exception->getMessage());
+            /*
+             * Setting status code 200 in an exception response is in fact against the standard HTTP flow.
+             * However, the custom exceptions caught here are not really errors, so in the application context
+             * it looks like an acceptable option.
+             */
+            $response->headers->set('X-Status-Code', 200);
+            $event->setResponse($response);
+            return;
+        }
+
+        // Otherwise, log the cause of the issue and return the predefined response.
         $this->logger->addError('An exception occurred - ' . $event->getException()->getMessage());
-        $message = 'An error occurred. Try again.';
-        $event->setResponse($this->createEventResponse($request, $message));
     }
 }
