@@ -62,3 +62,9 @@ doctrine:
 # VBee SettingBundle configuration
 v_bee_setting:
     orm: doctrine
+
+# KNP PaginatorBundle configuration
+knp_paginator:
+    page_range: 10                     # default page range used in pagination control
+    template:
+        pagination: 'WideBundle:AdminPanel:pagination.html.twig'     # sliding pagination controls template
