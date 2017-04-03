@@ -32,23 +32,4 @@ $(document).ready(function () {
         );
     });
 
-    $('#team-search-btn').click(function (event) {
-        event.preventDefault();
-
-        var email = $('#search-email').val();
-        var date = $('#search-date').val();
-
-        doAjaxRequest(
-            adminSearchUrl,
-            'POST',
-            function (response) {
-                var resultsList = $('#teams-list-group');
-                resultsList.html('');
-                for (i = 0; i < response.teams.length; i++) {
-                    resultsList.append(response.teams[i]);
-                }
-            },
-            { email : email, date : date }
-        );
-    });
 });

@@ -7,7 +7,7 @@
             <p class="list-group-item-text"><b>Members:</b></p>
             <ul class="email-list">
                 {% for member in team.members  %}
-                    <li>{{ member }}</li>
+                    <li>{{ member.email }}</li>
                 {% endfor %}
             </ul>
         </div>
@@ -15,5 +15,5 @@
             <a href="{{ path('admin_editor', {'team' : team.id}) }}" target="_blank" class="btn btn-default team-editor-link">Jump to team editor</a>
         </div>
     </div>
-    <p class="list-group-item-text"><b>Directory:</b> {{ team.folder }}</p>
+    <p class="list-group-item-text"><b>Directory:</b> {{ team.teamFolder }}</p>
 </div>

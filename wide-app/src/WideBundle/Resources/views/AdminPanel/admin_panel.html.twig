@@ -37,27 +37,6 @@
             </div>
             <div class="col-md-2"></div>
         </div>
-        <br>
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <h3>Find teams <small>use either or both criteria</small></h3>
-
-                <form id="search-form">
-                    <label for="search-email">Team has member </label>
-                    &nbsp;
-                    <input type="email" class="form-control search-text-input" id="search-email" placeholder="user email">
-                    &nbsp;
-                    <label for="search-date"> or is created after </label>
-                    &nbsp;
-                    <input type="date" class="form-control search-date-input" id="search-date">
-                    <button class="btn btn-default" id="team-search-btn">Search</button>
-                </form>
-                <br>
-                <div class="list-group" id="teams-list-group"></div>
-            </div>
-            <div class="col-md-2"></div>
-        </div>
         <!-- TODO: Add element for logs -->
         {% include 'WideBundle:Accounts:output_modal.html.twig' %}
     </div>
@@ -69,7 +48,6 @@
     <!-- Admin page specific javascript -->
     <script>
         var updateSettingUrl = "{{ url('update_setting') }}";
-        var adminSearchUrl = "{{ url('admin_search') }}";
     </script>
     <script src="{{ asset('js/admin_panel.js') }}"></script>
 {% endblock %}

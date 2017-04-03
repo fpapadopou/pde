@@ -333,3 +333,9 @@ footer > div {
     float: right;
 }
 /** Admin page end **/
+
+/** Team search page */
+div.navigation {
+    text-align: center;
+}
+/** Team search page end */

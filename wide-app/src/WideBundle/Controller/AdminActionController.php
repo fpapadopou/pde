@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use WideBundle\Search\SearchManager;
+use Knp\Component\Pager\Paginator;
 
 /**
  * Class AdminActionController
@@ -129,34 +130,37 @@ class AdminActionController extends BaseController
     }
 
     /**
-     * Returns team data based on the provided search criteria. The data is returned rendered to the frontend.
+     * Implements team search. Search criteria are optional - by default all teams are returned (paginated).
      *
      * @Route("/search", name="admin_search")
-     * @Method({"POST"})
+     * @Method({"GET"})
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      */
     public function searchAction(Request $request)
     {
-        $email = $request->get('email');
-        $date = $request->get('date');
+        // Optional parameters fetched from querystring
+        $email = $request->query->get('email', '');
+        $date = $request->query->get('date', '');
 
         /** @var SearchManager $searchManager */
         $searchManager = $this->get('wide.search.manager');
-        $results = $searchManager->searchTeams($email, $date);
-        if ($results['success'] !== true) {
-            return new JsonResponse($results);
+        $searchResult = $searchManager->createTeamSearchQuery($email, $date);
+        if ($searchResult['success'] !== true) {
+            $this->addFlash('error', $searchResult['error']);
+            return $this->redirect($this->generateUrl('account_page'));
         }
 
-        $teams = [];
-        foreach ($results['teams'] as $team) {
-            // Render the search result HTML.
-            $teams[] = $this->render('WideBundle:AdminPanel:search_result.html.twig', ['team' => $team])
-                ->getContent();
-        }
+        /** @var Paginator $paginator */
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $searchResult['query'],
+            $request->query->getInt('page', 1),
+            10
+        );
 
-        return new JsonResponse(['success' => true, 'teams' => $teams]);
+        return $this->render('WideBundle:AdminPanel:search.html.twig', ['pagination' => $pagination]);
     }
 
     /**

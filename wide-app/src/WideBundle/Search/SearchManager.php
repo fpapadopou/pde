@@ -5,6 +5,7 @@ namespace WideBundle\Search;
 use WideBundle\Entity\Team;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 
 /**
  * Class SearchManager
@@ -27,31 +28,22 @@ class SearchManager
     }
 
     /**
-     * Returns any teams matching the provided search criteria (having a member with `email` email or created
-     * after the `date` date).
+     * Returns a database query for searching teams, based on the provided `email` and `date` (optional) parameters.
+     * If the parameters are missing, the query will match all teams in database.
      *
      * @param $email
      * @param $date
      * @return array
      */
-    public function searchTeams($email, $date)
+    public function createTeamSearchQuery($email, $date)
     {
         try {
-            $teamEntities = $this->getResults($email, $date);
+            $query = $this->buildQuery($email, $date);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => 'An exception occurred - ' . $exception->getMessage()];
         }
-        $teams = [];
-        foreach ($teamEntities as $team) {
-            /** @var Team $team */
-            $teams[] = [
-                'id' => $team->getId(),
-                'created' => $team->getCreated(),
-                'members' => $team->getMembersEmails(),
-                'folder' => $team->getTeamFolder()
-            ];
-        }
-        return ['success' => true, 'teams' => $teams];
+
+        return ['success' => true, 'query' => $query];
     }
 
     /**
@@ -69,21 +61,21 @@ class SearchManager
             $criteria['team'] = $team->getId();
         }
         $dateObject = \DateTime::createFromFormat('Y-m-d', $date);
-        if ($date!= '' && $dateObject !== false) {
+        if ($date != '' && $dateObject !== false) {
             $criteria['date'] = $dateObject;
         }
         return $criteria;
     }
 
     /**
-     * Creates the query, executes it and returns the results from the entity manager.
-     * TODO: Can the team id fetching be improved?
+     * Returns the query that will be used in the search results pagination. Providing empty email & date parameters
+     * will result in all the teams being listed.
      *
      * @param $email
      * @param $date
-     * @return array
+     * @return Query
      */
-    private function getResults($email, $date)
+    private function buildQuery($email, $date)
     {
         $criteria = $this->getSearchCriteria($email, $date);
         $queryBuilder = $this->entityManager->createQueryBuilder();
@@ -109,9 +101,10 @@ class SearchManager
                     ->setParameter(1, $dateObject->format('Y-m-d'));
                 break;
             default:
-                return [];
+                // By default, all teams are returned.
+                return $selectFrom->getQuery();
         }
 
-        return $selectFrom->getQuery()->getResult();
+        return $selectFrom->getQuery();
     }
 }
