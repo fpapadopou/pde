@@ -26,6 +26,11 @@ services:
     wide.search.manager:
         class: WideBundle\Search\SearchManager
         arguments: ["@doctrine.orm.entity_manager"]
+    wide.exception_listener:
+        class: WideBundle\EventListener\ExceptionListener
+        arguments: ["@security.token_storage", "@router", "@logger"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 3 }
     wide.auth_listener:
         class: WideBundle\EventListener\AuthListener
         arguments: ["@security.token_storage", "@router"]
