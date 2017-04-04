@@ -86,9 +86,9 @@ class Authenticator implements GuardAuthenticatorInterface
      */
     public function getCredentials(Request $request)
     {
-        $login_check_route = $this->router->generate('security_login_check');
+        $loginCheckRoute = $this->router->generate('security_login_check');
         // TODO: Should `getPathInfo` or `getRequestUri` be used? `getRequestUri` matched the env too (app_dev)
-        if ($request->getRequestUri() != $login_check_route) {
+        if ($request->getRequestUri() != $loginCheckRoute) {
             return null;
         }
 
