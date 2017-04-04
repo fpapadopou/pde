@@ -7,6 +7,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use VBee\SettingBundle\Manager\SettingDoctrineManager;
 use WideBundle\Exception\ApplicationControlException;
+use WideBundle\Controller\TeamOperationInterface;
 
 /**
  * Class TeamOperationListener
@@ -14,7 +15,7 @@ use WideBundle\Exception\ApplicationControlException;
  */
 class TeamOperationListener extends BaseListener
 {
-    /** @var bool $teamsEnabled */
+    /** @var int $teamsEnabled */
     private $teamsEnabled;
 
     /**
