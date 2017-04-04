@@ -41,6 +41,9 @@ parameters:
         team_modifications_enabled:
             value: 1
             description: "Setting enabling/disabling create/delete/join/leave team operations"
+        edit_operations_enabled:
+            value: 1,
+            description: "Indicates whether or not users are allowed to modify their workspaces and files"
         storage_root:
             value: "/path/to/persistent/storage"
             description: "File system path where all users' workspace files are stored"
