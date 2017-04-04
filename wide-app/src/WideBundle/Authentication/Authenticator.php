@@ -39,9 +39,6 @@ class Authenticator implements GuardAuthenticatorInterface
     /** The domain of the email addresses used during authentication */
     private $webmailDomain;
 
-    /** @var bool $registrationAllowed */
-    private $registrationAllowed;
-
     /**
      * Authenticator constructor.
      * @param WebmailAuthenticator $webmailAuthenticator
@@ -60,10 +57,6 @@ class Authenticator implements GuardAuthenticatorInterface
         $this->router = $router;
         $this->registrationManager = $registrationManager;
         $this->webmailDomain = $settingsManager->get('webmail_domain');
-        $this->registrationAllowed = true;
-        if ($settingsManager->get('registrations_enabled') != 1) {
-            $this->registrationAllowed = false;
-        }
     }
 
     /**
@@ -121,9 +114,6 @@ class Authenticator implements GuardAuthenticatorInterface
             // If the user exists, fetch the respective object from the database
             return $userProvider->loadUserByUsername($credentials['username']);
         } catch (\Exception $exception) {
-            if ($this->registrationAllowed !== true) {
-                throw new \ErrorException('Registrations are disabled. Cannot create account.');
-            }
             // The user is trying to authenticate for the first time
             $newUser = $this->registrationManager->createUser($credentials);
             if ($newUser === false) {

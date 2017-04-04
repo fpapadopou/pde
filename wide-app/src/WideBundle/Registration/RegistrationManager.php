@@ -5,6 +5,7 @@ namespace WideBundle\Registration;
 use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
 use WideBundle\Entity\User;
+use VBee\SettingBundle\Manager\SettingDoctrineManager;
 
 /**
  * Class RegistrationManager
@@ -19,15 +20,22 @@ class RegistrationManager
     /** @var Logger $logger */
     private $logger;
 
+    /** @var bool $registrationsEnabled */
+    private $registrationsEnabled;
+
     /**
      * RegistrationManager constructor.
      * @param EntityManager $entityManager
      * @param Logger $logger
      */
-    public function __construct(EntityManager $entityManager, Logger $logger)
+    public function __construct(EntityManager $entityManager, Logger $logger, SettingDoctrineManager $settingsManager)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;
+        $this->registrationsEnabled = true;
+        if ($settingsManager->get('registrations_enabled') != 1) {
+            $this->registrationsEnabled = false;
+        }
     }
 
     /**
@@ -35,9 +43,14 @@ class RegistrationManager
      * during a latter step.
      * @param $credentials
      * @return bool|User
+     * @throws \ErrorException
      */
     public function createUser($credentials)
     {
+        if ($this->registrationsEnabled !== true) {
+            throw new \ErrorException('Registrations are disabled. Cannot create account.');
+        }
+
         // Create the user and set its properties
         $user = new User();
         // If any of the properties is invalid, the EntityManager will throw an exception
