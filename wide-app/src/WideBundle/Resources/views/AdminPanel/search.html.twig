@@ -1,0 +1,46 @@
+{% extends 'WideBundle:Default:base_layout.html.twig' %}
+{% block title %}Team Search{% endblock %}
+
+{% block content %}
+    {% include 'WideBundle:Default:navbar.html.twig' %}
+    <div>
+        <h2 class="center-heading">Team Search Page</h2>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <h3 class="center-heading">Find teams <small>use either or both criteria</small></h3>
+                <form id="search-form" action="{{ url('admin_search') }}" method="get">
+                    <label for="email">Team has member </label>
+                    &nbsp;
+                    <input type="email" class="form-control search-text-input" id="email" name="email" placeholder="user email">
+                    &nbsp;
+                    <label for="date"> or is created after </label>
+                    &nbsp;
+                    <input type="date" class="form-control search-date-input" id="date" name="date">
+                    <button type="submit" class="btn btn-default" id="team-search-btn">Search</button>
+                </form>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+                <h3 class="center-heading"><small>Found {{ pagination.getTotalItemCount }} teams matching the search criteria</small></h3>
+                <div class="list-group" id="teams-list-group">
+                    {% for team in pagination %}
+                        {% include 'WideBundle:AdminPanel:search_result.html.twig' %}
+                    {% endfor %}
+                </div>
+                <div class="navigation">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Functionality from parent template -->
+    {{ parent() }}
+{% endblock %}
