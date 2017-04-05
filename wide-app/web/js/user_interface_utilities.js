@@ -174,7 +174,7 @@ appendTextToOutput = function (text) {
     for (i = 0; i < tokens.length; i++) {
         output.append(
             $('<p>')
-                .text(tokens[i])
+                .html(tokens[i])
         );
     }
 
