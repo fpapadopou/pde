@@ -122,8 +122,7 @@ class WorkspaceActionController extends BaseController implements SecureResource
         return new JsonResponse(
             $fileHandler->updateMultipleFiles(
                 $team->getTeamFolder() . DIRECTORY_SEPARATOR . $request->get('workspace'),
-                $request->get('files'),
-                ['out']
+                $request->get('files')
             )
         );
     }

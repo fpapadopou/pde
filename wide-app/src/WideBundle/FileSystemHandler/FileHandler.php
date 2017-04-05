@@ -106,14 +106,13 @@ class FileHandler extends BaseHandler
     }
 
     /**
-     * Updates the contents of multiple files. The files must already exist. Some of the files can be skipped.
+     * Updates the contents of multiple files.
      *
      * @param $directory
      * @param $files
-     * @param $ignoredExtensions
      * @return array
      */
-    public function updateMultipleFiles($directory, $files, $ignoredExtensions = [])
+    public function updateMultipleFiles($directory, $files)
     {
         try {
             $this->checkDirectoryExists($directory);
@@ -122,9 +121,6 @@ class FileHandler extends BaseHandler
         }
 
         foreach ($files as $file) {
-            if (in_array($this->getFileExtension($file['filename']), $ignoredExtensions)) {
-                continue;
-            }
             $result = $this->addFileContent($directory . DIRECTORY_SEPARATOR . $file['filename'], $file['content']);
             if ($result['success'] !== true) {
                 return ['success' => false, 'error' => 'Multiple file update failed. ' . $result['error'] . ' Try again.'];
@@ -134,7 +130,7 @@ class FileHandler extends BaseHandler
     }
 
     /**
-     * Updates the contents of a specified file.
+     * Updates the contents of a specified file. If a file does not exist, it's created here.
      *
      * @param $filepath
      * @param $content
@@ -142,30 +138,36 @@ class FileHandler extends BaseHandler
      */
     public function addFileContent($filepath, $content)
     {
-        try {
-            $this->checkFileExists($filepath);
-        } catch (\Exception $exception) {
-            return ['success' => false, 'error' => $exception->getMessage()];
-        }
-
         $filename = pathinfo($filepath, PATHINFO_BASENAME);
-        $finfo = finfo_open(FILEINFO_MIME);
-        $mimetype = finfo_file($finfo, $filepath);
-        finfo_close($finfo);
-        if (substr($mimetype, 0, 4) != 'text') {
-            return ['success' => false, 'error' => "Cannot add contents to $filename - non text file."];
-        }
+        $fileIsBase64Encoded = $this->isBase64EncodedString($content);
 
-        if (!mb_check_encoding($content, 'UTF-8')) {
+        // Check provided file content for invalid encoding.
+        if ($fileIsBase64Encoded !== true && !mb_check_encoding($content, 'UTF-8')) {
             return ['success' => false, 'error' => "Invalid file contents provided for $filename."];
         }
 
-        if (!file_put_contents($filepath, $content, LOCK_EX)) {
+        // Replace the file's content.
+        if (!file_put_contents($filepath, $this->base64Decoder($content), LOCK_EX)) {
             $this->logger->addError('addFileContent error - ' . error_get_last()['message']);
-            return ['success' => false, 'error' => "Failed to add content to $filename file."];
+            return ['success' => false, 'error' => "Failed to add content to $filename file. Try again."];
         }
 
         return ['success' => true];
+    }
+
+    /**
+     * Detects whether a string is base-64 encoded or not.
+     *
+     * @param $string
+     * @return bool
+     */
+    private function isBase64EncodedString($string)
+    {
+        if ( base64_encode(base64_decode($string, true)) === $string){
+            // In this case the input was a valid base-64 encoded string.
+            return true;
+        }
+        return false;
     }
 
     /**
