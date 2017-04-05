@@ -67,20 +67,13 @@ class UtilityHandler
     public function useUtility($teamFolder, $workspace, $files, $utility, $input = '')
     {
         $workspacePath = $teamFolder . DIRECTORY_SEPARATOR . $workspace;
-        // First, save the files coming from the editor, then proceed with the operation.
-        $result = $this->fileHandler->updateMultipleFiles($workspacePath, $files, ['out']);
-        if ($result['success'] !== true) {
-            $result['error'] = 'Pre-operation save failed. ' . $result['error'];
-            return $result;
+        // Store files in temp directory
+        $storeResult = $this->directoryHandler->storeFilesToTemp($workspacePath, $files);
+        if ($storeResult['success'] !== true) {
+            return $storeResult;
         }
+        $workingDirectory = $storeResult['temp-path'];
 
-        // Copy all workspace contents to temp and execute the command there.
-        $teamFolderName = pathinfo($teamFolder, PATHINFO_BASENAME);
-        $copyResult = $this->directoryHandler->copyDirectoryToTemp($teamFolderName, $workspace, $workspacePath);
-        if ($copyResult['success'] !== true) {
-            return $copyResult;
-        }
-        $workingDirectory = $copyResult['temp-directory'];
         switch ($utility) {
             case 'bison':
                 $commandResult = $this->execute($this->bison, $workingDirectory, ['y'], '-d');
@@ -97,13 +90,14 @@ class UtilityHandler
             default:
                 return['success' => false, 'error' => 'Invalid operation requested.'];
         }
-        // Move all updated files back to the workspace and delete the temporary folder that was used during the operation.
-        $copyResult = $this->directoryHandler->copyDirectory($workingDirectory, $workspacePath);
-        $tempDeleteResult = $this->directoryHandler->deleteDirectory($workingDirectory);
-        if ($copyResult['success'] !== true || $tempDeleteResult['success'] !== true) {
-            return ['success' => false, 'error' => 'Something went wrong. Try again.'];
-        }
 
+        // Read all the files from the working directory and send them to the frontend
+        $productFiles = $this->directoryHandler->getFilesContents($workingDirectory);
+        $tempDeleteResult = $this->directoryHandler->deleteDirectory($workingDirectory);
+        if ($productFiles['success'] !== true || $tempDeleteResult['success'] !== true) {
+            return ['success' => false, 'error' => 'An error occurred. Try again or contact an admin.'];
+        }
+        $commandResult['files'] = $productFiles['contents']['files'];
         return $commandResult;
     }
 

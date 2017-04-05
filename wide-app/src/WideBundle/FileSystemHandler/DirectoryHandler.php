@@ -54,46 +54,31 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Copies a directory and its contents to a folder with the same name in the system temp directory.
+     * Stores the provided files in the specified directory in the system's temp folder.
      *
-     * @param $parent
      * @param $directory
-     * @param $directoryPath
+     * @param $files
      * @return array
      */
-    public function copyDirectoryToTemp($parent, $directory, $directoryPath)
+    public function storeFilesToTemp($directory, $files)
     {
-        $temp = sys_get_temp_dir();
-        $separator = DIRECTORY_SEPARATOR;
-        $workingDirectory = $temp . $separator . $parent . $separator . $directory;
-        if (!mkdir($workingDirectory, 0755, true)) {
-            return ['success' => 'false', 'error' => 'Cannot copy directory to temporary directory.'];
+        $targetPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $directory;
+        // Create the temporary folder using the provided directory name
+        if (!mkdir($targetPath, 0755, true)) {
+            return ['success' => 'false', 'error' => 'Failed to store files to temporary directory. Try again.'];
         }
-
-        $copyResult = $this->copyDirectory($directoryPath, $workingDirectory);
-        return array_merge($copyResult, ['temp-directory' => $workingDirectory]);
-    }
-
-    /**
-     * Copies the contents (preserving file permissions) from source directory to destination.
-     * @param $source
-     * @param $destination
-     * @return array
-     */
-    public function copyDirectory($source, $destination)
-    {
-        $files = $this->getFileList($source);
         foreach ($files as $file) {
-            $sourceFile = $source . DIRECTORY_SEPARATOR . $file['basename'];
-            $destinationFile = $destination . DIRECTORY_SEPARATOR . $file['basename'];
-            if (!copy($sourceFile, $destinationFile)) {
-                $this->logger->addError('copyDirectoryToTemp error - ' . error_get_last()['message']);
-                $this->deleteDirectory($destination);
-                return ['success' => false, 'error' => 'Failed to copy files to working directory. Try again.'];
+            $filePath = $targetPath . $file['filename'];
+            try {
+                $this->safeCreateFile($filePath, $file['content']);
+            } catch (\Exception $exception) {
+                $this->deleteDirectory($targetPath);
+                return ['success' => false, 'error' => 'Failed to store files to temporary directory. Try again.'];
             }
-            chmod($destinationFile, fileperms($sourceFile));
+
         }
-        return ['success' => true];
+
+        return ['success' => true, 'temp-path' => $targetPath];
     }
 
     /**
