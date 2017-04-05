@@ -131,10 +131,11 @@ class UtilityHandler
         $command = "$binaryPath $preFlags $operands $postFlags";
         $result = $this->runCommandInDirectory($command, $workspace);
 
+        $strippedCommand = $this->stripPathFromString($workspace, $command);
         if ($result['returnValue']) {
-            return ['success' => false, 'command' => $command, 'error' => $result['output']];
+            return ['success' => false, 'command' => $strippedCommand, 'error' => $result['output']];
         }
-        return ['success' => true, 'command' => $command];
+        return ['success' => true, 'command' => $strippedCommand];
     }
 
     /**
@@ -157,11 +158,12 @@ class UtilityHandler
         $command = $file['file'] . " $inputFile ";
         $result = $this->runCommandInDirectory($command, $workspace);
 
+        $strippedCommand = $this->stripPathFromString($workspace, $command);
         if ($result['returnValue']) {
-            return ['success' => false, 'command' => $command, 'error' => $result['output']];
+            return ['success' => false, 'command' => $strippedCommand, 'error' => $result['output']];
         }
 
-        return ['success' => true, 'command' => $command, 'output' => $result['output']];
+        return ['success' => true, 'command' => $strippedCommand, 'output' => $result['output']];
     }
 
     /**
@@ -182,5 +184,22 @@ class UtilityHandler
         chdir($currentDirectory);
 
         return ['output' => implode("\n", $output), 'returnValue' => $returnValue];
+    }
+
+    /**
+     * Strips the specified path from the input string.
+     *
+     * @param $path
+     * @param $string
+     * @return string
+     */
+    private function stripPathFromString($path, $string)
+    {
+        $pattern = '/' . str_replace('/', '\/', $path) . '(\/)*/';
+        $result = preg_replace($pattern, '', $string);
+        if ($result !== false) {
+            return $result;
+        }
+        return $string;
     }
 }
