@@ -27,7 +27,8 @@ class BaseController extends Controller
         }
 
         foreach ($directories['list'] as $workspace) {
-            $files = $directoryHandler->getTextFilesContents($teamFolder . DIRECTORY_SEPARATOR . $workspace);
+            // Get the files of the workspace (base-64 encoded)
+            $files = $directoryHandler->getFilesContents($teamFolder . DIRECTORY_SEPARATOR . $workspace, true);
             if ($files['success'] !== true) {
                 return $files;
             }

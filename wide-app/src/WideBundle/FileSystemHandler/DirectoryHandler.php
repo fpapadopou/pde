@@ -161,41 +161,6 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Reads the files of the provided directory. Subdirectories are ignored. Non text files' content is replaced with
-     * a default text.
-     *
-     * @param $directory
-     * @return array
-     */
-    public function getTextFilesContents($directory)
-    {
-        try {
-            $this->checkDirectoryExists($directory);
-        } catch (\Exception $exception) {
-            return ['success' => false, 'error' => $exception->getMessage()];
-        }
-
-        $contents = [
-            'name' => pathinfo($directory, PATHINFO_BASENAME),
-            'modified' => filemtime($directory . DIRECTORY_SEPARATOR . '.'),
-            'files' => []
-        ];
-
-        foreach ($this->getFileList($directory) as $file) {
-            try {
-                $contents['files'][] = [
-                    'filename' => $file['filename'],
-                    'extension' => $file['extension'],
-                    'content' => $this->readTextFile($file['pathname'])
-                ];
-            } catch (\Exception $exception) {
-                return ['success' => false, 'error' => $exception->getMessage()];
-            }
-        }
-        return ['success' => true, 'contents' => $contents];
-    }
-
-    /**
      * Returns list of the provided directory's file and metadata for each file.
      *
      * @param $directory
@@ -221,11 +186,13 @@ class DirectoryHandler extends BaseHandler
 
     /**
      * Returns a list with the contents of all files (binary safe) of the provided directory.
+     * The contents of the files can be returned in base-64 encoding.
      *
-     * @param $directory
+     * @param string $directory
+     * @param bool $encode
      * @return array
      */
-    public function getFilesContents($directory)
+    public function getFilesContents($directory, $encode = false)
     {
         try {
             $this->checkDirectoryExists($directory);
@@ -235,15 +202,20 @@ class DirectoryHandler extends BaseHandler
 
         $contents = [
             'name' => pathinfo($directory, PATHINFO_BASENAME),
+            'modified' => filemtime($directory . DIRECTORY_SEPARATOR . '.'),
             'files' => []
         ];
 
         foreach ($this->getFileList($directory) as $file) {
             try {
+                $fileContent = $this->readFile($file['pathname']);
+                if ($encode === true) {
+                    $fileContent = base64_encode($fileContent);
+                }
                 $contents['files'][] = [
                     'filename' => $file['basename'],
                     'extension' => $file['extension'],
-                    'content' => $this->readFile($file['pathname'])
+                    'content' => $fileContent
                 ];
             } catch (\Exception $exception) {
                 return ['success' => false, 'error' => $exception->getMessage()];

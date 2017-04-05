@@ -210,24 +210,6 @@ class BaseHandler
     }
 
     /**
-     * Reads text files, rejects binary and resource files.
-     *
-     * @param $filepath
-     * @return string
-     */
-    protected function readTextFile($filepath)
-    {
-        $fileInfoResource = finfo_open(FILEINFO_MIME);
-        $mimeType = finfo_file($fileInfoResource, $filepath);
-        finfo_close($fileInfoResource);
-
-        if (substr($mimeType, 0, 4) != 'text') {
-            return 'Binary file.';
-        }
-        return $this->binarySafeReadFile($filepath);
-    }
-
-    /**
      * Reads binary files.
      *
      * @param $filepath
