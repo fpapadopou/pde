@@ -68,9 +68,10 @@ class DirectoryHandler extends BaseHandler
             return ['success' => 'false', 'error' => 'Failed to store files to temporary directory. Try again.'];
         }
         foreach ($files as $file) {
-            $filePath = $targetPath . $file['filename'];
+            $filePath = $targetPath . DIRECTORY_SEPARATOR. $file['filename'];
             try {
                 $this->safeCreateFile($filePath, $file['content']);
+                chmod($filePath, 0755);
             } catch (\Exception $exception) {
                 $this->deleteDirectory($targetPath);
                 return ['success' => false, 'error' => 'Failed to store files to temporary directory. Try again.'];

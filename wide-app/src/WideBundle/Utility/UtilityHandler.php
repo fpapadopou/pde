@@ -66,9 +66,10 @@ class UtilityHandler
      */
     public function useUtility($teamFolder, $workspace, $files, $utility, $input = '')
     {
-        $workspacePath = $teamFolder . DIRECTORY_SEPARATOR . $workspace;
+        // The sub path containing the team and workspace names
+        $workspaceSubPath = pathinfo($teamFolder, PATHINFO_BASENAME) . DIRECTORY_SEPARATOR . $workspace;
         // Store files in temp directory
-        $storeResult = $this->directoryHandler->storeFilesToTemp($workspacePath, $files);
+        $storeResult = $this->directoryHandler->storeFilesToTemp($workspaceSubPath, $files);
         if ($storeResult['success'] !== true) {
             return $storeResult;
         }
