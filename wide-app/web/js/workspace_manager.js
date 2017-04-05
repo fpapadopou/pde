@@ -52,6 +52,7 @@ WorkspaceManager = function () {
     // Sets the current file list with the provided files.
     this.setFileList = function (files) {
         this.fileList = files;
+        this.activeWorkspace.files = files;
         this.selectedFile = files[0];
         if (files.length == 0) {
             this.selectedFile = null;

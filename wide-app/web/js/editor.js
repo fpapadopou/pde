@@ -44,20 +44,32 @@ execUtilityCallback = function(response) {
     if (response.success === true) {
         var activeFile = WorkspaceManager.getSelectedFile()['filename'];
 
-        refreshWorkspaces(function () {
-            createWorkspaceList(WorkspaceManager.getWorkspaces());
-            selectWorkspace(WorkspaceManager.getActiveWorkspaceName());
-            WorkspaceManager.setSelectedFile(activeFile);
-            activateSelectedFile();
-        });
+        // Files' contents are sent base-64 encoded from the app backend. They should be decoded before being added
+        // to the WorkspaceManager.
+        var receivedFiles = response.files;
+        for (i = 0; i < receivedFiles.length; i++) {
+            // TODO: Might need a better way to tell which files should not be base-64 decoded.
+            if (receivedFiles[i]['extension'] === 'out') {
+                continue;
+            }
+            decodedContent = atob(receivedFiles[i]['content']);
+            receivedFiles[i]['content'] = decodedContent;
+        }
+        WorkspaceManager.setFileList(response.files);
+        createNavFileList(WorkspaceManager.getActiveWorkspaceFiles());
+        WorkspaceManager.setSelectedFile(activeFile);
+        activateSelectedFile();
+
         var message = 'Operation completed.';
-        if (typeof response.output !== "undefined" && response.output != '') {
+        appendTextToOutput("Executed command: <strong>" + response.command + "</strong>");
+        if (typeof response.output !== "undefined" && response.output !== '') {
             message = response.output;
         }
         appendTextToOutput(message);
         showOutput();
         return;
     }
+    appendTextToOutput("Executed command: <strong>" + response.command + "</strong>");
     appendTextToOutput(response.error);
     showOutput();
 };
