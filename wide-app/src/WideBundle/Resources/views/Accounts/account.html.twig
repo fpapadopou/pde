@@ -4,7 +4,7 @@
 {% block content %}
     {% include 'WideBundle:Default:navbar.html.twig' %}
     <div class="row" id="editor-page-content">
-        <h2 style="text-align: center;"> Account and team management </h2>
+        <h2 class="center-heading"> Account and team management </h2>
         <div class="col-md-1"></div>
         <div class="col-md-10">
             <div class="col-md-5" id="team-container">
@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-1"></div>
         {% include 'WideBundle:Accounts:account_delete_modal.html.twig' %}
-        {% include 'WideBundle:Accounts:output_modal.html.twig' %}
+        {% include 'WideBundle:Default:info_modal.html.twig' %}
     </div>
 {% endblock %}
 
