@@ -173,10 +173,27 @@ class BaseHandler
             throw new \ErrorException('The file already exists.');
         }
 
-        if (file_put_contents($filepath, $content, LOCK_EX) === false) {
+        if (file_put_contents($filepath, $this->base64Decoder($content), LOCK_EX) === false) {
             $this->logger->addError('safeCreateFile error - ' . error_get_last()['message']);
             throw new \ErrorException('Failed to create file ' . pathinfo($filepath, PATHINFO_BASENAME));
         }
+    }
+
+    /**
+     * Returns the base-64 decoded version of the provided string. If the string was not encoded in the first place,
+     * it's returned as is.
+     *
+     * @param $string
+     * @return string
+     */
+    protected function base64Decoder($string)
+    {
+        if ( base64_encode(base64_decode($string, true)) === $string){
+            // In this case the input was a valid base-64 encoded string.
+            return base64_decode($string);
+        }
+        // The string was not base-64 encoded, so just return it to the caller.
+        return $string;
     }
 
     /**

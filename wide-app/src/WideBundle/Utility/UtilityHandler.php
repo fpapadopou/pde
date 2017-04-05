@@ -97,7 +97,12 @@ class UtilityHandler
         if ($productFiles['success'] !== true || $tempDeleteResult['success'] !== true) {
             return ['success' => false, 'error' => 'An error occurred. Try again or contact an admin.'];
         }
-        $commandResult['files'] = $productFiles['contents']['files'];
+        $productFiles = $productFiles['contents']['files'];
+        // Base-64 encode files' contents in order to avoid binaries messing up the JsonResponse.
+        foreach ($productFiles as &$file) {
+            $file['content'] = base64_encode($file['content']);
+        }
+        $commandResult['files'] = $productFiles;
         return $commandResult;
     }
 
