@@ -9,6 +9,14 @@ WorkspaceManager = function () {
 
     // Sets the workspaces object contents.
     this.setWorkspaces = function (workspaces) {
+        // Decode base-64 decoded files (except for .out files which are binaries)
+        for (i = 0; i < workspaces.length; i++) {
+            for (j = 0; j < workspaces[i]['files'].length; j++) {
+                if (workspaces[i]['files'][j]['extension'] !== 'out') {
+                    workspaces[i]['files'][j]['content'] = atob(workspaces[i]['files'][j]['content']);
+                }
+            }
+        }
         this.workspaces = workspaces;
     };
 
