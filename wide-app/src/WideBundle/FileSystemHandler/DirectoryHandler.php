@@ -241,6 +241,7 @@ class DirectoryHandler extends BaseHandler
             try {
                 $contents['files'][] = [
                     'filename' => $file['basename'],
+                    'extension' => $file['extension'],
                     'content' => $this->readFile($file['pathname'])
                 ];
             } catch (\Exception $exception) {
