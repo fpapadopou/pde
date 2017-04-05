@@ -122,13 +122,13 @@ class UtilityHandler
             }
             $operands .= $result['file'] . ' ';
         }
-        $command = escapeshellcmd("$binaryPath $preFlags $operands $postFlags") . ' 2>&1';
+        $command = "$binaryPath $preFlags $operands $postFlags";
         $result = $this->runCommandInDirectory($command, $workspace);
 
         if ($result['returnValue']) {
-            return ['success' => false, 'error' => $result['output']];
+            return ['success' => false, 'command' => $command, 'error' => $result['output']];
         }
-        return ['success' => true];
+        return ['success' => true, 'command' => $command];
     }
 
     /**
@@ -148,14 +148,14 @@ class UtilityHandler
         if (!file_exists($inputFile)) {
             return ['success' => false, 'error' => 'Input file not found.'];
         }
-        $command = escapeshellcmd($file['file'] . " $inputFile ") . '2>&1';
+        $command = $file['file'] . " $inputFile ";
         $result = $this->runCommandInDirectory($command, $workspace);
 
         if ($result['returnValue']) {
-            return ['success' => false, 'error' => $result['output']];
+            return ['success' => false, 'command' => $command, 'error' => $result['output']];
         }
 
-        return ['success' => true, 'output' => $result['output']];
+        return ['success' => true, 'command' => $command, 'output' => $result['output']];
     }
 
     /**
@@ -171,7 +171,8 @@ class UtilityHandler
         $output = [];
         $currentDirectory = getcwd();
         chdir($directory);
-        exec($command, $output, $returnValue);
+        $escapedCommand = escapeshellcmd($command) . ' 2>&1';
+        exec($escapedCommand, $output, $returnValue);
         chdir($currentDirectory);
 
         return ['output' => implode("\n", $output), 'returnValue' => $returnValue];
