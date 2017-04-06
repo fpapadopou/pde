@@ -7,7 +7,7 @@ services:
         arguments: ["@wide.webmailauthenticator", "@router", "@wide.registrationmanager", "@vbee.manager.setting"]
     wide.registrationmanager:
         class: WideBundle\Registration\RegistrationManager
-        arguments: ["@doctrine.orm.entity_manager", "@logger",]
+        arguments: ["@doctrine.orm.entity_manager", "@logger", "@vbee.manager.setting"]
     wide.teammanager:
         class: WideBundle\Teams\TeamManager
         arguments: ["@doctrine.orm.entity_manager", "@wide.directory.handler", "@logger", "@vbee.manager.setting"]
