@@ -255,6 +255,27 @@ footer > div {
 }
 /** Ace editor section end **/
 
+/** Crete file modal **/
+#file-creation-modal-input {
+    width: 40%;
+    display: inline-block;
+}
+
+#file-upload-input {
+    width: 40%;
+    display: inline-block;
+}
+
+.create-file-modal-btn {
+    margin-bottom: auto;
+    display: inline-block;
+}
+
+#file-upload-msg {
+    display: none;
+}
+/** Create file modal end **/
+
 /** Account page **/
 .team-action {
     display: none;

@@ -183,6 +183,36 @@ class WorkspaceActionController extends BaseController implements SecureResource
     }
 
     /**
+     * Handles file upload to the specified workspace.
+     *
+     * @Route("/upload", name="upload_file")
+     * @Method({"POST"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function uploadFileAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        /** @var Team $team */
+        $team = $user->getTeam();
+        /** @var FileHandler $fileHandler */
+        $fileHandler = $this->get('wide.file.handler');
+        $workspace = $request->get('workspace');
+        $filename = $request->get('filename');
+        $content = $request->get('content');
+
+        $targetDirectory = $team->getTeamFolder() . DIRECTORY_SEPARATOR . $workspace;
+        $createResult = $fileHandler->createFile($targetDirectory, $filename, $content);
+        if ($createResult['success'] !== true) {
+            return new JsonResponse($createResult);
+        }
+
+        return new JsonResponse(['success' => true, 'filename' => $filename, 'content' => $content]);
+    }
+
+    /**
      * Renames a file in the specified workspace.
      *
      * @Route("/file", name="rename_file")
