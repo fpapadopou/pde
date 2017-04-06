@@ -41,6 +41,10 @@ function refreshWorkspaces(callableFunction) {
  * Then the output (if any) is printed in the output element
  */
 execUtilityCallback = function(response) {
+    var executedCommand = 'none';
+    if (typeof response.command !== "undefined" && response.command !== '') {
+        executedCommand = response.command;
+    }
     if (response.success === true) {
         var activeFile = WorkspaceManager.getSelectedFile()['filename'];
 
@@ -61,7 +65,7 @@ execUtilityCallback = function(response) {
         activateSelectedFile();
 
         var message = 'Operation completed.';
-        appendTextToOutput("Executed command: <strong>" + response.command + "</strong>");
+        appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
         if (typeof response.output !== "undefined" && response.output !== '') {
             message = response.output;
         }
@@ -69,7 +73,7 @@ execUtilityCallback = function(response) {
         showOutput();
         return;
     }
-    appendTextToOutput("Executed command: <strong>" + response.command + "</strong>");
+    appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
     appendTextToOutput(response.error);
     showOutput();
 };
