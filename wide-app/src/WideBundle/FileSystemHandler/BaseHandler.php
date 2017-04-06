@@ -94,7 +94,7 @@ class BaseHandler
      * @param string $basename
      * @throw \InvalidArgumentException
      */
-    protected function validateFilename($basename)
+    public function validateFilename($basename)
     {
         $extension = $this->getFileExtension($basename);
 

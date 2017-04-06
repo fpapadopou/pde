@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use WideBundle\FileSystemHandler\FileHandler;
 use WideBundle\Search\SearchManager;
 use Knp\Component\Pager\Paginator;
 
@@ -126,7 +127,32 @@ class AdminActionController extends BaseController implements SecureResourceInte
      */
     public function dummyAction()
     {
-        return new JsonResponse(['success' => false, 'error' => 'Admins cannot modify user content.']);
+        $message = 'This function is not implemented. As an admin you can only create temporary files which will be deleted after this session.';
+        return new JsonResponse(['success' => false, 'error' => $message]);
+    }
+
+    /**
+     * Dummy file create action. The file is actually created only in the frontend, which is fine when an admin
+     * is using the editor. This is the least invasive way to allow admins to create files when viewing a user's
+     * workspace.
+     *
+     * @Route("/create-file", name="admin_create_file")
+     * @Method({"POST"})
+     *
+     * @return JsonResponse
+     */
+    public function createFileAction(Request $request)
+    {
+        /** @var FileHandler $fileHandler */
+        $fileHandler = $this->get('wide.file.handler');
+        try {
+            $fileHandler->validateFilename($request->get('filename'));
+        } catch (\Exception $exception) {
+            return new JsonResponse(['success' => false, 'error' => $exception->getMessage()]);
+        }
+        $content = "This file has not been stored on the server. It will be lost once you close this tab. \n";
+        $content .= "If you did not intend to create this file, just reload the current page.\n";
+        return new JsonResponse(['success' => true, 'content' => $content]);
     }
 
     /**
