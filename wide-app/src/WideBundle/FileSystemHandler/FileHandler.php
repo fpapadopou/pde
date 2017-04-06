@@ -15,9 +15,10 @@ class FileHandler extends BaseHandler
      *
      * @param $directory
      * @param $filename
+     * @param $content
      * @return array
      */
-    public function createFile($directory, $filename)
+    public function createFile($directory, $filename, $content = '')
     {
         try {
             $this->checkDirectoryExists($directory);
@@ -25,7 +26,9 @@ class FileHandler extends BaseHandler
             $this->canCreateFile($directory, $filename);
             // Add some content in order to avoid empty files being recognised as octet/stream files
             $date = new \DateTime('now');
-            $content = "/*\n * File created on " . $date->format('F jS, Y') . " at " . $date->format('g:i a') . "\n */\n";
+            if ($content == '') {
+                $content = "/*\n * File created on " . $date->format('F jS, Y') . " at " . $date->format('g:i a') . "\n */\n";
+            }
             $this->safeCreateFile($directory . DIRECTORY_SEPARATOR . $filename, $content);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];

@@ -173,6 +173,10 @@ class BaseHandler
             throw new \ErrorException('The file already exists.');
         }
 
+        if (!mb_check_encoding($content, 'UTF-8')) {
+            throw new \ErrorException('Invalid file content. Cannot create file.');
+        }
+
         if (file_put_contents($filepath, $this->base64Decoder($content), LOCK_EX) === false) {
             $this->logger->addError('safeCreateFile error - ' . error_get_last()['message']);
             throw new \ErrorException('Failed to create file ' . pathinfo($filepath, PATHINFO_BASENAME));
