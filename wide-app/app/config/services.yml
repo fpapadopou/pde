@@ -46,3 +46,8 @@ services:
         arguments: ["@security.token_storage", "@router"]
         tags:
             - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 0 }
+    wide.editable_resource_listener:
+        class: WideBundle\EventListener\EditableResourceListener
+        arguments: ["@vbee.manager.setting", "@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: -1 }
