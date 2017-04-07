@@ -204,7 +204,12 @@ class AdminActionController extends BaseController implements SecureResourceInte
             10
         );
 
-        return $this->render('WideBundle:Search:search.html.twig', ['pagination' => $pagination]);
+        /** @var User $user */
+        $user = $this->getUser();
+        return $this->render(
+            'WideBundle:Search:search.html.twig',
+                ['username' => $user->getUsername(),'pagination' => $pagination]
+        );
     }
 
     /**
