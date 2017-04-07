@@ -76,6 +76,12 @@ footer > div {
     white-space: pre;
 }
 
+/** Bootstrap row elements with full width **/
+.row-fill {
+    width: 100%;
+}
+/** Bootstrap row elements with full width **/
+
 /** Editor page content **/
 #editor-page-content {
     display: block;
