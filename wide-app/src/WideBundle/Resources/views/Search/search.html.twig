@@ -28,7 +28,7 @@
                 <h3 class="center-heading"><small>Found {{ pagination.getTotalItemCount }} teams matching the search criteria</small></h3>
                 <div class="list-group" id="teams-list-group">
                     {% for team in pagination %}
-                        {% include 'WideBundle:AdminPanel:search_result.html.twig' %}
+                        {% include 'WideBundle:Search:search_result.html.twig' %}
                     {% endfor %}
                 </div>
                 <div class="navigation">
