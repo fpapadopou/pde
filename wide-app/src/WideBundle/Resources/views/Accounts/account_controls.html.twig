@@ -14,7 +14,9 @@
     {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a class="btn btn-default has-shadow" href="{{ url('admin_panel') }}">Admin page</a>
+        <a class="btn btn-default has-shadow" href="{{ url('admin_panel') }}" target="_blank">Application management</a>
+        <br/><br/>
+        <a class="btn btn-default has-shadow" href="{{ url('admin_search') }}" target="_blank">Team search</a>
         <br/><br/>
     {% endif %}
 
