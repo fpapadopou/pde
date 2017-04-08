@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  * @package WideBundle\Controller
  * @Route("/setting")
  */
-class SettingController extends Controller
+class SettingController extends Controller implements SecureResourceInterface, AdminResourceInterface
 {
     /**
      * Updates a specified setting.
