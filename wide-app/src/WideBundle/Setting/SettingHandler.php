@@ -35,12 +35,13 @@ class SettingHandler
     {
         try {
             $this->validateValue($setting, $value);
-            $this->settingsManager->set($setting, $value);
+            $formattedValue = $this->formatValueIfDate($setting, $value);
+            $this->settingsManager->set($setting, $formattedValue);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];
         }
 
-        return ['success' => true];
+        return ['success' => true, 'value' => $formattedValue];
     }
 
     /**
@@ -64,6 +65,30 @@ class SettingHandler
     }
 
     /**
+     * Returns a formatted version of the specified value if the setting type is `date`. Formatting date values
+     * is necessary due to the poor date handling that the SettingBundle offers.
+     *
+     * @param $settingName
+     * @param $value
+     * @return mixed
+     */
+    private function formatValueIfDate($settingName, $value)
+    {
+        $formattedValue = $value;
+        /** @var Setting $setting */
+        $setting = $this->getSettingByName($settingName);
+
+        if ($setting->getType() === SettingTypeEnum::DATE && $value != '') {
+            $date = new \DateTime($value);
+            $date->add(new \DateInterval('PT23H59M'));
+            $formattedValue = $date->format('Y-m-d H:i');
+
+        }
+
+        return $formattedValue;
+    }
+
+    /**
      * Returns the setting specified by name parameter.
      *
      * @param $name
@@ -83,7 +108,7 @@ class SettingHandler
     }
 
     /**
-     * Makes sure the provided values matches the setting type. Only string and integer values are supported.
+     * Makes sure the provided value matches the setting type. Applies to integer and string values.
      *
      * @param $value
      * @param $type

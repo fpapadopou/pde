@@ -19,14 +19,15 @@ $(document).ready(function () {
         event.preventDefault();
         var setting = $(this).attr('data-setting');
         var value = $('#' + setting + '-input').val();
+        // Set an empty value in order to reset the deadline setting, if necessary.
+        if ($(this).attr('id') === 'reset-deadline') {
+            value = '';
+        }
         doAjaxRequest(
             updateSettingUrl,
             'POST',
-            function () {
-                $('#' + setting + '-current').html(value + ' <span class="label label-success">Updated</span>');
-                setTimeout(function () {
-                    $('#' + setting + '-current').html(value);
-                }, 2000);
+            function (response) {
+                $('#' + setting + '-current').html(response.value);
             },
             { setting: setting, value:  value }
         );

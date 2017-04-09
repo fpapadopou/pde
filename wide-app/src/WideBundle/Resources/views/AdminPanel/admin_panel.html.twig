@@ -25,10 +25,15 @@
                                             <label for="{{ setting.value }}-input">int</label>
                                             <input type="number" class="form-control setting-input-int" id="{{ setting.name }}-input" >
                                         {% endif %}
+                                    {% elseif setting.type == "date" %}
+                                        <input type="date" class="form-control setting-input-date" id="{{ setting.name }}-input">
                                     {% else %}
                                         <input type="text" class="form-control setting-input-string" placeholder="new value" id="{{ setting.name }}-input">
                                     {% endif %}
                                     <button class="btn btn-success submit-setting" data-setting="{{ setting.name }}">Update</button>
+                                    {% if setting.type == "date" %}
+                                        <button class="btn btn-default submit-setting" id="reset-deadline" data-setting="{{ setting.name }}">Reset</button>
+                                    {% endif %}
                                 </form>
                             </div>
                         {% endfor %}
@@ -38,7 +43,6 @@
             <div class="col-md-2"></div>
         </div>
         <!-- TODO: Add element for logs -->
-        {% include 'WideBundle:Accounts:output_modal.html.twig' %}
     </div>
 {% endblock %}
 

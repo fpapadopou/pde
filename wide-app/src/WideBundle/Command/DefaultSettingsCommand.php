@@ -65,24 +65,26 @@ class DefaultSettingsCommand extends ContainerAwareCommand
      *
      * @param $name
      * @param $value
+     * @throws \ErrorException
      */
     private function addSetting($name, $value)
     {
         /** @var SettingDoctrineManager $settingsManager */
         $settingsManager = $this->getContainer()->get('vbee.manager.setting');
-        // Setting in the context of this app are either
-        $type = SettingTypeEnum::STRING;
-        if (is_numeric($value['value'])) {
-            $type = SettingTypeEnum::INTEGER;
+        // A valid (int/str/date) type must be specified for each setting in the parameters file.
+        if (!in_array($value['type'], [SettingTypeEnum::STRING, SettingTypeEnum::INTEGER, SettingTypeEnum::DATE])) {
+            throw new \ErrorException('Invalid setting type ' . $value['type'] . " for setting $name");
         }
 
+        // Update the value if the setting already exists.
         $currentValue = $settingsManager->get($name);
         if ($currentValue !== null) {
-            $settingsManager->set($name, $value['value'], $type);
+            $settingsManager->set($name, $value['value'], $value['type']);
             return;
         }
 
-        $settingsManager->create($name, $value['value'], $type, $value['description']);
+        // Create a new setting with the specified type, value and description otherwise.
+        $settingsManager->create($name, $value['value'], $value['type'], $value['description']);
 
     }
 }

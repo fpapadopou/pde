@@ -338,6 +338,11 @@ footer > div {
     width: 40%;
 }
 
+.setting-input-date {
+    display: inline;
+    width: 40%;
+}
+
 .submit-setting {
     display: inline;
 }
