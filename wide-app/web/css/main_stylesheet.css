@@ -162,19 +162,15 @@ footer > div {
     display: inline-block;
 }
 
-#editor-lower-left {
-    display: block;
-    position: absolute;
-    bottom: 2%;
+#trigger-modal-btn {
+    /*display: block;*/
+    width: 180px;
     left: 0;
     right: 0;
     margin: 0 auto;
-}
+    position: absolute;
+    bottom: 2%;
 
-.lower-left-btn {
-    display: block;
-    width: 80%;
-    margin: 0 auto 5px auto;
 }
 
 .has-shadow {
