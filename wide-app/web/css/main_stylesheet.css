@@ -122,6 +122,11 @@ footer > div {
 /** Editor left and right panes end **/
 
 /** Left pane controls & buttons **/
+#workspace-name-container {
+    overflow: scroll;
+    max-height: 60px;
+}
+
 #workspace-name {
     text-align: center;
     text-shadow: 1px 1px #ddd;
