@@ -19,31 +19,45 @@ parameters:
     default_settings:
         team_members:
             value: 4
-            description: "Maximum number of team members"
+            type: 'int'
+            description: 'Maximum number of team members'
         max_team_workspaces:
             value: 5
-            description: "Maximum number of workspaces per team"
+            type: 'int'
+            description: 'Maximum number of workspaces per team'
         max_workspace_files:
             value: 10
-            description: "Maximum number of files per workspace"
+            type: 'int'
+            description: 'Maximum number of files per workspace'
         imap_server_host:
-            value: mail.server.com
-            description: "The IMAP server host against which users are authenticated"
+            value: 'mail.server.com'
+            type: 'str'
+            description: 'The IMAP server host against which users are authenticated'
         imap_server_port:
             value: 993
-            description: "The IMAP server port (must be set to 993 for SSL connection)"
+            type: 'int'
+            description: 'The IMAP server port (must be set to 993 for SSL connection)'
         webmail_domain:
-            value: domain.com
-            description: "The domain of the users' email addresses (no http/https protocol or www prefix should be used)"
+            value: 'domain.com'
+            type: 'str'
+            description: 'The domain of the users' email addresses (no http/https protocol or www prefix should be used)'
         registrations_enabled:
-            value: 1,
-            description: "Setting for enabling/disabling new registrations"
+            value: 1
+            type: 'int'
+            description: 'Setting for enabling/disabling new registrations'
         team_modifications_enabled:
             value: 1
-            description: "Setting enabling/disabling create/delete/join/leave team operations"
+            type: 'int'
+            description: 'Setting enabling/disabling create/delete/join/leave team operations'
         edit_operations_enabled:
-            value: 1,
-            description: "Indicates whether or not users are allowed to modify their workspaces and files"
+            value: 1
+            type: 'int'
+            description: 'Indicates whether or not users are allowed to modify their workspaces and files'
+        deadline:
+            value: ''
+            type: 'date'
+            description: 'Date when team and workspace modifications will be disabled'
         storage_root:
-            value: "/path/to/persistent/storage"
-            description: "File system path where all users' workspace files are stored"
+            value: '/path/to/persistent/storage'
+            type: 'str'
+            description: 'File system path where all users' workspace files are stored'
