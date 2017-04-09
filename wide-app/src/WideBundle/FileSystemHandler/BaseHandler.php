@@ -184,6 +184,23 @@ class BaseHandler
     }
 
     /**
+     * Copies a file and its contents. The destination file has the same permissions as the source file. No further
+     * checks are necessary, as they should have already been applied to the source file upon creation.
+     *
+     * @param $source
+     * @param $destination
+     * @throws \ErrorException
+     */
+    protected function safeFileCopy($source, $destination)
+    {
+        if (!copy($source, $destination)) {
+            $this->logger->addError('safeFileCopy error - ' . error_get_last()['message']);
+            throw new \ErrorException('Failed to copy file ' . pathinfo($source, PATHINFO_BASENAME));
+        }
+        chmod($destination, fileperms($source));
+    }
+
+    /**
      * Returns the base-64 decoded version of the provided string. If the string was not encoded in the first place,
      * it's returned as is.
      *

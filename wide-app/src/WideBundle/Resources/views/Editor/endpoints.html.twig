@@ -11,6 +11,7 @@
         var renameFileUrl = "{{ url('admin_dummy') }}";
         var deleteFileUrl = "{{ url('admin_dummy') }}";
         var utilitiesUrl = "{{ url('admin_utility', {'team' : team}) }}";
+        var cloneWorkspaceUrl = "{{ url('admin_dummy') }}";
     {% else %}
         var getWorkspacesUrl = "{{ url('get_wspsaces') }}";
         var createWorkspaceUrl = "{{ url('create_wspsace') }}";
@@ -23,5 +24,6 @@
         var renameFileUrl = "{{ url('rename_file') }}";
         var deleteFileUrl = "{{ url('delete_file') }}";
         var utilitiesUrl = "{{ url('use_utility') }}";
+        var cloneWorkspaceUrl = "{{ url('clone_wspsace') }}";
     {% endif %}
 </script>

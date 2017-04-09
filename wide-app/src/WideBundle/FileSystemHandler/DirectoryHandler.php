@@ -25,15 +25,55 @@ class DirectoryHandler extends BaseHandler
             $this->checkNoSuchDirectory($path);
             $this->canCreateDirectory($parent);
             $parentPermissions = fileperms($parent);
+            $this->safeCreateDirectory($path, $parentPermissions);
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => $exception->getMessage()];
         }
-        if (!mkdir($path, $parentPermissions)) {
-            $this->logger->addError('createDirectory error - ' . error_get_last()['message']);
-            return ['success' => false, 'error' => 'Failed to create directory ' . $directory];
-        }
 
         return ['success' => true];
+    }
+
+    /**
+     * Clones a the specified directory and its contents. The destination directory name is generated within the
+     * function and contains the source directory name.
+     *
+     * @param $parent
+     * @param $directory
+     * @return array
+     */
+    public function cloneDirectory($parent, $directory)
+    {
+        try {
+            $this->canCreateDirectory($parent);
+            $path = $parent . DIRECTORY_SEPARATOR . $directory;
+            $this->checkDirectoryExists($path);
+            $parentPermissions = fileperms($parent);
+            $destination = $parent . DIRECTORY_SEPARATOR . $directory . '_clone_' . date('H_i_s');
+            $this->safeCreateDirectory($destination, $parentPermissions);
+            $files = $this->getFileList($path);
+            foreach ($files as $file) {
+                $this->safeFileCopy($file['pathname'], $destination . DIRECTORY_SEPARATOR . $file['basename']);
+            }
+        } catch (\Exception $exception) {
+            return ['success' => false, 'error' => $exception->getMessage()];
+        }
+        return ['success' => true];
+    }
+
+    /**
+     * Creates the directory with the specified path - throws an exception if the operation fails.
+     *
+     * @param $path
+     * @param $permissions
+     * @throws \ErrorException
+     */
+    private function safeCreateDirectory($path, $permissions)
+    {
+        if (!mkdir($path, $permissions)) {
+            $directoryName = pathinfo($path, PATHINFO_BASENAME);
+            $this->logger->addError('secureCreateDirectory error - ' . error_get_last()['message']);
+            throw new \ErrorException('Failed to create directory ' . $directoryName);
+        }
     }
 
     /**

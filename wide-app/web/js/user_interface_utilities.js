@@ -2,6 +2,53 @@
  * This file contains functions that handle the view of the editor elements
  */
 
+// Shortens the workspace name that is printed in the workspace list, if necessary.
+createPrintableName = function (workspace) {
+    var printable = workspace;
+    if (printable.length > 20) {
+        printable = workspace.substr(0, 20) + '...';
+    }
+    return '<span title="' + workspace + '"><strong>' + printable + '</strong></span>';
+};
+
+// Creates the element of a select button for the specified workspace and binds it with a javascript callback.
+createSelectButton = function (workspace) {
+    return $('<button>')
+        .attr('class', 'btn btn-primary btn-xs wspace-select')
+        .attr('data-workspace', workspace)
+        .css('float', 'right')
+        .css('margin-left', '1%')
+        .html('<i class="fa fa-check-circle-o"/> select')
+        .click(function () {
+            name = $(this).data('workspace');
+            selectWorkspace(name);
+            setWorkspaceTitle(name);
+        });
+};
+
+// Creates the element of a clone button for the specified workspace and binds it with a javascript callback.
+createCloneButton = function (workspace) {
+    return $('<button>')
+        .attr('class', 'btn btn-primary btn-xs wspace-clone')
+        .attr('data-workspace', workspace)
+        .css('float', 'right')
+        .css('margin-left', '1%')
+        .html('<i class="fa fa-clone"/> clone')
+        .click(function () {
+            name = $(this).data('workspace');
+            doAjaxRequest(
+                cloneWorkspaceUrl,
+                'POST',
+                function () {
+                    refreshWorkspaces(function () {
+                        createWorkspaceList(WorkspaceManager.getWorkspaces());
+                    });
+                },
+                {workspace : workspace}
+            );
+        });
+};
+
 // Creates the list of workspaces used in the workspace selection modal.
 createWorkspaceList = function (workspaceData) {
     // First clear the html of the list
@@ -10,20 +57,17 @@ createWorkspaceList = function (workspaceData) {
     // Populate the workspace list with the names of the workspace and some metadata
     for (i = 0; i < workspaceData.length; i++) {
         var dateObject = new Date(workspaceData[i].modified * 1000);
-        modifiedDate = dateObject.toDateString() + ' ' + dateObject.getHours() + ':' + dateObject.getMinutes();
-        listSelector.append(
-            $('<a>')
+        var leadingZero = dateObject.getMinutes() < 10 ? '0' : '';
+        modifiedDate = dateObject.toDateString() + ' ' + dateObject.getHours() + ':' + leadingZero + dateObject.getMinutes();
+        var listElement = $('<li>')
             .attr('class', 'list-group-item')
-            .attr('data-name', workspaceData[i].name)
-            .css('text-align', 'center')
+            .css('text-align', 'left')
             .html(
-                '<strong>' + workspaceData[i].name + '</strong> <small>last modified ' + modifiedDate + '</small>'
-            ).click(function () {
-                name = $(this).data('name');
-                selectWorkspace(name);
-                setWorkspaceTitle(name);
-            })
-        );
+                createPrintableName(workspaceData[i].name) + ' <small>last modified ' + modifiedDate + '</small>'
+            );
+        listElement.append(createCloneButton(workspaceData[i].name));
+        listElement.append(createSelectButton(workspaceData[i].name));
+        listSelector.append(listElement);
     }
 };
 

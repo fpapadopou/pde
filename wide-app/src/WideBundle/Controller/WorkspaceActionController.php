@@ -49,6 +49,33 @@ class WorkspaceActionController extends BaseController implements SecureResource
     }
 
     /**
+     * Clones the specified workspace.
+     *
+     * @Route("/clone", name="clone_wspsace")
+     * @Method("POST")
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function cloneWorkspaceAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        /** @var Team $team */
+        $team = $user->getTeam();
+
+        /** @var DirectoryHandler $directoryHandler */
+        $directoryHandler = $this->get('wide.directory.handler');
+
+        return new JsonResponse(
+            $directoryHandler->cloneDirectory(
+                $team->getTeamFolder(),
+                $request->get('workspace')
+            )
+        );
+    }
+
+    /**
      * Renames a workspace in the user's team space.
      *
      * @Route("/", name="rename_wspsace")
