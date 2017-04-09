@@ -10,7 +10,7 @@
         </div> <!-- navbar-header end -->
         {% if username is defined %}
             <div class="nav navbar-right">
-                <span id="logged-in-as">Logged in as <strong>{{ username }}</strong></span>
+                <a href="{{ url('account_page') }}" class="btn btn-sm btn-default" id="account-icon"><i class="fa fa-user"></i> {{ username }}</a>
                 <a href="{{ path('logout') }}" class="btn btn-danger btn-sm" role="button">
                     <i class="fa fa-sign-out"></i> Logout
                 </a>

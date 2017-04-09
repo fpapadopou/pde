@@ -37,6 +37,12 @@ body {
     font-size: small;
 }
 
+#account-icon {
+    font-size: small;
+    opacity: 0.9;
+    border-radius: 15px;
+}
+
 #flash-error {
     text-align: center;
     margin: 0;
