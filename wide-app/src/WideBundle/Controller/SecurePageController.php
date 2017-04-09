@@ -45,7 +45,7 @@ class SecurePageController extends Controller implements SecureResourceInterface
                 'has_team' => $hasTeam,
                 'email' => $user->getEmail(),
                 'team' => $user->getTeam()->getMembersEmails(),
-                'deadline' => 'April 1st 2017' // TODO Add configurable setting
+                'deadline' => $this->get('vbee.manager.setting')->get('deadline')
             ]
         );
     }

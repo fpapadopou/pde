@@ -20,6 +20,8 @@ class EditableResourceListener extends BaseListener
 {
     /** @var int $editsEnabled */
     private $editsEnabled;
+    /** @var string $deadline */
+    private $deadline;
 
     /**
      * EditableResourceListener constructor.
@@ -31,6 +33,7 @@ class EditableResourceListener extends BaseListener
     {
         parent::__construct($tokenStorage, $router);
         $this->editsEnabled = $settingsManager->get('edit_operations_enabled');
+        $this->deadline = $settingsManager->get('deadline');
     }
 
     /**
@@ -48,6 +51,17 @@ class EditableResourceListener extends BaseListener
 
         if ($this->editsEnabled != 1) {
             $message = 'Workspace and file modifications are disabled.';
+            throw new ApplicationControlException($message);
+        }
+
+        if ($this->deadline == '') {
+            return;
+        }
+
+        $deadlineDate = \DateTime::createFromFormat('Y-m-d H:i', $this->deadline);
+        $currentDate = new \DateTime();
+        if ($currentDate > $deadlineDate) {
+            $message = 'The deadline is past. You cannot edit your content.';
             throw new ApplicationControlException($message);
         }
     }

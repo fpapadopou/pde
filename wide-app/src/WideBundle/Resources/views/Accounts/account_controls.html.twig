@@ -10,7 +10,11 @@
         </ul>
     {% endif %}
     {% if deadline is defined %}
-        <p>You have an active deadline: {{ deadline }}</p>
+        {% if deadline == '' %}
+            <p>No deadline has been set yet</p>
+        {% else %}
+            <p>You have an active deadline:<br/>{{ deadline|date('D M dS Y H:i') }}</p>
+        {% endif %}
     {% endif %}
 
     {% if is_granted('ROLE_ADMIN') %}
