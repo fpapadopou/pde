@@ -195,6 +195,46 @@ footer > div {
 }
 /** Modals position end **/
 
+/** Tool configuration modal **/
+@media (max-height: 850px) {
+    #tool-configuration-modal > .modal-dialog {
+        top: 0;
+    }
+}
+
+@media(min-height: 850px){
+    #tool-configuration-modal > .modal-dialog {
+        top: 10%;
+    }
+}
+
+#bison-config, #flex-config, #gcc-config {
+    height: 300px;
+}
+
+.panel-body {
+    height: 100%;
+}
+
+.panel-body-scrollable {
+    height: 80%;
+    overflow-y: scroll;
+}
+
+.command-prompt {
+    overflow-x: scroll;
+}
+
+.accordion-title:link, .accordion-title:visited, .accordion-title:hover, .accordion-title:active {
+    text-decoration: none;
+}
+
+input[class$='-arg-input'] {
+    display: none;
+    width: 35%;
+}
+/** Tool configuration modal end **/
+
 /** File navigation (nav list) **/
 #file-tab-list {
     background: #BCC9D6;
