@@ -1,0 +1,141 @@
+<!-- All available GNU Bison configuration options are listed below. -->
+<div class="panel-body">
+    <pre class="command-prompt" id="bison-command">prompt> bison <span id="bison-short-options">-d </span><span id="bison-long-options"></span><span id="bison-arg-options"></span><span>bison-file.y</span></pre>
+    <div class="panel-body-scrollable">
+        <div class="row">
+            <div class="col-md-6">
+                <p>Operation modes:</p>
+                <dl class="dl-horizontal">
+                    <dt>--yacc</dt>
+                    <dd><input class="bison-long-option" data-option="yacc" type="checkbox"/>&nbsp; emulate POSIX Yacc</dd>
+                    <dt>--warnings[=CATEGORY]</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="warnings-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="warnings-input" data-option="warnings" type="text"/>
+                        report the warnings falling in CATEGORY
+                    </dd>
+                    <dt>--feature[=FEATURE]</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="features-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="features-input" data-option="feature" type="text"/>
+                        activate miscellaneous features
+                    </dd>
+                </dl>
+                <p>Output:</p>
+                <dl class="dl-horizontal">
+                    <dt>-v</dt>
+                    <dd><input class="bison-short-option" data-option="v" type="checkbox"/>&nbsp; same as `--report=state'</dd>
+                    <dt>-d</dt>
+                    <dd>
+                        <input class="bison-short-option" data-option="d" type="checkbox" checked/>&nbsp;
+                        produce a header file w/o specifying the file (for POSIX Yacc)
+                    </dd>
+                    <dt>--defines[=FILE]</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="defines-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="defines-value-input" data-option="defines" type="text"/>
+                        produce a header file and specify FILE
+                    </dd>
+                    <dt>--report=THINGS</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="report-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="report-input" data-option="report" type="text"/>
+                        also produce details on the automaton
+                    </dd>
+                    <dt>--file-prefix=PREFIX</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="prefix-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="prefix-input" data-option="file-prefix" type="text"/>
+                        specify a PREFIX for output files
+                    </dd>
+                    <dt>--output=FILE</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="output-file-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="output-file-input" data-option="output" type="text"/>
+                        leave output to FILE
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <p>Parser:</p>
+                <dl class="dl-horizontal">
+                    <dt>-l</dt>
+                    <dd>
+                        <input class="bison-short-option" data-option="l" type="checkbox"/>&nbsp;
+                        don't generate '#line' directives
+                    </dd>
+                    <dt>-k</dt>
+                    <dd>
+                        <input class="bison-short-option" data-option="k" type="checkbox"/>&nbsp;
+                        include a table of token names
+                    </dd>
+                    <dt>--debug</dt>
+                    <dd>
+                        <input class="bison-long-option" data-option="debug" type="checkbox"/>&nbsp;
+                        instrument the parser for tracing
+                    </dd>
+                    <dt>--language=LANGUAGE</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="language-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="language-input" data-option="language" type="text"/>
+                        specify the output programming language
+                    </dd>
+                    <dt>--define=NAME[=VALUE]</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="define-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="define-value-input" data-option="define" type="text"/>
+                        similar to '%define NAME "VALUE"'
+                    </dd>
+                    <dt>--force-define=NAME[=VALUE]</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="force-define-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm bison-arg-input" id="force-define-value-input" data-option="force-define" type="text"/>
+                        override '%define NAME "VALUE"'
+                    </dd>
+                    <dt>-Dapi.prefix=PREFIX</dt>
+                    <dd>
+                        <input class="bison-arg-option" data-target="prefix-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm single-hyphen bison-arg-input" id="prefix-value-input" data-option="Dapi.prefix" type="text"/>
+                        prepend PREFIX to the external symbols
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p><b>Warning categories</b> include:</p>
+                <dl class="dl-horizontal">
+                    <dt>midrule-values</dt><dd>unset or unused midrule values</dd>
+                    <dt>yacc</dt><dd>incompatibilities with POSIX Yacc</dd>
+                    <dt>conflicts-sr</dt><dd>S/R conflicts (enabled by default)</dd>
+                    <dt>conflicts-rr</dt><dd>R/R conflicts (enabled by default)</dd>
+                    <dt>deprecated</dt><dd>obsolete constructs</dd>
+                    <dt>empty-rule</dt><dd>empty rules without %empty</dd>
+                    <dt>precedence</dt><dd>useless precedence and associativity</dd>
+                    <dt>other</dt><dd>all other warnings (enabled by default)</dd>
+                    <dt>all</dt><dd>all the warnings except 'yacc'</dd>
+                    <dt>no-CATEGORY</dt><dd>turn off warnings in CATEGORY</dd>
+                    <dt>none</dt><dd>turn off all the warnings</dd>
+                    <dt>error[=CATEGORY]</dt><dd>treat warnings as errors</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <p><b>THINGS</b> is a list of comma separated words that can include:<br></p>
+                <dl class="dl-horizontal">
+                    <dt>state</dt><dd>describe the states</dd>
+                    <dt>itemset</dt><dd>complete the core item sets with their closure</dd>
+                    <dt>look-ahead</dt><dd>explicitly associate look-ahead tokens to items</dd>
+                    <dt>solved</dt><dd>describe shift/reduce conflicts solving</dd>
+                    <dt>all</dt><dd>include all the above information</dd>
+                    <dt>none</dt><dd>disable the report</dd>
+                </dl>
+                <p><b>FEATURE</b> is a list of comma separated words that can include:</p>
+                <dl class="dl-horizontal">
+                    <dt>caret</dt><dd>show errors with carets</dd>
+                    <dt>all</dt><dd>all of the above</dd>
+                    <dt>none</dt><dd>disable all of the above</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

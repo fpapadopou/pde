@@ -3,8 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Configure Bison, Flex & GCC</h4>
-                <p>Each configuration option you choose is automatically saved</p>
+                <h4 class="modal-title">Configure Bison, Flex & GCC (options are saved on change)</h4>
             </div>
             <div class="modal-body">
                 <div class="panel-group" id="accordion">
@@ -17,52 +16,7 @@
                             </h4>
                         </div>
                         <div id="bison-config" class="panel-collapse collapse">
-                            <div class="panel-body">
-                                <pre class="command-prompt" id="bison-command">prompt> bison <span id="bison-options">-d </span><span id="bison-arg-options"></span><span>bison-file.y</span></pre>
-                                <div class="panel-body-scrollable">
-                                    <p>Output:</p>
-                                    <dl class="dl-horizontal">
-                                        <dt>-d</dt>
-                                        <dd><input class="bison-option" data-option="d" type="checkbox" checked/>&nbsp; also produce a header file (default)</dd>
-                                        <dt>--report=THINGS</dt>
-                                        <dd>
-                                            <input class="bison-arg-option" data-target="report-input" type="checkbox"/>&nbsp;
-                                            <input class="form-control input-sm bison-arg-input" id="report-input" data-option="report" type="text"/>
-                                            also produce details on the automaton</dd>
-                                        <dt>-v</dt>
-                                        <dd><input class="bison-option" data-option="v" type="checkbox"/>&nbsp; same as `--report=state'</dd>
-                                        <dt>--file-prefix=PREFIX</dt>
-                                        <dd>
-                                            <input class="bison-arg-option" data-target="prefix-input" type="checkbox"/>&nbsp;
-                                            <input class="form-control input-sm bison-arg-input" id="prefix-input" data-option="file-prefix" type="text"/>
-                                            specify a PREFIX for output files
-                                        </dd>
-                                        <dt>--output=FILE</dt>
-                                        <dd>
-                                            <input class="bison-arg-option" data-target="output-file-input" type="checkbox"/>&nbsp;
-                                            <input class="form-control input-sm bison-arg-input" id="output-file-input" data-option="output" type="text"/>
-                                            leave output to FILE
-                                        </dd>
-                                        <dt>-g</dt>
-                                        <dd><input class="bison-option" data-option="g" type="checkbox"/>&nbsp; also produce a VCG description of the automaton</dd>
-                                    </dl>
-                                    <p><b>THINGS</b> is a list of comma separated words that can include:<br></p>
-                                    <dl class="dl-horizontal">
-                                        <dt>state</dt>
-                                        <dd>describe the states</dd>
-                                        <dt>itemset</dt>
-                                        <dd>complete the core item sets with their closure</dd>
-                                        <dt>look-ahead</dt>
-                                        <dd>explicitly associate look-ahead tokens to items</dd>
-                                        <dt>solved</dt>
-                                        <dd>describe shift/reduce conflicts solving</dd>
-                                        <dt>all</dt>
-                                        <dd>include all the above information</dd>
-                                        <dt>none</dt>
-                                        <dd>disable the report</dd>
-                                    </dl>
-                                </div>
-                            </div>
+                            {% include 'WideBundle:Editor:bison_configs.html.twig' %}
                         </div>
                     </div>
                     <div class="panel panel-default">

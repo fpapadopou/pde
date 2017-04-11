@@ -2,18 +2,27 @@
  * Functions used when configuring the Bison/Flex/GCC tools.
  */
 
-updateOptions = function (tool) {
+updateShortOptions = function (tool) {
     var options = '';
-    $('.' + tool + '-option').each(function () {
+    $('.' + tool + '-short-option').each(function () {
         if (this.checked) {
-            var option = $(this).attr('data-option');
-            options = options + option;
+            options += $(this).attr('data-option');
         }
     });
     if (options !== '') {
         options = '-' + options + ' ';
     }
-    $('#' + tool + '-options').text(options);
+    $('#' + tool + '-short-options').text(options);
+};
+
+updateLongOptions = function (tool) {
+    var options = '';
+    $('.' + tool + '-long-option').each(function () {
+        if (this.checked) {
+            options += '--' + $(this).attr('data-option') + ' ';
+        }
+    });
+    $('#' + tool + '-long-options').text(options);
 };
 
 updateOptionsWithArguments = function(tool) {
@@ -22,17 +31,32 @@ updateOptionsWithArguments = function(tool) {
         if (this.checked) {
             var targetId = $(this).attr('data-target');
             var target = $('#' + targetId);
-            options = options + '--' + target.attr('data-option') + '=' + target.val() + ' ';
+            var dashes = '--';
+            if (target.hasClass('single-hyphen')) {
+                dashes = '-';
+            }
+            options += dashes + target.attr('data-option');
+            if (target.val() !== '') {
+                options += '=' + target.val();
+            }
+            options += ' ';
         }
     });
     $('#' + tool + '-arg-options').text(options);
 };
 
 $(document).ready(function () {
-    $('.bison-option').change(function () {
-        updateOptions('bison');
+    // Single-hyphen bison options
+    $('.bison-short-option').change(function () {
+        updateShortOptions('bison');
     });
 
+    // Double-hyphen bison options
+    $('.bison-long-option').change(function () {
+        updateLongOptions('bison');
+    });
+
+    // Bison options with arguments
     $('.bison-arg-input').on('change paste keyup', function () {
         updateOptionsWithArguments('bison');
     });
