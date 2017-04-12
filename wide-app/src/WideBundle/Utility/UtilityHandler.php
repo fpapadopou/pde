@@ -136,7 +136,7 @@ class UtilityHandler
         if ($result['returnValue']) {
             return ['success' => false, 'command' => $strippedCommand, 'error' => $result['output']];
         }
-        return ['success' => true, 'command' => $strippedCommand];
+        return ['success' => true, 'command' => $strippedCommand, 'output' => $result['output']];
     }
 
     /**
