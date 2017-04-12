@@ -40,7 +40,11 @@ updateOptionsWithArguments = function(tool) {
             }
             options += dashes + target.attr('data-option');
             if (target.val() !== '') {
-                options += '=' + target.val();
+                var equalSign = '=';
+                if (target.hasClass('no-equals-sign')) {
+                    equalSign = '';
+                }
+                options += equalSign + target.val();
             }
             options += ' ';
         }
