@@ -1,0 +1,116 @@
+<!-- All available Flex configuration options are listed below. -->
+<div class="panel-body">
+    <pre class="command-prompt" id="flex-command">prompt> flex <span id="flex-short-options"></span><span id="flex-long-options"></span><span id="flex-arg-options"></span><span>flex-file.l</span></pre>
+    <div class="panel-body-scrollable">
+        <div class="row">
+            <div class="col-md-6">
+                <p>Debugging:</p>
+                <dl class="dl-horizontal">
+                    <dt>--debug</dt>
+                    <dd><input class="flex-long-option" data-option="debug" type="checkbox"/>&nbsp; enable debug mode in scanner</dd>
+                    <dt>--backup</dt>
+                    <dd><input class="flex-long-option" data-option="backup" type="checkbox"/>&nbsp; write backing-up information to lex.backup</dd>
+                    <dt>--perf-report</dt>
+                    <dd><input class="flex-long-option" data-option="perf-report" type="checkbox"/>&nbsp; write performance report to stderr</dd>
+                    <dt>--nodefault</dt>
+                    <dd><input class="flex-long-option" data-option="nodefault" type="checkbox"/>&nbsp; suppress default rule to ECHO unmatched text</dd>
+                    <dt>--trace</dt>
+                    <dd><input class="flex-long-option" data-option="trace" type="checkbox"/>&nbsp; flex should run in trace mode</dd>
+                    <dt>--nowarn</dt>
+                    <dd><input class="flex-long-option" data-option="nowarn" type="checkbox"/>&nbsp; do not generate warnings</dd>
+                    <dt>--verbose</dt>
+                    <dd><input class="flex-long-option" data-option="verbose" type="checkbox"/>&nbsp; write summary of scanner statistics to stdout</dd>
+                </dl>
+                <p>Files:</p>
+                <dl class="dl-horizontal">
+                    <dt>--outfile=FILE</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="flex-outfile-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm flex-arg-input" id="flex-outfile-input" data-option="outfile" type="text"/>
+                        specify output filename
+                    </dd>
+                    <dt>--stdout</dt>
+                    <dd><input class="flex-long-option" data-option="stdout" type="checkbox"/>&nbsp; write scanner on stdout instead of lex.yy.c</dd>
+                    <dt>--yyclass=NAME</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="yyclass-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm flex-arg-input" id="yyclass-input" data-option="yyclass" type="text"/>
+                        name of C++ class
+                    </dd>
+                    <dt>--header-file=FILE</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="flex-header-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm flex-arg-input" id="flex-header-input" data-option="header-file" type="text"/>
+                        create a C header file in addition to the scanner
+                    </dd>
+                    <dt>--tables-file[=FILE]</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="flex-table-file-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm flex-arg-input" id="flex-table-file-input" data-option="tables-file" type="text"/>
+                        write tables to FILE
+                    </dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <p>Scanner behavior:</p>
+                <dl class="dl-horizontal">
+                    <dt>--7bit</dt>
+                    <dd><input class="flex-long-option" data-option="7bit" type="checkbox"/>&nbsp; generate 7-bit scanner</dd>
+                    <dt>--8bit</dt>
+                    <dd><input class="flex-long-option" data-option="8bit" type="checkbox"/>&nbsp; generate 8-bit scanner</dd>
+                    <dt>--batch</dt>
+                    <dd><input class="flex-long-option" data-option="batch" type="checkbox"/>&nbsp; generate batch scanner (opposite of --interactive)</dd>
+                    <dt>--case-insensitive</dt>
+                    <dd><input class="flex-long-option" data-option="case-insensitive" type="checkbox"/>&nbsp; ignore case in patterns</dd>
+                    <dt>--lex-compat</dt>
+                    <dd><input class="flex-long-option" data-option="lex-compat" type="checkbox"/>&nbsp; maximal compatibility with original lex</dd>
+                    <dt>--posix-compat</dt>
+                    <dd><input class="flex-long-option" data-option="posix-compat" type="checkbox"/>&nbsp; maximal compatibility with POSIX lex</dd>
+                    <dt>--interactive</dt>
+                    <dd><input class="flex-long-option" data-option="interactive" type="checkbox"/>&nbsp; generate interactive scanner (opposite of --batch)</dd>
+                    <dt>--yylineno</dt>
+                    <dd><input class="flex-long-option" data-option="yylineno" type="checkbox"/>&nbsp; track line count in yylineno</dd>
+                </dl>
+                <p>Generated code:</p>
+                <dl class="dl-horizontal">
+                    <dt>--c++</dt>
+                    <dd><input class="flex-long-option" data-option="c++" type="checkbox"/>&nbsp; generate C++ scanner class</dd>
+                    <dt>-Dmacro[=defn]</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="flex-macro-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm single-hyphen flex-arg-input" id="flex-macro-value-input" data-option="Dmacro" type="text"/>
+                        #define macro defn  (default defn is '1')
+                    </dd>
+                    <dt>--noline</dt>
+                    <dd><input class="flex-long-option" data-option="noline" type="checkbox"/>&nbsp; suppress #line directives in scanner</dd>
+                    <dt>--prefix=STRING</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="flex-yyprefix-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm flex-arg-input" id="flex-yyprefix-value-input" data-option="prefix" type="text"/>
+                        use STRING as prefix instead of "yy"
+                    </dd>
+                    <dt>--reentrant</dt>
+                    <dd><input class="flex-long-option" data-option="reentrant" type="checkbox"/>&nbsp; generate a reentrant C scanner</dd>
+                    <dt>--bison-bridge</dt>
+                    <dd><input class="flex-long-option" data-option="bison-bridge" type="checkbox"/>&nbsp; scanner for bison pure parser</dd>
+                    <dt>--bison-locations</dt>
+                    <dd><input class="flex-long-option" data-option="bison-locations" type="checkbox"/>&nbsp; include yylloc support</dd>
+                    <dt>--stdinit</dt>
+                    <dd><input class="flex-long-option" data-option="stdinit" type="checkbox"/>&nbsp; initialize yyin/yyout to stdin/stdout</dd>
+                    <dt>--noansi-definitions</dt>
+                    <dd><input class="flex-long-option" data-option="noansi-definitions" type="checkbox"/>&nbsp; old-style function definitions</dd>
+                    <dt>--noansi-prototypes</dt>
+                    <dd><input class="flex-long-option" data-option="noansi-prototypes" type="checkbox"/>&nbsp; empty parameter list in prototypes</dd>
+                    <dt>--nounistd</dt>
+                    <dd><input class="flex-long-option" data-option="nounistd" type="checkbox"/>&nbsp; do not include &lt;unistd.h&gt;</dd>
+                    <dt>--noFUNCTION</dt>
+                    <dd>
+                        <input class="flex-arg-option" data-target="flex-nofunction-value-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm no-equals-sign flex-arg-input" id="flex-nofunction-value-input" data-option="no" type="text"/>
+                        do not generate a particular FUNCTION
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

@@ -60,11 +60,12 @@ class UtilityHandler
      * @param $teamFolder
      * @param $workspace
      * @param $files
+     * @param $options
      * @param $utility
      * @param $input
      * @return array
      */
-    public function useUtility($teamFolder, $workspace, $files, $utility, $input = '')
+    public function useUtility($teamFolder, $workspace, $files, $options, $utility, $input = '')
     {
         // The sub path containing the team and workspace names
         $workspaceSubPath = pathinfo($teamFolder, PATHINFO_BASENAME) . DIRECTORY_SEPARATOR . $workspace;
@@ -77,13 +78,13 @@ class UtilityHandler
 
         switch ($utility) {
             case 'bison':
-                $commandResult = $this->execute($this->bison, $workingDirectory, ['y'], '-d');
+                $commandResult = $this->execute($this->bison, $workingDirectory, ['y'], $options);
                 break;
             case 'flex':
-                $commandResult = $this->execute($this->flex, $workingDirectory, ['l']);
+                $commandResult = $this->execute($this->flex, $workingDirectory, ['l'], $options);
                 break;
             case 'gcc':
-                $commandResult = $this->execute($this->gcc, $workingDirectory, ['tab.c', 'yy.c'], '', '-lfl');
+                $commandResult = $this->execute($this->gcc, $workingDirectory, ['tab.c', 'yy.c'], '', '-lfl -o executable.out');
                 break;
             case 'simulation':
                 $commandResult = $this->simulate($workingDirectory, $input);
@@ -135,7 +136,7 @@ class UtilityHandler
         if ($result['returnValue']) {
             return ['success' => false, 'command' => $strippedCommand, 'error' => $result['output']];
         }
-        return ['success' => true, 'command' => $strippedCommand];
+        return ['success' => true, 'command' => $strippedCommand, 'output' => $result['output']];
     }
 
     /**

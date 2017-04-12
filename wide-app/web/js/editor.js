@@ -45,6 +45,7 @@ execUtilityCallback = function(response) {
     if (typeof response.command !== "undefined" && response.command !== '') {
         executedCommand = response.command;
     }
+    appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
     if (response.success === true) {
         var activeFile = WorkspaceManager.getSelectedFile()['filename'];
 
@@ -64,23 +65,27 @@ execUtilityCallback = function(response) {
         WorkspaceManager.setSelectedFile(activeFile);
         activateSelectedFile();
 
-        var message = 'Operation completed.';
-        appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
+        var message = 'Operation completed.<br/>';
         if (typeof response.output !== "undefined" && response.output !== '') {
-            message = response.output;
+            message += response.output;
         }
         appendTextToOutput(message);
         showOutput();
         return;
     }
-    appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
-    appendTextToOutput(response.error);
+    appendTextToOutput('Operation failed.<br/>' + response.error);
     showOutput();
 };
 
 // Executes one of the available tools (flex, bison, gcc or simulation of the .out file)
 function execUtility(utilitySelection, input) {
     input = input || '';
+    var options = '';
+    if (utilitySelection === 'bison' || utilitySelection === 'flex') {
+        options += $('#' + utilitySelection + '-short-options').text() + ' ';
+        options += $('#' + utilitySelection + '-long-options').text() + ' ';
+        options += $('#' + utilitySelection + '-arg-options').text() + ' ';
+    }
     appendTextToOutput('>> ' + utilitySelection.toUpperCase() + ' output: ');
     doAjaxRequestWithOutput(
         utilitiesUrl,
@@ -90,6 +95,7 @@ function execUtility(utilitySelection, input) {
             workspace : WorkspaceManager.getActiveWorkspaceName(),
             files : WorkspaceManager.getActiveWorkspaceFiles(),
             utility : utilitySelection,
+            options: options,
             input : input
         });
 }

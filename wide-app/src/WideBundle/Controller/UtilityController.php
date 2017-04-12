@@ -42,6 +42,7 @@ class UtilityController extends Controller implements SecureResourceInterface, T
             $team->getTeamFolder(),
             $request->get('workspace'),
             $request->get('files'),
+            $request->get('options'),
             $request->get('utility'),
             $request->get('input')
         );

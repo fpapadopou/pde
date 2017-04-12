@@ -25,6 +25,7 @@
         {% include 'WideBundle:Editor:delete_workspace_modal.html.twig' %}
         {% include 'WideBundle:Editor:rename_workspace_modal.html.twig' %}
         {% include 'WideBundle:Editor:unsaved_changes_modal.html.twig' %}
+        {% include 'WideBundle:Editor:tool_configuration_modal.html.twig' %}
     </div>
 {% endblock %}
 
@@ -48,6 +49,7 @@
     <script src="{{ asset('js/workspace_control_bindings.js') }}"></script>
     <script src="{{ asset('js/tools_bindings.js') }}"></script>
     <script src="{{ asset('js/file_upload.js') }}"></script>
+    <script src="{{ asset('js/tool_configuration.js') }}"></script>
     <script>
         $(document).ready(function() {
             // Notify the user if there are any unsaved changes in the current workspace, in case they try to
@@ -58,6 +60,10 @@
             refreshWorkspaces(function () {
                 createWorkspaceList(WorkspaceManager.getWorkspaces());
                 $('#wpsace-selection-modal').modal('show');
+            });
+
+            $('#tool-configuration').click(function () {
+                $('#tool-configuration-modal').modal('show');
             });
 
             // The document has loaded successfully, all buttons can now be enabled

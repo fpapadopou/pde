@@ -127,6 +127,7 @@ class AdminActionController extends BaseController implements SecureResourceInte
             $team->getTeamFolder(),
             $request->get('workspace'),
             $request->get('files'),
+            $request->get('options'),
             $request->get('utility'),
             $request->get('input')
         );
