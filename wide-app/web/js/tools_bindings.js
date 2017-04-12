@@ -4,7 +4,7 @@
 $(document).ready(function () {
     $('#bison-btn').click(function () {
         if (WorkspaceManager.containsFileWithExtension('y') !== true) {
-            infoModalMessage('You need to create a \'.y\' file in order to generate a parser with GNU Bison.');
+            infoModalMessage('You need to create a \'.y\' file in order to generate a syntax analyzer with GNU Bison.');
             return;
         }
         execUtility('bison');
@@ -18,7 +18,7 @@ $(document).ready(function () {
     });
     $('#gcc-btn').click(function () {
         var message = 'Some files are missing.';
-        message += 'You need to generate a parser with Bison and a lexer with Flex before you can compile your interpreter.';
+        message += 'You need to generate a syntax analyzer with Bison and a scanner with Flex before you can compile your parser.';
         if (WorkspaceManager.containsFileWithExtension('tab.c') !== true
             || WorkspaceManager.containsFileWithExtension('yy.c') !== true) {
             infoModalMessage(message);
