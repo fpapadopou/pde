@@ -45,6 +45,7 @@ execUtilityCallback = function(response) {
     if (typeof response.command !== "undefined" && response.command !== '') {
         executedCommand = response.command;
     }
+    appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
     if (response.success === true) {
         var activeFile = WorkspaceManager.getSelectedFile()['filename'];
 
@@ -64,17 +65,15 @@ execUtilityCallback = function(response) {
         WorkspaceManager.setSelectedFile(activeFile);
         activateSelectedFile();
 
-        var message = 'Operation completed.';
-        appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
+        var message = 'Operation completed.<br/>';
         if (typeof response.output !== "undefined" && response.output !== '') {
-            message = response.output;
+            message += response.output;
         }
         appendTextToOutput(message);
         showOutput();
         return;
     }
-    appendTextToOutput("Executed command: <strong>" + executedCommand + "</strong>");
-    appendTextToOutput(response.error);
+    appendTextToOutput('Operation failed.<br/>' + response.error);
     showOutput();
 };
 
