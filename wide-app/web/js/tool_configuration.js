@@ -2,6 +2,7 @@
  * Functions used when configuring the Bison/Flex/GCC tools.
  */
 
+// Updates the short options list (single hyphen options).
 updateShortOptions = function (tool) {
     var options = '';
     $('.' + tool + '-short-option').each(function () {
@@ -15,6 +16,7 @@ updateShortOptions = function (tool) {
     $('#' + tool + '-short-options').text(options);
 };
 
+// Updates the long options list (double hyphen options).
 updateLongOptions = function (tool) {
     var options = '';
     $('.' + tool + '-long-option').each(function () {
@@ -25,6 +27,7 @@ updateLongOptions = function (tool) {
     $('#' + tool + '-long-options').text(options);
 };
 
+// Updates the list of options with arguments (single or double hyphen options). Arguments might be optional.
 updateOptionsWithArguments = function(tool) {
     var options = '';
     $('.' + tool + '-arg-option').each(function () {
@@ -46,28 +49,46 @@ updateOptionsWithArguments = function(tool) {
 };
 
 $(document).ready(function () {
-    // Single-hyphen bison options
+    // Single-hyphen bison options handler.
     $('.bison-short-option').change(function () {
         updateShortOptions('bison');
     });
+    // Single-hyphen bison options handler.
+    $('.flex-short-option').change(function () {
+        updateShortOptions('flex');
+    });
+    // Single-hyphen gcc options handler.
+    $('.gcc-short-option').change(function () {
+        updateShortOptions('gcc');
+    });
 
-    // Double-hyphen bison options
+    // Double-hyphen bison options handler.
     $('.bison-long-option').change(function () {
         updateLongOptions('bison');
     });
+    // Double-hyphen flex options handler.
+    $('.flex-long-option').change(function () {
+        updateLongOptions('flex');
+    });
+    // Double-hyphen gcc options handler.
+    $('.gcc-long-option').change(function () {
+        updateLongOptions('gcc');
+    });
 
-    // Bison options with arguments
+    // Bison options with arguments change listener.
     $('.bison-arg-input').on('change paste keyup', function () {
         updateOptionsWithArguments('bison');
     });
+    // Flex options with arguments change listener.
+    $('.flex-arg-input').on('change paste keyup', function () {
+        updateOptionsWithArguments('flex');
+    });
+    // Gcc options with arguments change listener.
+    $('.gcc-arg-input').on('change paste keyup', function () {
+        updateOptionsWithArguments('gcc');
+    });
 
-    // $('.flex-option').change(function () {
-    //     updateOptions('flex');
-    // });
-    // $('.gcc-option').change(function () {
-    //     updateOptions('gcc');
-    // });
-
+    // Listener for changes in option arguments input elements
     $("[class$='-arg-option']").change(function () {
         var targetId = $(this).attr('data-target');
         var target = $('#' + targetId);
