@@ -1,0 +1,20 @@
+<!-- All available Flex configuration options are listed below. -->
+<div class="panel-body">
+    <pre class="command-prompt" id="gcc-command">prompt> gcc syntax-analyzer.tab.c scanner.yy.c -lfl -o executable.out</pre>
+    <div class="panel-body-scrollable">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <p>The GNU GCC compiler command has been hardcoded for the purpose of this application.<br/>
+                The above command combines the syntax analyzer produced from GNU Bison and the scanner produced from Flex
+                creating a parser. The <i>-lfl</i> flag indicates that the linker should link the program with the flex library.
+                <br/>An executable file named <i>executable.out</i> is produced which you can use like:</p>
+                <br/>
+                <pre class="command-prompt">./executable.out input-file.txt</pre>
+                <br/>
+                <p>Note that <i>executable.out</i> is created on a 64-bit Unix system and therefore cannot <br> be used on a Windows operating system or 32-bit Unix architectures.</p>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+</div>
