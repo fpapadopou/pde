@@ -81,6 +81,12 @@ execUtilityCallback = function(response) {
 // Executes one of the available tools (flex, bison, gcc or simulation of the .out file)
 function execUtility(utilitySelection, input) {
     input = input || '';
+    var options = '';
+    if (utilitySelection === 'bison' || utilitySelection === 'flex') {
+        options += $('#' + utilitySelection + '-short-options').text() + ' ';
+        options += $('#' + utilitySelection + '-long-options').text() + ' ';
+        options += $('#' + utilitySelection + '-arg-options').text() + ' ';
+    }
     appendTextToOutput('>> ' + utilitySelection.toUpperCase() + ' output: ');
     doAjaxRequestWithOutput(
         utilitiesUrl,
@@ -90,6 +96,7 @@ function execUtility(utilitySelection, input) {
             workspace : WorkspaceManager.getActiveWorkspaceName(),
             files : WorkspaceManager.getActiveWorkspaceFiles(),
             utility : utilitySelection,
+            options: options,
             input : input
         });
 }
