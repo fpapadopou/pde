@@ -27,9 +27,13 @@ $(document).ready(function () {
         execUtility('gcc');
     });
     $('#simulation-btn').click(function () {
+        if(WorkspaceManager.containsFileWithExtension('out') !== true) {
+            infoModalMessage('No executable (.out) file found.');
+            return;
+        }
         var selectedFile = WorkspaceManager.getSelectedFile()['filename'];
-        if (WorkspaceManager.getFileExtension(selectedFile) != 'input') {
-            infoModalMessage('You need to select a \'.input\' file in order to test your interpreter.');
+        if (WorkspaceManager.getFileExtension(selectedFile) !== 'txt') {
+            infoModalMessage('You need to select a \'.txt\' file in order to test your parser.');
             return;
         }
         execUtility('simulation', selectedFile);

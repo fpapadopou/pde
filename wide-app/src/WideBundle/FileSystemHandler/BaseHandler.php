@@ -98,7 +98,7 @@ class BaseHandler
     {
         $extension = $this->getFileExtension($basename);
 
-        $allowedExtensions = ['input', 'y', 'l', 'tab.c', 'tab.h', 'yy.c', 'out'];
+        $allowedExtensions = ['txt', 'y', 'l', 'tab.c', 'tab.h', 'yy.c', 'out'];
         if (!in_array($extension, $allowedExtensions)) {
             throw new \InvalidArgumentException(
                 "Extension '$extension' is not allowed. Use one of '" . implode('\', \'', $allowedExtensions) . '\''
@@ -270,8 +270,8 @@ class BaseHandler
     }
 
     /**
-     * Throws an exception if file creation limits are reached. A workspace can't have more than 10 files in total,
-     * .out files can't be manually created only one of each of the allowed extensions can exist, except for .input
+     * Throws an exception if file creation limits are reached. A workspace can't have more than a number of files in total,
+     * .out files can't be manually created only one of each of the allowed extensions can exist, except for .txt
      * files.
      *
      * @param $directory
@@ -281,7 +281,7 @@ class BaseHandler
     protected function canCreateFile($directory, $filename)
     {
         $extension = $this->getFileExtension($filename);
-        if (!in_array($extension, ['y', 'l', 'input'])) {
+        if (!in_array($extension, ['y', 'l', 'txt'])) {
             throw new \InvalidArgumentException('Cannot manually create .' . $extension . ' files.');
         }
         $totalFileCountRegex = $directory . DIRECTORY_SEPARATOR . '*.*';
@@ -291,7 +291,7 @@ class BaseHandler
         }
         $extensionRegex = $directory . DIRECTORY_SEPARATOR . '*.' . $extension;
         $files = glob($extensionRegex);
-        if ($extension != 'input' && $files !== false && count($files) > 1) {
+        if ($extension != 'txt' && $files !== false && count($files) >= 1) {
             throw new \ErrorException("Cannot create any more .$extension files here.");
         }
     }

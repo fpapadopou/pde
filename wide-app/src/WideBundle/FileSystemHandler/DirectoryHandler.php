@@ -240,9 +240,9 @@ class DirectoryHandler extends BaseHandler
             return ['success' => false, 'error' => $exception->getMessage()];
         }
 
+        $folderModifiedTime = filemtime($directory . DIRECTORY_SEPARATOR . '.');
         $contents = [
             'name' => pathinfo($directory, PATHINFO_BASENAME),
-            'modified' => filemtime($directory . DIRECTORY_SEPARATOR . '.'),
             'files' => []
         ];
 
@@ -260,7 +260,12 @@ class DirectoryHandler extends BaseHandler
             } catch (\Exception $exception) {
                 return ['success' => false, 'error' => $exception->getMessage()];
             }
+            $fileModifiedTime = filemtime($file['pathname']);
+            if ($fileModifiedTime > $folderModifiedTime) {
+                $folderModifiedTime = $fileModifiedTime;
+            }
         }
+        $contents['modified'] = $folderModifiedTime;
         return ['success' => true, 'contents' => $contents];
     }
 

@@ -3,13 +3,14 @@
     It pops up when the editor page is loaded for the first time,
     as well as when the user tries to select another workspace.
 -->
-<div class="modal fade" id="wpsace-selection-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="wspace-selection-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Create a new workspace, select or clone an existing one</h4>
             </div>
             <div class="modal-body">
+                <p><i class="fa fa-times"></i> <span id="wspace-modal-error"></span></p>
                 <ul class="list-group" id="wspace-selection"></ul>
             </div>
             <div class="modal-footer">

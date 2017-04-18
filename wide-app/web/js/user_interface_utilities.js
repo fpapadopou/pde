@@ -36,13 +36,18 @@ createCloneButton = function (workspace) {
         .html('<i class="fa fa-clone"/> clone')
         .click(function () {
             name = $(this).data('workspace');
-            doAjaxRequest(
+            ajaxRequestWithDoneCallback(
                 cloneWorkspaceUrl,
                 'POST',
-                function () {
-                    refreshWorkspaces(function () {
-                        createWorkspaceList(WorkspaceManager.getWorkspaces());
-                    });
+                function (response) {
+                    if (response.success === true) {
+                        refreshWorkspaces(function () {
+                            createWorkspaceList(WorkspaceManager.getWorkspaces());
+                        });
+                        return;
+                    }
+                    $('#wspace-selection-modal p').show();
+                    $('#wspace-modal-error').text(response.error);
                 },
                 {workspace : workspace}
             );
@@ -58,7 +63,7 @@ createWorkspaceList = function (workspaceData) {
     for (i = 0; i < workspaceData.length; i++) {
         var dateObject = new Date(workspaceData[i].modified * 1000);
         var leadingZero = dateObject.getMinutes() < 10 ? '0' : '';
-        modifiedDate = dateObject.toDateString() + ' ' + dateObject.getHours() + ':' + leadingZero + dateObject.getMinutes();
+        var modifiedDate = dateObject.toDateString() + ' ' + dateObject.getHours() + ':' + leadingZero + dateObject.getMinutes();
         var listElement = $('<li>')
             .attr('class', 'list-group-item')
             .css('text-align', 'left')
@@ -83,12 +88,12 @@ setEditorContent = function (text) {
 };
 
 setEditorAvailability = function(extension) {
-    if (typeof extension === "undefined" || extension == '') {
+    if (typeof extension === "undefined" || extension === '') {
         editor.setReadOnly(true);
         return;
     }
 
-    var editableExtensions = ['y', 'l', 'input'];
+    var editableExtensions = ['y', 'l', 'txt'];
     var readOnlyIndication = $('#generated-file-note');
     if (editableExtensions.includes(extension) === true) {
         editor.setReadOnly(false);
@@ -131,7 +136,7 @@ createNavFileList = function (files) {
     tabListSelector = $('#file-tab-list');
     tabListSelector.html('');
 
-    if (files.length == 0) {
+    if (files.length === 0) {
         tabListSelector.append('<li role="presentation"><a>No files</a></li>');
         setEditorAvailability();
         return;
@@ -159,6 +164,7 @@ createNavFileList = function (files) {
 // Performs all necessary UI actions when a workspace is selected.
 selectWorkspace = function (workspaceName) {
     WorkspaceManager.setActiveWorkspace(workspaceName);
+    WorkspaceManager.createSnapshot();
     files = WorkspaceManager.getActiveWorkspaceFiles();
     if (files.length != 0) {
         WorkspaceManager.setFileList(files);
@@ -170,7 +176,7 @@ selectWorkspace = function (workspaceName) {
     }
 
     // After the selection is done, just hide the modal window
-    $('#wpsace-selection-modal').modal('hide');
+    $('#wspace-selection-modal').modal('hide');
 };
 
 // Toggles the output element.
@@ -209,7 +215,7 @@ hideOutput = function () {
 
 // Appends text to the output element.
 appendTextToOutput = function (text) {
-    if (typeof text === "undefined" || text == '') {
+    if (typeof text === "undefined" || text === '') {
         return;
     }
     var tokens = text.split("\n");
@@ -239,7 +245,7 @@ showWorkingIndication = function () {
         if (indication.css('display') != 'block') {
             clearInterval(interval);
         }
-        if (dots.text() == '...') {
+        if (dots.text() === '...') {
             dots.html('');
             return;
         }

@@ -44,17 +44,17 @@ $(document).ready(function() {
 
     // Team button handlers
     $('#create-team-btn').click(function () {
-        doAjaxRequest(createTeamUrl, 'POST', updateOnTeamCreate);
+        ajaxRequestWithSuccessHandler(createTeamUrl, 'POST', updateOnTeamCreate);
     });
     $('#delete-team-btn').click(function () {
-        doAjaxRequest(deleteTeamUrl, 'POST', updateOnTeamDelete);
+        ajaxRequestWithSuccessHandler(deleteTeamUrl, 'POST', updateOnTeamDelete);
     });
     $('#leave-team-btn').click(function () {
-        doAjaxRequest(leaveTeamUrl, 'POST', updateOnTeamDelete);
+        ajaxRequestWithSuccessHandler(leaveTeamUrl, 'POST', updateOnTeamDelete);
     });
     $('#add-member-btn').click(function (event) {
         event.preventDefault();
-        doAjaxRequest(addMemberUrl, 'POST', modalResponseHandler, {'email' : $('#add-to-team-input').val()});
+        ajaxRequestWithSuccessHandler(addMemberUrl, 'POST', modalResponseHandler, {'email' : $('#add-to-team-input').val()});
     });
 
     // Account deletion modal trigger

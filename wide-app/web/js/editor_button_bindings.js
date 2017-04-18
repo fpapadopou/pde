@@ -5,8 +5,10 @@ $(document).ready(function () {
             $('#unsaved-changes-modal').modal('show');
             return;
         }
+        $('#wspace-selection-modal p').hide();
         refreshWorkspaces(function () {
-            $('#wpsace-selection-modal').modal('show');
+            createWorkspaceList(WorkspaceManager.getWorkspaces());
+            $('#wspace-selection-modal').modal('show');
         });
     });
 
@@ -14,7 +16,7 @@ $(document).ready(function () {
     $('#unsaved-changes-leave-btn').click(function () {
         refreshWorkspaces(function () {
             $('.modal').modal('hide');
-            $('#wpsace-selection-modal').modal('show');
+            $('#wspace-selection-modal').modal('show');
         });
     });
 
@@ -30,11 +32,11 @@ $(document).ready(function () {
         $('#delete-file-placeholder').html(WorkspaceManager.getSelectedFile().filename);
         $('#file-delete-modal').modal('show');
     });
-    $('#rename-wpsace-btn').click(function () {
+    $('#rename-wspace-btn').click(function () {
         $('#rename-wspace-placeholder').html(WorkspaceManager.getActiveWorkspaceName());
         $('#wspace-rename-modal').modal('show');
     });
-    $('#delete-wpsace-btn').click(function () {
+    $('#delete-wspace-btn').click(function () {
         $('#delete-wspace-placeholder').html(WorkspaceManager.getActiveWorkspaceName());
         $('#wspace-delete-modal').modal('show');
     });

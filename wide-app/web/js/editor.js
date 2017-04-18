@@ -29,9 +29,18 @@ editor.getSession().on('change', function() {
 
 // Reloads all workspaces from the app's backend - can use a callable in order to enhance callback functionality
 function refreshWorkspaces(callableFunction) {
-    doAjaxRequest(getWorkspacesUrl, 'GET', function (response) {
-        WorkspaceManager.setWorkspaces(response.workspaces);
-        callableFunction();
+    ajaxRequestWithDoneCallback(getWorkspacesUrl, 'GET', function (response) {
+        if (response.success === true) {
+            WorkspaceManager.setWorkspaces(response.workspaces);
+            callableFunction();
+            return;
+        }
+        // Make the reload section of the modal visible and prevent it from closing before showing the response error
+        $('#info-modal-footer').show();
+        var infoModal = $('#info-modal');
+        infoModal.attr('data-backdrop', 'static');
+        infoModal.attr('data-keyboard', 'false');
+        infoModalMessage(response.error);
     });
 }
 
@@ -51,21 +60,20 @@ execUtilityCallback = function(response) {
 
         // Files' contents are sent base-64 encoded from the app backend. They should be decoded before being added
         // to the WorkspaceManager.
-        var receivedFiles = response.files;
-        for (i = 0; i < receivedFiles.length; i++) {
+        for (i = 0; i < response.files.length; i++) {
             // TODO: Might need a better way to tell which files should not be base-64 decoded.
-            if (receivedFiles[i]['extension'] === 'out') {
+            if (response.files[i]['extension'] === 'out') {
                 continue;
             }
-            decodedContent = atob(receivedFiles[i]['content']);
-            receivedFiles[i]['content'] = decodedContent;
+            decodedContent = atob(response.files[i]['content']);
+            response.files[i]['content'] = decodedContent;
         }
         WorkspaceManager.setFileList(response.files);
         createNavFileList(WorkspaceManager.getActiveWorkspaceFiles());
         WorkspaceManager.setSelectedFile(activeFile);
         activateSelectedFile();
 
-        var message = 'Operation completed.<br/>';
+        var message = 'Operation completed.\n';
         if (typeof response.output !== "undefined" && response.output !== '') {
             message += response.output;
         }
@@ -73,7 +81,7 @@ execUtilityCallback = function(response) {
         showOutput();
         return;
     }
-    appendTextToOutput('Operation failed.<br/>' + response.error);
+    appendTextToOutput('Operation failed.\n' + response.error);
     showOutput();
 };
 
@@ -87,7 +95,7 @@ function execUtility(utilitySelection, input) {
         options += $('#' + utilitySelection + '-arg-options').text() + ' ';
     }
     appendTextToOutput('>> ' + utilitySelection.toUpperCase() + ' output: ');
-    doAjaxRequestWithOutput(
+    ajaxRequestWithDoneCallback(
         utilitiesUrl,
         'POST',
         execUtilityCallback,
@@ -102,7 +110,7 @@ function execUtility(utilitySelection, input) {
 
 // Triggers an alert window when a user tries to close the current tab without having saved all changes
 function onBeforeUnloadFunction() {
-    if (WorkspaceManager.hasUnsavedChanges() == true) {
+    if (WorkspaceManager.hasUnsavedChanges() === true) {
         return 'There are unsaved changes in this workspace';
     }
 }

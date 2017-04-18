@@ -23,7 +23,7 @@ $(document).ready(function () {
         if ($(this).attr('id') === 'reset-deadline') {
             value = '';
         }
-        doAjaxRequest(
+        ajaxRequestWithSuccessHandler(
             updateSettingUrl,
             'POST',
             function (response) {

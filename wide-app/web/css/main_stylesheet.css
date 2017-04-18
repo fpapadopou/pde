@@ -353,6 +353,13 @@ input[class$='-arg-input'] {
 }
 /** Create file modal end **/
 
+/** Workspace selection modal **/
+#wspace-selection-modal p {
+    display: none;
+    text-align: center;
+}
+/** Workspace selection modal end**/
+
 /** Account page **/
 .team-action {
     display: none;
@@ -386,6 +393,16 @@ input[class$='-arg-input'] {
 
 #info-modal-body {
     text-align: center;
+}
+
+#info-modal-footer {
+    display: none;
+    text-align: center;
+}
+
+#info-modal-footer > button {
+    float: right;
+    margin-right: 5px;
 }
 
 #go-to-editor-btn {

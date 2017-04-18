@@ -7,7 +7,7 @@ $(document).ready(function () {
     $('#file-creation-modal-btn').click(function () {
         workspace = WorkspaceManager.getActiveWorkspaceName();
         filename = $('#file-creation-modal-input').val();
-        doAjaxRequest(
+        ajaxRequestWithSuccessHandler(
             createFileUrl,
             'POST',
             function (response) {
@@ -25,7 +25,12 @@ $(document).ready(function () {
         workspace = WorkspaceManager.getActiveWorkspaceName();
         currentName = WorkspaceManager.getSelectedFile().filename;
         newName = $('#file-rename-modal-input').val();
-        doAjaxRequest(
+
+        if (WorkspaceManager.isFileSaved(currentName) !== true) {
+            infoModalMessage('The file has not been saved yet. Cannot rename.');
+            return;
+        }
+        ajaxRequestWithSuccessHandler(
             renameFileUrl,
             'PUT',
             function () {
@@ -39,18 +44,27 @@ $(document).ready(function () {
         );
     });
 
+    deleteFileCallback = function () {
+        var filename = WorkspaceManager.getSelectedFile().filename;
+        WorkspaceManager.removeFileFromWorkspace(filename);
+        createNavFileList(WorkspaceManager.getActiveWorkspaceFiles());
+        activateSelectedFile();
+        $('#file-delete-modal').modal('hide');
+    };
+
     $('#file-delete-modal-btn').click(function () {
         workspace = WorkspaceManager.getActiveWorkspaceName();
         filename = WorkspaceManager.getSelectedFile().filename;
-        doAjaxRequest(
+        // If the file has not yet been saved to the backend, just delete the JS WorkspaceManager copy.
+        if (WorkspaceManager.isFileSaved(filename) !== true) {
+            deleteFileCallback();
+            return;
+        }
+        // Otherwise, proceed with the Ajax request.
+        ajaxRequestWithSuccessHandler(
             deleteFileUrl,
             'DELETE',
-            function () {
-                WorkspaceManager.removeFileFromWorkspace(filename);
-                createNavFileList(WorkspaceManager.getActiveWorkspaceFiles());
-                activateSelectedFile();
-                $('#file-delete-modal').modal('hide');
-            },
+            deleteFileCallback,
             {workspace : workspace, filename : filename}
         );
     });
@@ -58,29 +72,35 @@ $(document).ready(function () {
     $('#create-wspace').click(function () {
         date = new Date();
         datePart = date.getHours() + '_' + date.getMinutes() + '_' + date.getSeconds();
-        doAjaxRequest(
+        ajaxRequestWithDoneCallback(
             createWorkspaceUrl,
             'POST',
-            function () {
-                refreshWorkspaces(function () {
-                    createWorkspaceList(WorkspaceManager.getWorkspaces());
-                });
+            function (response) {
+                if (response.success === true) {
+                    refreshWorkspaces(function () {
+                        createWorkspaceList(WorkspaceManager.getWorkspaces());
+                    });
+                    return;
+                }
+                $('#wspace-selection-modal p').show();
+                $('#wspace-modal-error').text(response.error);
             },
             {workspace : 'workspace_' + datePart}
         );
     });
 
-    $('#save-wpsace-btn').click(function () {
-        doAjaxRequest(
+    $('#save-wspace-btn').click(function () {
+        ajaxRequestWithSuccessHandler(
             saveWorkspaceUrl,
             'PUT',
             function () {
                 WorkspaceManager.resetUnsavedChangesIndicator();
+                WorkspaceManager.createSnapshot();
                 $('#save-success').css('display', 'inline-block');
-                $('#save-wpsace-btn').removeClass('btn-default').addClass('btn-success');
+                $('#save-wspace-btn').removeClass('btn-default').addClass('btn-success');
                 setTimeout(function () {
                     $('#save-success').css('display', 'none');
-                    $('#save-wpsace-btn').removeClass('btn-success').addClass('btn-default');
+                    $('#save-wspace-btn').removeClass('btn-success').addClass('btn-default');
                 }, 1000);
             },
             {workspace : WorkspaceManager.getActiveWorkspaceName(), files : WorkspaceManager.getActiveWorkspaceFiles()}
@@ -97,7 +117,7 @@ $(document).ready(function () {
     });
 
     $('#download-btn').click(function (event) {
-        if (WorkspaceManager.getActiveWorkspaceFiles().length == 0) {
+        if (WorkspaceManager.getActiveWorkspaceFiles().length === 0) {
             event.preventDefault();
             infoModalMessage('There are no files in this workspace. Download canceled.');
             return;
@@ -112,7 +132,7 @@ $(document).ready(function () {
     });
 
     $('#wspace-delete-modal-btn').click(function () {
-        doAjaxRequest(
+        ajaxRequestWithSuccessHandler(
             deleteWorkspaceUrl,
             'DELETE',
             function() {
@@ -121,7 +141,8 @@ $(document).ready(function () {
                     createWorkspaceList(WorkspaceManager.getWorkspaces());
                     createNavFileList([]);
                     setWorkspaceTitle();
-                    $('#wpsace-selection-modal').modal('show');
+                    setEditorContent('');
+                    $('#wspace-selection-modal').modal('show');
                 });
             },
             {workspace : WorkspaceManager.getActiveWorkspaceName()}
@@ -134,8 +155,8 @@ $(document).ready(function () {
             return;
         }
         var currentName = WorkspaceManager.getActiveWorkspaceName();
-        var newName = $('#wpsace-rename-modal-input').val();
-        doAjaxRequest(
+        var newName = $('#wspace-rename-modal-input').val();
+        ajaxRequestWithSuccessHandler(
             renameWorkspaceUrl,
             'PUT',
             function() {

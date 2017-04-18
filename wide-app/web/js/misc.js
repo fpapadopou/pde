@@ -9,27 +9,24 @@ function infoModalMessage(message) {
     $('#info-modal').modal('show');
 }
 
-// Performs an ajax request - the done callback (successful response handler) is passed as a parameter.
-function doAjaxRequest(url, method, callback, data) {
-    // data is an optional parameter
-    data = data || {};
-    $.ajax({
-        url: url,
-        method: method,
-        data: data
-    }).done(function (response) {
-        if (response.success === true) {
-            callback(response);
-            return;
-        }
-        infoModalMessage(response.error);
-    }).fail(function () {
-        infoModalMessage('An error occurred. Please try again.');
-    });
+// Performs an ajax request - the handler callback for successful responses is passed as a parameter.
+function ajaxRequestWithSuccessHandler(url, method, callback, data) {
+    ajaxRequestWithDoneCallback(
+        url,
+        method,
+        function (response) {
+            if (response.success === true) {
+                callback(response);
+                return;
+            }
+            infoModalMessage(response.error);
+        },
+        data
+    );
 }
 
 // Performs an ajax request - the done callback is fully specified.
-function doAjaxRequestWithOutput(url, method, callback, data) {
+function ajaxRequestWithDoneCallback(url, method, callback, data) {
     // data is an optional parameter
     data = data || {};
     $.ajax({

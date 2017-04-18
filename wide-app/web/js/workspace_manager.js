@@ -5,6 +5,7 @@ WorkspaceManager = function () {
     this.workspaces = {};
     this.activeWorkspace = null;
     this.fileList = [];
+    this.snapshot = [];
     this.selectedFile = null;
 
     // Sets the workspaces object contents.
@@ -24,7 +25,7 @@ WorkspaceManager = function () {
     this.setActiveWorkspace = function (workspaceName) {
         var workspaces = this.workspaces;
         for (i = 0; i < workspaces.length; i++) {
-            if (workspaceName == this.workspaces[i].name) {
+            if (workspaceName === this.workspaces[i].name) {
                 this.activeWorkspace = this.workspaces[i];
                 this.activeWorkspace.isModified = false;
                 this.setFileList(this.getActiveWorkspaceFiles());
@@ -62,14 +63,16 @@ WorkspaceManager = function () {
         this.fileList = files;
         this.activeWorkspace.files = files;
         this.selectedFile = files[0];
-        if (files.length == 0) {
+        if (files.length === 0) {
             this.selectedFile = null;
         }
     };
 
-    // Adds a file to the currently active workspace.
+    // Adds a file to the currently active workspace. Also updates the file list snapshot.
     this.addFileToWorkspace = function (file) {
-        this.fileList.push({filename : file.filename, extension : this.getFileExtension(file.filename), content : file.content});
+        var fileObject = {filename : file.filename, extension : this.getFileExtension(file.filename), content : file.content};
+        this.fileList.push(fileObject);
+        this.snapshot.push(fileObject);
     };
 
     // Detects a file's extension.
@@ -78,23 +81,33 @@ WorkspaceManager = function () {
         return filename.substr(dotPosition + 1);
     };
 
-    // Removes a file from the currently active workspace.
+    // Removes a file from the currently active workspace. Also updates the file list snapshot.
     this.removeFileFromWorkspace = function (filename) {
         var fileList = this.fileList;
-        for (i = 0; i < fileList.length; i++) {
-            if (fileList[i].filename == filename) {
-                fileList.splice(i, 1);
-                this.setFileList(fileList);
-                break;
+        this.fileList = removeFromFileList(filename, fileList);
+        var snapshot = this.snapshot;
+        this.snapshot = removeFromFileList(filename, snapshot);
+
+    };
+
+    // Removes the specified from the provided list and returns the updated list.
+    // If the file does not exist in the provided list, returns the list as is.
+    // List parameter must comply with the structure of the WorkspaceManager's file list.
+    removeFromFileList = function (filename, list) {
+        for (i = 0; i < list.length; i++) {
+            if (list[i].filename === filename) {
+                list.splice(i, 1);
+                return list;
             }
         }
+        return list;
     };
 
     // Renames a file in the current workspace.
     this.renameFile = function (currentName, newName) {
         var fileList = this.fileList;
         for (i = 0; i < fileList.length; i++) {
-            if (fileList[i].filename == currentName) {
+            if (fileList[i].filename === currentName) {
                 fileList[i].filename = newName;
                 break;
             }
@@ -105,7 +118,7 @@ WorkspaceManager = function () {
     this.setSelectedFile = function (filename) {
         var fileList = this.fileList;
         for (i = 0; i < fileList.length; i++) {
-            if (filename == fileList[i].filename) {
+            if (filename === fileList[i].filename) {
                 this.selectedFile = this.fileList[i];
                 return true;
             }
@@ -134,7 +147,7 @@ WorkspaceManager = function () {
         var fileList = this.fileList;
         var file = this.selectedFile;
         for (i = 0; i < fileList.length; i++) {
-            if (file.filename == fileList[i].filename) {
+            if (file.filename === fileList[i].filename) {
                 this.fileList[i] = this.selectedFile;
                 this.activeWorkspace.files = this.fileList;
             }
@@ -150,7 +163,7 @@ WorkspaceManager = function () {
         var name = this.getActiveWorkspaceName();
         var workspaces = this.workspaces;
         for (i = 0; i < workspaces.length; i++) {
-            if (workspaces[i].name == name) {
+            if (workspaces[i].name === name) {
                 this.workspaces[i] = this.activeWorkspace;
                 break;
             }
@@ -162,7 +175,10 @@ WorkspaceManager = function () {
         if (typeof this.activeWorkspace === "undefined" || this.activeWorkspace === null) {
             return false;
         }
-        return this.activeWorkspace.isModified;
+        // If the snapshot does not have the same number of files as the file list, there are
+        // definitely unsaved changes, so the user will be prompted to save.
+        var isSnapshotOutdated = this.fileList.length !== this.snapshot.length;
+        return this.activeWorkspace.isModified || isSnapshotOutdated;
     };
 
     // Resets the unsaved changes flag.
@@ -172,15 +188,32 @@ WorkspaceManager = function () {
 
     // Can identify whether a file with the requested extension exists in the workspace.
     this.containsFileWithExtension = function (extension) {
-        if (typeof extension === "undefined" || extension == '') {
+        if (typeof extension === "undefined" || extension === '') {
             return false;
         }
         var fileList = this.fileList;
         for (i = 0; i < fileList.length; i++) {
-            if (fileList[i].extension == extension) {
+            if (fileList[i].extension === extension) {
                 return true;
             }
         }
         return false;
-    }
+    };
+
+    // Creates a snapshot of the current file list. The snapshot is updated on every file create/remove operation,
+    // which are performed directly on the application backend.
+    this.createSnapshot = function () {
+        this.snapshot = this.fileList.slice();
+    };
+
+    // Determines whether a filename exists in the last snapshot of the
+    this.isFileSaved = function (filename) {
+        for (i = 0; i < this.snapshot.length; i++) {
+            if (this.snapshot[i].filename === filename) {
+                return true;
+            }
+        }
+        return false;
+    };
+
 };

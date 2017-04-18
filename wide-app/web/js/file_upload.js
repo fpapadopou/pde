@@ -46,7 +46,7 @@ $(document).ready(function () {
             return;
         }
 
-        doAjaxRequest(
+        ajaxRequestWithSuccessHandler(
             uploadFileUrl,
             'POST',
             function (response) {
