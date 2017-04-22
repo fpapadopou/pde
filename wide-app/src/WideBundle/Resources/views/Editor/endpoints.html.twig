@@ -10,7 +10,7 @@
         var uploadFileUrl = "{{ url('admin_dummy') }}";
         var renameFileUrl = "{{ url('admin_dummy') }}";
         var deleteFileUrl = "{{ url('admin_dummy') }}";
-        var utilitiesUrl = "{{ url('admin_utility', {'team' : team}) }}";
+        var runCommandUrl = "{{ url('run_command') }}";
         var cloneWorkspaceUrl = "{{ url('admin_dummy') }}";
     {% else %}
         var getWorkspacesUrl = "{{ url('get_wspsaces') }}";
@@ -23,7 +23,7 @@
         var uploadFileUrl = "{{ url('upload_file') }}";
         var renameFileUrl = "{{ url('rename_file') }}";
         var deleteFileUrl = "{{ url('delete_file') }}";
-        var utilitiesUrl = "{{ url('use_utility') }}";
+        var runCommandUrl = "{{ url('run_command') }}";
         var cloneWorkspaceUrl = "{{ url('clone_wspsace') }}";
     {% endif %}
 </script>

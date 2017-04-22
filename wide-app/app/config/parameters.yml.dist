@@ -9,12 +9,6 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    # A list of the paths to the bison/flex/gcc tools.
-    resource_map:
-        bison: /path/to/bison/binary
-        flex: /path/to/flex/binary
-        gcc: /path/to/gcc/binary
-
     # Default values for configurable application settings. Only admins have access to these through the admin panel.
     default_settings:
         team_members:
@@ -40,7 +34,7 @@ parameters:
         webmail_domain:
             value: 'domain.com'
             type: 'str'
-            description: 'The domain of the users' email addresses (no http/https protocol or www prefix should be used)'
+            description: 'The domain of the users email addresses (no http/https protocol or www prefix should be used)'
         registrations_enabled:
             value: 1
             type: 'int'
@@ -57,7 +51,11 @@ parameters:
             value: ''
             type: 'date'
             description: 'Date when team and workspace modifications will be disabled'
+        docker_image_name:
+            value: 'pde-command-container'
+            type: 'str'
+            description: 'The Docker image that is used for running commands in an isolated environment'
         storage_root:
             value: '/path/to/persistent/storage'
             type: 'str'
-            description: 'File system path where all users' workspace files are stored'
+            description: 'File system path where all users workspace files are stored'

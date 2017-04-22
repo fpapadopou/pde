@@ -9,38 +9,31 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use WideBundle\Utility\UtilityHandler;
+use WideBundle\CommandExecution\CommandManager;
 
 /**
- * Class UtilityController
+ * Class CommandController
  * Serves requests related to using any of the Flex/Bison/Gcc system tools.
  *
  * @package WideBundle\Controller
- * @Route("/utility")
+ * @Route("/command")
  */
-class UtilityController extends Controller implements SecureResourceInterface, TeamResourceInterface
+class CommandController extends Controller implements SecureResourceInterface, TeamResourceInterface
 {
     /**
      * All bison/flex/gcc/simulation requests are handled here.
      *
-     * @Route("/", name="use_utility")
+     * @Route("/", name="run_command")
      * @Method("POST")
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function utilityAction(Request $request)
+    public function commandAction(Request $request)
     {
-        /** @var User $user */
-        $user = $this->getUser();
-        /** @var Team $team */
-        $team = $user->getTeam();
-
-        /** @var UtilityHandler $utilityHandler */
-        $utilityHandler = $this->get('wide.utility.handler');
-        $result = $utilityHandler->useUtility(
-            $team->getTeamFolder(),
-            $request->get('workspace'),
+        /** @var CommandManager $commandManager */
+        $commandManager = $this->get('wide.command.manager');
+        $result = $commandManager->runCommand(
             $request->get('files'),
             $request->get('options'),
             $request->get('utility'),

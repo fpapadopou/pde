@@ -94,35 +94,6 @@ class DirectoryHandler extends BaseHandler
     }
 
     /**
-     * Stores the provided files in the specified directory in the system's temp folder.
-     *
-     * @param $directory
-     * @param $files
-     * @return array
-     */
-    public function storeFilesToTemp($directory, $files)
-    {
-        $targetPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $directory;
-        // Create the temporary folder using the provided directory name
-        if (!mkdir($targetPath, 0755, true)) {
-            return ['success' => 'false', 'error' => 'Failed to store files to temporary directory. Try again.'];
-        }
-        foreach ($files as $file) {
-            $filePath = $targetPath . DIRECTORY_SEPARATOR. $file['filename'];
-            try {
-                $this->safeCreateFile($filePath, $file['content']);
-                chmod($filePath, 0755);
-            } catch (\Exception $exception) {
-                $this->deleteDirectory($targetPath);
-                return ['success' => false, 'error' => 'Failed to store files to temporary directory. Try again.'];
-            }
-
-        }
-
-        return ['success' => true, 'temp-path' => $targetPath];
-    }
-
-    /**
      * Deletes a folder and its contents recursively. Wrapper function.
      *
      * @param $directory

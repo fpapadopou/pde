@@ -7,14 +7,14 @@ $(document).ready(function () {
             infoModalMessage('You need to create a \'.y\' file in order to generate a syntax analyzer with GNU Bison.');
             return;
         }
-        execUtility('bison');
+        runCommand('bison');
     });
     $('#flex-btn').click(function () {
         if (WorkspaceManager.containsFileWithExtension('l') !== true) {
             infoModalMessage('You need to create a \'.l\' file in order to generate a lexical analyzer with Flex.');
             return;
         }
-        execUtility('flex');
+        runCommand('flex');
     });
     $('#gcc-btn').click(function () {
         var message = 'Some files are missing.';
@@ -24,7 +24,7 @@ $(document).ready(function () {
             infoModalMessage(message);
             return;
         }
-        execUtility('gcc');
+        runCommand('gcc');
     });
     $('#simulation-btn').click(function () {
         if(WorkspaceManager.containsFileWithExtension('out') !== true) {
@@ -36,6 +36,6 @@ $(document).ready(function () {
             infoModalMessage('You need to select a \'.txt\' file in order to test your parser.');
             return;
         }
-        execUtility('simulation', selectedFile);
+        runCommand('simulation', selectedFile);
     });
 });

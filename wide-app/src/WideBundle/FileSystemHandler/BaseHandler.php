@@ -13,6 +13,8 @@ use VBee\SettingBundle\Manager\SettingDoctrineManager;
  */
 class BaseHandler
 {
+    use \WideBundle\Traits\FileHelperTrait;
+
     /** @var Logger $logger */
     protected $logger;
 
@@ -113,29 +115,6 @@ class BaseHandler
     }
 
     /**
-     * Returns the extension of a file. If a file has multiple extensions (e.g. .inc.php) all the extensions
-     * will be returned. Files with no extension are allowed. The file parameter can either be the basename or
-     * the full path of the file.
-     *
-     * @param $file
-     * @return string
-     */
-    protected function getFileExtension($file)
-    {
-        $basename = $file;
-        if (strpos($file, DIRECTORY_SEPARATOR) !== false) {
-            $basename = pathinfo($file, PATHINFO_BASENAME);
-        }
-
-        $dotPosition = strpos($basename, '.');
-        if ($dotPosition === false) {
-            return '';
-        }
-
-        return substr($basename, $dotPosition + 1);
-    }
-
-    /**
      * Detects the actual name of a file. In the context of this application a file can have multiple extensions.
      *
      * @param $basename
@@ -198,23 +177,6 @@ class BaseHandler
             throw new \ErrorException('Failed to copy file ' . pathinfo($source, PATHINFO_BASENAME));
         }
         chmod($destination, fileperms($source));
-    }
-
-    /**
-     * Returns the base-64 decoded version of the provided string. If the string was not encoded in the first place,
-     * it's returned as is.
-     *
-     * @param $string
-     * @return string
-     */
-    protected function base64Decoder($string)
-    {
-        if ( base64_encode(base64_decode($string, true)) === $string){
-            // In this case the input was a valid base-64 encoded string.
-            return base64_decode($string);
-        }
-        // The string was not base-64 encoded, so just return it to the caller.
-        return $string;
     }
 
     /**

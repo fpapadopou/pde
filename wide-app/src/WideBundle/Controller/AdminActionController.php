@@ -14,7 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use WideBundle\FileSystemHandler\FileHandler;
 use WideBundle\Search\SearchManager;
 use Knp\Component\Pager\Paginator;
-use WideBundle\Utility\UtilityHandler;
 
 /**
  * Class AdminActionController
@@ -102,37 +101,6 @@ class AdminActionController extends BaseController implements SecureResourceInte
         $response->sendHeaders();
         $response->setContent($zipFile['content']);
         return $response;
-    }
-
-    /**
-     * Allows an admin to use bison/flex/gcc or a parser within another user's workspace. No changes are saved in the
-     * workspace.
-     *
-     * @Route("/utility/{team}", name="admin_utility", requirements={"team": "\d+"})
-     * @Method({"POST"})
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function useUtility(Request $request)
-    {
-        /** @var Team $team */
-        $team = $this->getTeam($request->get('team'));
-        if ($team === null) {
-            return new JsonResponse(['success' => false, 'error' => 'The specified team does not exist.']);
-        }
-        /** @var UtilityHandler $utilityHandler */
-        $utilityHandler = $this->get('wide.utility.handler');
-        $result = $utilityHandler->useUtility(
-            $team->getTeamFolder(),
-            $request->get('workspace'),
-            $request->get('files'),
-            $request->get('options'),
-            $request->get('utility'),
-            $request->get('input')
-        );
-
-        return new JsonResponse($result);
     }
 
     /**

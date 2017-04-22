@@ -49,7 +49,7 @@ function refreshWorkspaces(callableFunction) {
  * Upon success, all workspaces are reloaded and the current one is selected again
  * Then the output (if any) is printed in the output element
  */
-execUtilityCallback = function(response) {
+runCommandCallback = function(response) {
     var executedCommand = 'none';
     if (typeof response.command !== "undefined" && response.command !== '') {
         executedCommand = response.command;
@@ -86,23 +86,22 @@ execUtilityCallback = function(response) {
 };
 
 // Executes one of the available tools (flex, bison, gcc or simulation of the .out file)
-function execUtility(utilitySelection, input) {
+function runCommand(utility, input) {
     input = input || '';
     var options = '';
-    if (utilitySelection === 'bison' || utilitySelection === 'flex') {
-        options += $('#' + utilitySelection + '-short-options').text() + ' ';
-        options += $('#' + utilitySelection + '-long-options').text() + ' ';
-        options += $('#' + utilitySelection + '-arg-options').text() + ' ';
+    if (utility === 'bison' || utility === 'flex') {
+        options += $('#' + utility + '-short-options').text() + ' ';
+        options += $('#' + utility + '-long-options').text() + ' ';
+        options += $('#' + utility + '-arg-options').text() + ' ';
     }
-    appendTextToOutput('>> ' + utilitySelection.toUpperCase() + ' output: ');
-    ajaxRequestWithDoneCallback(
-        utilitiesUrl,
+    appendTextToOutput('>> ' + utility.toUpperCase() + ' output: ');
+    doAjaxRequestWithOutput(
+        runCommandUrl,
         'POST',
-        execUtilityCallback,
+        runCommandCallback,
         {
-            workspace : WorkspaceManager.getActiveWorkspaceName(),
             files : WorkspaceManager.getActiveWorkspaceFiles(),
-            utility : utilitySelection,
+            utility : utility,
             options: options,
             input : input
         });

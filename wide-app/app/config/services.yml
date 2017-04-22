@@ -17,15 +17,18 @@ services:
     wide.file.handler:
         class: WideBundle\FileSystemHandler\FileHandler
         arguments: ["@logger", "@vbee.manager.setting"]
-    wide.utility.handler:
-        class: WideBundle\Utility\UtilityHandler
-        arguments: ["@wide.file.handler", "@wide.directory.handler", "%resource_map%"]
+    wide.command.manager:
+        class: WideBundle\CommandExecution\CommandManager
+        arguments: ["@wide.docker.manager"]
     wide.setting.handler:
         class: WideBundle\Setting\SettingHandler
         arguments: ["@vbee.manager.setting"]
     wide.search.manager:
         class: WideBundle\Search\SearchManager
         arguments: ["@doctrine.orm.entity_manager"]
+    wide.docker.manager:
+        class: WideBundle\Docker\DockerManager
+        arguments: ["@vbee.manager.setting", "@logger"]
     wide.exception_listener:
         class: WideBundle\EventListener\ExceptionListener
         arguments: ["@security.token_storage", "@router", "@logger"]
