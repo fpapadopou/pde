@@ -95,7 +95,7 @@ function runCommand(utility, input) {
         options += $('#' + utility + '-arg-options').text() + ' ';
     }
     appendTextToOutput('>> ' + utility.toUpperCase() + ' output: ');
-    doAjaxRequestWithOutput(
+    ajaxRequestWithDoneCallback(
         runCommandUrl,
         'POST',
         runCommandCallback,
