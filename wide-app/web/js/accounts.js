@@ -25,6 +25,16 @@ function updateOnTeamCreate(response) {
     }
 }
 
+function updateOnMemberAdded(response) {
+    modalResponseHandler(response);
+    if (response.success === true) {
+        $('#team-member-list').append(
+            $('<li>')
+                .text($('#add-to-team-input').val())
+        );
+    }
+}
+
 function modalResponseHandler(response) {
     body = $('#info-modal-body');
     modalDiv = $('#info-modal');
@@ -54,7 +64,7 @@ $(document).ready(function() {
     });
     $('#add-member-btn').click(function (event) {
         event.preventDefault();
-        ajaxRequestWithSuccessHandler(addMemberUrl, 'POST', modalResponseHandler, {'email' : $('#add-to-team-input').val()});
+        ajaxRequestWithSuccessHandler(addMemberUrl, 'POST', updateOnMemberAdded, {'email' : $('#add-to-team-input').val()});
     });
 
     // Account deletion modal trigger

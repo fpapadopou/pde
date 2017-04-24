@@ -3,7 +3,7 @@
     <p> Registered as {{ username }}  ({{ email }})</p>
     {% if team is defined %}
         <span>Your team: </span>
-        <ul>
+        <ul id="team-member-list">
             {% for member in team %}
                 <li> {{ member }} </li>
             {% endfor %}
