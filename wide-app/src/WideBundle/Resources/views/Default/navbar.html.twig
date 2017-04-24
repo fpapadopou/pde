@@ -10,7 +10,8 @@
         </div> <!-- navbar-header end -->
         {% if username is defined %}
             <div class="nav navbar-right">
-                <a href="{{ url('account_page') }}" class="btn btn-sm btn-default" id="account-icon"><i class="fa fa-user"></i> {{ username }}</a>
+                <a href="{{ url('account_page') }}" class="btn btn-sm btn-default" id="account-icon" target="_blank"><i class="fa fa-user"></i> {{ username }}</a>
+                <a href="{{ url('help_page') }}" class="btn btn-sm btn-default" title="Help" id="help-button" target="_blank"><i class="fa fa-question"></i></a>
                 <a href="{{ path('logout') }}" class="btn btn-danger btn-sm" role="button">
                     <i class="fa fa-sign-out"></i> Logout
                 </a>

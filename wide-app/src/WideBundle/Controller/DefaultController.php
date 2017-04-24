@@ -50,4 +50,21 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * Renders the help page. Publicly accessible page.
+     *
+     * @Route("/help", name="help_page")
+     * @Method({"GET"})
+     */
+    public function helpAction()
+    {
+        $parameters = [];
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (is_a($user, 'WideBundle\Entity\User')) {
+            $parameters['username'] = $user->getUsername();
+        }
+        return $this->render('WideBundle:Help:help.html.twig', $parameters);
+    }
 }

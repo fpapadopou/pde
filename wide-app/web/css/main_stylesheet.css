@@ -37,7 +37,7 @@ body {
     font-size: small;
 }
 
-#account-icon {
+#account-icon, #help-button {
     font-size: small;
     opacity: 0.9;
     border-radius: 15px;
@@ -459,3 +459,12 @@ div.navigation {
     text-align: center;
 }
 /** Team search page end */
+
+/** Help page **/
+#help-editor-options dt {
+    width: 120px;
+}
+#help-editor-options dd {
+    margin-left: 130px;
+}
+/** Help page end **/
