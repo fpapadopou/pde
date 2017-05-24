@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Monolog\Logger;
 use WideBundle\Entity\User;
 use VBee\SettingBundle\Manager\SettingDoctrineManager;
+use WideBundle\Exception\RegistrationException;
 
 /**
  * Class RegistrationManager
@@ -48,7 +49,7 @@ class RegistrationManager
     public function createUser($credentials)
     {
         if ($this->registrationsEnabled !== true) {
-            throw new \ErrorException('Registrations are disabled. Cannot create account.');
+            throw new RegistrationException('Registrations are disabled. Cannot create account.');
         }
 
         // Create the user and set its properties
