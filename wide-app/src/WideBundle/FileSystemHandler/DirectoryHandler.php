@@ -279,7 +279,7 @@ class DirectoryHandler extends BaseHandler
     {
         /** @var \FilesystemIterator $iterator */
         $iterator = new \FilesystemIterator($directory, \FilesystemIterator::SKIP_DOTS);
-        if (iterator_count($iterator) > $this->maxSubDirectories) {
+        if (iterator_count($iterator) >= $this->maxSubDirectories) {
             throw new \ErrorException('Cannot create any more directories here.');
         }
     }

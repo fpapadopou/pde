@@ -248,7 +248,7 @@ class BaseHandler
         }
         $totalFileCountRegex = $directory . DIRECTORY_SEPARATOR . '*.*';
         $files = glob($totalFileCountRegex);
-        if ($files !== false && count($files) > $this->maxDirectoryFiles) {
+        if ($files !== false && count($files) >= $this->maxDirectoryFiles) {
             throw new \ErrorException('Cannot create any more files in this directory.');
         }
         $extensionRegex = $directory . DIRECTORY_SEPARATOR . '*.' . $extension;
