@@ -168,6 +168,8 @@ class DirectoryHandler extends BaseHandler
             }
             $list[] = $path->getBasename();
         }
+        // Sort the list of subdirectories before returning them
+        asort($list, SORT_REGULAR);
         return ['success' => true, 'list' => $list];
     }
 
