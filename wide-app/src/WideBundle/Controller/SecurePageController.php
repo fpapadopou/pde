@@ -34,8 +34,10 @@ class SecurePageController extends Controller implements SecureResourceInterface
         /** @var Team $Team */
         $team = $user->getTeam();
         $hasTeam = false;
+        $teamMembers = [];
         if ($team !== null) {
             $hasTeam = true;
+            $teamMembers = $user->getTeam()->getMembersEmails();
         }
 
         return $this->render(
@@ -44,7 +46,7 @@ class SecurePageController extends Controller implements SecureResourceInterface
                 'username' => $user->getUsername(),
                 'has_team' => $hasTeam,
                 'email' => $user->getEmail(),
-                'team' => $user->getTeam()->getMembersEmails(),
+                'team' => $teamMembers,
                 'deadline' => $this->get('vbee.manager.setting')->get('deadline')
             ]
         );
