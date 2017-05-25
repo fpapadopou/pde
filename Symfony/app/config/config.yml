@@ -67,4 +67,4 @@ v_bee_setting:
 knp_paginator:
     page_range: 10                     # default page range used in pagination control
     template:
-        pagination: 'PDEBundle:AdminPanel:pagination.html.twig'     # sliding pagination controls template
+        pagination: 'PDEBundle:Search:pagination.html.twig'     # sliding pagination controls template
