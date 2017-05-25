@@ -1,0 +1,74 @@
+{% extends 'PDEBundle:Default:base_layout.html.twig' %}
+{% block title %}Editor{% endblock %}
+
+{% block content %}
+    {% include 'PDEBundle:Default:navbar.html.twig' %}
+    <div class="row" id="editor-page-content">
+        <div class="col-md-2" id="editor-left-side">
+            {% include 'PDEBundle:Editor:editor_controls.html.twig' %}
+        </div>
+        <div class="col-md-10" id="editor-right-side">
+            <ul id="file-tab-list" class="nav nav-tabs">
+                <li role="presentation"><a>No files</a></li>
+            </ul>
+            <div id="editor-container">
+                <span id="generated-file-note" class="label label-default">Generated file - can't edit</span>
+                <pre id="editor" class="full-size"></pre>
+                <div id="output-section" class="inactive well"></div>
+            </div>
+        </div>
+        <!-- Modals used in editor -->
+        {% include 'PDEBundle:Editor:workspace_selection_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:create_file_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:rename_file_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:delete_file_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:delete_workspace_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:rename_workspace_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:unsaved_changes_modal.html.twig' %}
+        {% include 'PDEBundle:Editor:tool_configuration_modal.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Functionality from parent template -->
+    {{ parent() }}
+    <!-- CDN documents for ace editor (core, mode and themes) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/mode-c_cpp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/snippets/c_cpp.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-textmate.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/theme-ambiance.js"></script>
+    <!-- Initialization of the ajax endpoint used in the editor -->
+    {% include 'PDEBundle:Editor:endpoints.html.twig' %}
+
+    <!-- Javascript used for workspace and file management -->
+    <script src="{{ asset('js/workspace_manager.js') }}"></script>
+    <script src="{{ asset('js/user_interface_utilities.js') }}"></script>
+    <script src="{{ asset('js/editor.js') }}"></script>
+    <script src="{{ asset('js/editor_button_bindings.js') }}"></script>
+    <script src="{{ asset('js/workspace_control_bindings.js') }}"></script>
+    <script src="{{ asset('js/tools_bindings.js') }}"></script>
+    <script src="{{ asset('js/file_upload.js') }}"></script>
+    <script src="{{ asset('js/tool_configuration.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            // Notify the user if there are any unsaved changes in the current workspace, in case they try to
+            // leave - the actual dialog text will most likely be replaced by the browser
+            window.onbeforeunload = onBeforeUnloadFunction;
+
+            // Initialize the editor and workspaces list
+            refreshWorkspaces(function () {
+                createWorkspaceList(WorkspaceManager.getWorkspaces());
+                $('#wspace-selection-modal').modal('show');
+            });
+
+            $('#tool-configuration').click(function () {
+                $('#tool-configuration-modal').modal('show');
+            });
+
+            // The document has loaded successfully, all buttons can now be enabled
+            $('.btn').removeClass('disabled');
+            $('.btn-group').removeClass('disabled');
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,56 @@
+services:
+    pde.webmailauthenticator:
+        class: PDEBundle\Authentication\WebmailAuthenticator
+        arguments: ["@vbee.manager.setting", "@logger"]
+    pde.authenticator:
+        class: PDEBundle\Authentication\Authenticator
+        arguments: ["@pde.webmailauthenticator", "@router", "@pde.registrationmanager", "@vbee.manager.setting"]
+    pde.registrationmanager:
+        class: PDEBundle\Registration\RegistrationManager
+        arguments: ["@doctrine.orm.entity_manager", "@logger", "@vbee.manager.setting"]
+    pde.teammanager:
+        class: PDEBundle\Teams\TeamManager
+        arguments: ["@doctrine.orm.entity_manager", "@pde.directory.handler", "@logger", "@vbee.manager.setting"]
+    pde.directory.handler:
+        class: PDEBundle\FileSystemHandler\DirectoryHandler
+        arguments: ["@logger", "@vbee.manager.setting"]
+    pde.file.handler:
+        class: PDEBundle\FileSystemHandler\FileHandler
+        arguments: ["@logger", "@vbee.manager.setting"]
+    pde.command.manager:
+        class: PDEBundle\CommandExecution\CommandManager
+        arguments: ["@pde.docker.manager"]
+    pde.setting.handler:
+        class: PDEBundle\Setting\SettingHandler
+        arguments: ["@vbee.manager.setting"]
+    pde.search.manager:
+        class: PDEBundle\Search\SearchManager
+        arguments: ["@doctrine.orm.entity_manager"]
+    pde.docker.manager:
+        class: PDEBundle\Docker\DockerManager
+        arguments: ["@vbee.manager.setting", "@logger"]
+    pde.exception_listener:
+        class: PDEBundle\EventListener\ExceptionListener
+        arguments: ["@security.token_storage", "@router", "@logger"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+    pde.auth_listener:
+        class: PDEBundle\EventListener\AuthListener
+        arguments: ["@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 2 }
+    pde.team_operation_listener:
+        class: PDEBundle\EventListener\TeamOperationListener
+        arguments: ["@vbee.manager.setting", "@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 1 }
+    pde.team_resource_listener:
+        class: PDEBundle\EventListener\TeamResourceListener
+        arguments: ["@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: 0 }
+    pde.editable_resource_listener:
+        class: PDEBundle\EventListener\EditableResourceListener
+        arguments: ["@vbee.manager.setting", "@security.token_storage", "@router"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: -1 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Parser Development Environment{% endblock %}</title>
+        <!-- Favicons (normal and high res) -->
+        <link rel="icon" type="image/png" href="{{ asset('images/ceid_logo.png') }}" sizes="16x16" />
+        <link rel="icon" type="image/png" href="{{ asset('images/ceid_logo@2x.png') }}" sizes="32x32" />
+        {% block stylesheets %}
+            <!-- Bootstrap css library version 3.3.5 -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+            <!-- Bootstrap's font-awesome icons version 4.0.0 -->
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+            <!-- Custom application stylesheet -->
+            <link rel="stylesheet" href="{{ asset('css/main_stylesheet.css') }}">
+        {% endblock %}
+    </head>
+    <body>
+    {% block body %}
+        <!-- Container for flashbag errors -->
+        {% if app.session.flashBag.has('error') %}
+            <div id="flash-error" class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {{ app.session.flashBag.get('error')[0] }}
+            </div>
+        {% endif %}
+        {% block content %}{% endblock %}
+        <!-- Modal used when ajax errors occur -->
+        {% include 'PDEBundle:Default:info_modal.html.twig' %}
+    {% endblock %}
+    {% block javascripts %}
+        <!-- JQuery 1.11.3 minified version -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <!-- Bootstrap Javascript 3.3.5 minified version -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+        <!-- Custom JavaScript functions -->
+        <script src="{{ asset('js/misc.js') }}"></script>
+    {% endblock %}
+    </body>
+</html>

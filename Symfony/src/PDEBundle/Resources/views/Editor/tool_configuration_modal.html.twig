@@ -1,0 +1,53 @@
+<!-- Displays all available Bison/Flex/GCC options and allows the user to select any of them. -->
+<div class="modal fade" id="tool-configuration-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Configure Bison, Flex & GCC (options saved for this session)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-title" data-toggle="collapse" data-parent="#accordion" href="#bison-config">
+                                    GNU Bison options <i class="fa fa-caret-down"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="bison-config" class="panel-collapse collapse">
+                            {% include 'PDEBundle:Editor:bison_configs.html.twig' %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-title" data-toggle="collapse" data-parent="#accordion" href="#flex-config">
+                                    Flex options <i class="fa fa-caret-down"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="flex-config" class="panel-collapse collapse">
+                            {% include 'PDEBundle:Editor:flex_configs.html.twig' %}
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-title" data-toggle="collapse" data-parent="#accordion" href="#gcc-config">
+                                    GNU GCC options <i class="fa fa-caret-down"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="gcc-config" class="panel-collapse collapse">
+                            {% include 'PDEBundle:Editor:gcc_configs.html.twig' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default btn-small" data-dismiss="modal">Done</button>
+            </div>
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->

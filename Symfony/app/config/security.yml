@@ -1,0 +1,22 @@
+security:
+
+    providers:
+        database:
+            entity: { class: PDEBundle:User, property: username }
+
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            guard:
+                authenticators:
+                    - pde.authenticator
+            # Let the Symfony Firewall handle the logout and just redirect logged out users to the homepage
+            # TODO: Check this out again. Should the logout path be placed under `main` firewall??
+            logout:
+                path: logout
+                target: /

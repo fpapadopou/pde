@@ -1,0 +1,40 @@
+{% extends 'PDEBundle:Default:base_layout.html.twig' %}
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+    {% include 'PDEBundle:Default:navbar.html.twig' %}
+    <div class="row row-fill">
+        <h2 class="center-heading"> Account and team management </h2>
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="col-md-5" id="team-container">
+                {% include 'PDEBundle:Accounts:team_controls.html.twig' %}
+                {% if has_team is defined and has_team == true %}
+                    {% set display = 'block' %}
+                {% else %}
+                    {% set display = 'none' %}
+                {% endif %}
+                <a href="{{ url('editor') }}" id="go-to-editor-btn" class="btn btn-default has-shadow" style="display: {{ display }};">Go to editor</a>
+            </div>
+            <div class="col-md-2"></div>
+            <div class="col-md-5" id="account-container">
+                {% include 'PDEBundle:Accounts:account_controls.html.twig' %}
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+        {% include 'PDEBundle:Default:info_modal.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- include functionality from parent template -->
+    {{ parent() }}
+    <script type="text/javascript">
+        // Endpoint definitions for team operations
+        createTeamUrl = '{{ url("create_team") }}';
+        deleteTeamUrl = '{{ url("delete_team") }}';
+        leaveTeamUrl = '{{ url("leave_team") }}';
+        addMemberUrl = '{{ url("add_member") }}';
+    </script>
+    <script src="{{ asset('js/accounts.js') }}"></script>
+{% endblock %}

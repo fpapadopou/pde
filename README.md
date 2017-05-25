@@ -1,12 +1,14 @@
-# WIDE, a Web Interpreter Development Environment 
-A web development environment for creating custom language interpreters using flex and bison tools.
+# PDE, a Parser Development Environment 
+A web development environment for creating context-free language parsers using Flex and GNU Bison.
 
 
-This project uses the following open-source projects
+This project is based on the following open-source projects
+
+* [Symfony Framework](http://symfony.com/) a powerful web framework.
 
 * [Ace Editor](http://ace.c9.io/) an embeddable editor written in Javascript.
 
-* [flex](http://flex.sourceforge.net/) a lexical analyzer (scanner generator).
+* [Flex](http://flex.sourceforge.net/) a lexical analyzer (scanner generator).
 
-* [bison](http://www.gnu.org/software/bison/) a general-purpose parser generator.
+* [GNU Bison](http://www.gnu.org/software/bison/) a general-purpose parser generator.
 
