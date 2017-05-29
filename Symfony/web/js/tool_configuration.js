@@ -34,11 +34,6 @@ updateOptionsWithArguments = function(tool) {
     var options = '';
     $('.' + tool + '-arg-option').each(function () {
         var inputElement = $(this);
-        // Restore default gcc output file name when option is unchecked
-        if (tool === 'gcc' && !inputElement.prop("checked")) {
-            $('#gcc-arg-options').text('-o executable');
-            return;
-        }
         if (inputElement.prop("checked")) {
             var targetId = $(this).attr('data-target');
             var target = $('#' + targetId);
@@ -60,6 +55,10 @@ updateOptionsWithArguments = function(tool) {
             }
         }
     });
+    // Restore default gcc output file name when option is unchecked
+    if (tool === 'gcc' && options === '') {
+        options = '-o executable';
+    }
     $('#' + tool + '-arg-options').text(options);
 };
 
