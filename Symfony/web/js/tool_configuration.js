@@ -31,6 +31,11 @@ updateLongOptions = function (tool) {
 updateOptionsWithArguments = function(tool) {
     var options = '';
     $('.' + tool + '-arg-option').each(function () {
+        // Restore default gcc output file name when option is unchecked
+        if (tool === 'gcc' && !this.checked) {
+            $('#gcc-arg-options').text('-o executable');
+            return;
+        }
         if (this.checked) {
             var targetId = $(this).attr('data-target');
             var target = $('#' + targetId);
@@ -78,13 +83,6 @@ $(document).ready(function () {
         updateLongOptions('flex');
     });
 
-    // Restore default gcc output file name when option is unchecked
-    $('.gcc-arg-option').change(function() {
-        var isChecked= $(this).is(':checked');
-        if(!isChecked) {
-            $('#gcc-arg-options').text('-o executable');
-        }
-    });
     // Bison options with arguments change listener.
     $('.bison-arg-input').on('change paste keyup', function () {
         updateOptionsWithArguments('bison');
