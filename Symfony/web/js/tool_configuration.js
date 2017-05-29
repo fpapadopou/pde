@@ -7,7 +7,7 @@ updateShortOptions = function (tool) {
     var options = '';
     $('.' + tool + '-short-option').each(function () {
         var inputElement = $(this);
-        if (inputElement.checked) {
+        if (inputElement.prop("checked")) {
             options += $(this).attr('data-option');
         }
     });
@@ -22,7 +22,7 @@ updateLongOptions = function (tool) {
     var options = '';
     $('.' + tool + '-long-option').each(function () {
         var inputElement = $(this);
-        if (inputElement.checked) {
+        if (inputElement.prop("checked")) {
             options += '--' + $(this).attr('data-option') + ' ';
         }
     });
@@ -35,11 +35,11 @@ updateOptionsWithArguments = function(tool) {
     $('.' + tool + '-arg-option').each(function () {
         var inputElement = $(this);
         // Restore default gcc output file name when option is unchecked
-        if (tool === 'gcc' && !inputElement.checked) {
+        if (tool === 'gcc' && !inputElement.prop("checked")) {
             $('#gcc-arg-options').text('-o executable');
             return;
         }
-        if (inputElement.checked) {
+        if (inputElement.prop("checked")) {
             var targetId = $(this).attr('data-target');
             var target = $('#' + targetId);
             var dashes = '--';
