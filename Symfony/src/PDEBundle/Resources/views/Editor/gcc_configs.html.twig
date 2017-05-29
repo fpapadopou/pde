@@ -1,14 +1,24 @@
 <!-- All available Flex configuration options are listed below. -->
 <div class="panel-body">
-    <pre class="command-prompt" id="gcc-command">prompt> gcc syntax-analyzer.tab.c scanner.yy.c -lfl -o executable.out</pre>
+    <pre class="command-prompt" id="gcc-command">prompt> gcc syntax-analyzer.tab.c scanner.yy.c <span id="gcc-short-options">-lfl</span> <span id="gcc-arg-options">-o executable</span>.out</pre>
     <div class="panel-body-scrollable">
         <div class="row">
             <div class="col-md-2"></div>
             <div class="col-md-8">
-                <p>The GNU GCC compiler command has been hardcoded for the purpose of this application.<br/>
+                <dl class="dl-horizontal">
+                    <dd><input class="gcc-short-option" data-option="lfl" type="checkbox" checked/>&nbsp; use Flex library when linking parser</dd>
+                    <dt>-o EXECUTABLE_NAME.out</dt>
+                    <dd>
+                        <input class="gcc-arg-option" data-target="gcc-exec-file-input" type="checkbox"/>&nbsp;
+                        <input class="form-control input-sm gcc-arg-input single-hyphen no-equals-sign" id="gcc-exec-file-input" data-option="o " type="text"/>
+                        use a custom executable file name
+                    </dd>
+                </dl>
+                <p>The GNU GCC compiler command has been hardcoded for the purpose of this application, but you can change the two options above.<br/>
                 The above command combines the syntax analyzer produced from GNU Bison and the scanner produced from Flex
-                creating a parser. The <i>-lfl</i> flag indicates that the linker should link the program with the flex library.
-                <br/>An executable file named <i>executable.out</i> is produced which you can use like:</p>
+                creating an executable parser. The <i>-lfl</i> flag (if selected) indicates that the linker should link the program with the Flex library.
+                The syntax analyzer code (tab.c) and the scanner (.yy.c) are automatically detected by their extensions.
+                <br/>An executable file - named <i>executable.out</i> by default - is produced which you can use like:</p>
                 <br/>
                 <pre class="command-prompt">./executable.out input-file.txt</pre>
                 <br/>

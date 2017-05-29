@@ -48,7 +48,7 @@ class CommandManager
                     break;
                 case 'gcc':
                     $operands = $this->findOperands($files, ['tab.c', 'yy.c']);
-                    $command = $this->buildCommand('gcc', $operands, '', '-lfl -o executable.out');
+                    $command = $this->buildCommand('gcc', $operands, '', $options);
                     break;
                 case 'simulation':
                     $executable = $this->findOperands($files, ['out']);

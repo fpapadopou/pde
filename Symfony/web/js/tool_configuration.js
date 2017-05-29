@@ -74,10 +74,6 @@ $(document).ready(function () {
     $('.flex-long-option').change(function () {
         updateLongOptions('flex');
     });
-    // Double-hyphen gcc options handler.
-    $('.gcc-long-option').change(function () {
-        updateLongOptions('gcc');
-    });
 
     // Bison options with arguments change listener.
     $('.bison-arg-input').on('change paste keyup', function () {

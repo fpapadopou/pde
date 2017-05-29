@@ -89,10 +89,15 @@ runCommandCallback = function(response) {
 function runCommand(utility, input) {
     input = input || '';
     var options = '';
-    if (utility === 'bison' || utility === 'flex') {
+    if (utility === 'bison' || utility === 'flex' || utility === 'gcc') {
         options += $('#' + utility + '-short-options').text() + ' ';
         options += $('#' + utility + '-long-options').text() + ' ';
-        options += $('#' + utility + '-arg-options').text() + ' ';
+        var argOption = $('#' + utility + '-arg-options').text();
+        // Append '.out' extension to GCC output file, if necessary
+        if (utility === 'gcc') {
+            argOption += '.out';
+        }
+        options += argOption + ' ';
     }
     appendTextToOutput('>> ' + utility.toUpperCase() + ' output: ');
     ajaxRequestWithDoneCallback(
