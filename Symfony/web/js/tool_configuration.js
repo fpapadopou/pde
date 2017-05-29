@@ -46,7 +46,10 @@ updateOptionsWithArguments = function(tool) {
                 }
                 options += equalSign + target.val();
             }
-            options += ' ';
+            // Append space after arguments, except for gcc
+            if (tool !== 'gcc') {
+                options += ' ';
+            }
         }
     });
     $('#' + tool + '-arg-options').text(options);
