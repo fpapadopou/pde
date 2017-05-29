@@ -30,12 +30,10 @@ updateLongOptions = function (tool) {
 // Updates the list of options with arguments (single or double hyphen options). Arguments might be optional.
 updateOptionsWithArguments = function(tool) {
     var options = '';
+    if (tool === 'gcc') {
+        options = '-o executable';
+    }
     $('.' + tool + '-arg-option').each(function () {
-        // Restore default gcc output file name when option is unchecked
-        if (tool === 'gcc' && !this.checked) {
-            $('#gcc-arg-options').text('-o executable');
-            return;
-        }
         if (this.checked) {
             var targetId = $(this).attr('data-target');
             var target = $('#' + targetId);
