@@ -6,6 +6,7 @@ use PDEBundle\Entity\Team;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
+use PDEBundle\Entity\User;
 
 /**
  * Class SearchManager
@@ -56,9 +57,10 @@ class SearchManager
     private function getSearchCriteria($email, $date)
     {
         $criteria = [];
-        $team = $this->entityManager->getRepository('PDEBundle:User')->findOneBy(['email' => $email]);
-        if ($team !== null) {
-            $criteria['team'] = $team->getId();
+        /** @var User $user */
+        $user = $this->entityManager->getRepository('PDEBundle:User')->findOneBy(['email' => $email]);
+        if ($user !== null && $user->getTeam() !== null) {
+            $criteria['team'] = $user->getTeam()->getId();
         }
         $dateObject = \DateTime::createFromFormat('Y-m-d', $date);
         if ($date != '' && $dateObject !== false) {
