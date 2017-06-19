@@ -15,15 +15,18 @@ class DirectoryHandler extends BaseHandler
      *
      * @param $parent
      * @param $directory
+     * @param $limit
      * @return array
      */
-    public function createDirectory($parent, $directory)
+    public function createDirectory($parent, $directory, $limit = true)
     {
         try {
             $this->validateDirectoryName($directory);
             $path = $parent . DIRECTORY_SEPARATOR . $directory;
             $this->checkNoSuchDirectory($path);
-            $this->canCreateDirectory($parent);
+            if ($limit === true) {
+                $this->canCreateDirectory($parent);
+            }
             $parentPermissions = fileperms($parent);
             $this->safeCreateDirectory($path, $parentPermissions);
         } catch (\Exception $exception) {

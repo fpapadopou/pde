@@ -78,7 +78,7 @@ class TeamManager
         try {
             $team->addMember($user);
             $folderName = md5($user->getUsername()) . rand(10000, 99999);
-            $this->directoryHandler->createDirectory($this->storageRoot, $folderName);
+            $this->directoryHandler->createDirectory($this->storageRoot, $folderName, false);
             $team->setTeamFolder($this->storageRoot . DIRECTORY_SEPARATOR . $folderName);
         } catch (\Exception $exception) {
             $this->logger->addError('Team space creation failed - ' . $exception->getMessage());
