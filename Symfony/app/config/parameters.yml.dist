@@ -1,10 +1,10 @@
 # Application default parameters
 parameters:
-    database_host:     127.0.0.1
-    database_port:     ~
-    database_name:     symfony
+    database_host:     localhost
+    database_port:     3306
+    database_name:     pde
     database_user:     root
-    database_password: ~
+    database_password: root
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
