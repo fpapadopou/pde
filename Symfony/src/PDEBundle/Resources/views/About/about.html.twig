@@ -1,0 +1,33 @@
+{% extends 'PDEBundle:Default:base_layout.html.twig' %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+    {% include 'PDEBundle:Default:navbar.html.twig' %}
+    <div class="row row-fill">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <h3 class="center-heading">About Parser Development Environment</h3>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <p>
+                        This web application is part of Fotis Papadopoulos' thesis which was implemented during the
+                        2016-2017 academic year. The main goal of the Parser Development Environment is to provide
+                        an efficient way of creating language parsers using Flex and GNU Bison tools.
+                        This environment provides a variety of tools which enable fast prototyping and testing
+                        of context free grammar parsers, collaboration and
+                        administrator tools that can be used by tutors when supervising students' projects.
+                        This project is based on several other open source projects such as the Symfony Framework,
+                        Bootstrap and Ace Editor. Hence, the project itself is open source and you can find more about
+                        it in its official Github page.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- include functionality from parent template -->
+    {{ parent() }}
+{% endblock %}

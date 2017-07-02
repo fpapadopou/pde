@@ -67,4 +67,22 @@ class DefaultController extends Controller
         }
         return $this->render('PDEBundle:Help:help.html.twig', $parameters);
     }
+
+    /**
+     * Renders the about page. Publicly accessible page.
+     *
+     * @Route("/about", name="about_page")
+     * @Method({"GET"})
+     */
+    public function aboutAction()
+    {
+        $parameters = [];
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if (is_a($user, 'PDEBundle\Entity\User')) {
+            $parameters['username'] = $user->getUsername();
+        }
+        return $this->render('PDEBundle:About:about.html.twig', $parameters);
+    }
 }
