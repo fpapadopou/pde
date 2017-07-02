@@ -1,5 +1,5 @@
 # PDE, a Parser Development Environment 
-A web development environment for creating context-free language parsers using Flex and GNU Bison.
+A web environment for creating context-free language parsers using Flex and GNU Bison.
 
 
 This project is based on the following open-source projects
