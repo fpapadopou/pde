@@ -196,6 +196,25 @@ class AdminActionController extends BaseController implements SecureResourceInte
     }
 
     /**
+     * Deletes an existing team, specified by its id.
+     *
+     * @Route("/delteam", name="admin_delete_team")
+     * @Method({"DELETE"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteTeam(Request $request)
+    {
+        /** @var Team $team */
+        $team = $this->getTeam($request->get('team'));
+        if ($team === null) {
+            return new JsonResponse(['success' => false, 'error' => 'No such team found']);
+        }
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
      * Fetches a team from the database.
      *
      * @param $teamId
