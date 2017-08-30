@@ -11,6 +11,9 @@ services:
     pde.teammanager:
         class: PDEBundle\Teams\TeamManager
         arguments: ["@doctrine.orm.entity_manager", "@pde.directory.handler", "@logger", "@vbee.manager.setting"]
+    pde.usermanager:
+        class: PDEBundle\Users\UserManager
+        arguments: ["@doctrine.orm.entity_manager"]
     pde.directory.handler:
         class: PDEBundle\FileSystemHandler\DirectoryHandler
         arguments: ["@logger", "@vbee.manager.setting"]
