@@ -100,12 +100,6 @@ class TeamManager
      */
     public function deleteTeam(Team $team)
     {
-        if ($team->getMembersCount() > 1) {
-            return [
-                'success' => false,
-                'error' => 'The rest of the members must leave the team before it can be deleted.'
-            ];
-        }
         try {
             $this->directoryHandler->deleteDirectory($team->getTeamFolder());
         } catch (\Exception $exception) {
