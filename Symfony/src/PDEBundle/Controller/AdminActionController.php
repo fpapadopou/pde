@@ -14,6 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use PDEBundle\FileSystemHandler\FileHandler;
 use PDEBundle\Search\SearchManager;
 use Knp\Component\Pager\Paginator;
+use PDEBundle\Teams\TeamManager;
+use PDEBundle\Teams\UserManager;
 
 /**
  * Class AdminActionController
@@ -196,7 +198,8 @@ class AdminActionController extends BaseController implements SecureResourceInte
     }
 
     /**
-     * Deletes an existing team, specified by its id.
+     * Deletes an existing team, specified by its id. First deletes the team and its files, then
+     * removes the users from the system database.
      *
      * @Route("/delteam", name="admin_delete_team")
      * @Method({"DELETE"})
@@ -211,6 +214,21 @@ class AdminActionController extends BaseController implements SecureResourceInte
         if ($team === null) {
             return new JsonResponse(['success' => false, 'error' => 'No such team found']);
         }
+
+        /** @var TeamManager $teamManager */
+        $teamManager = $this->get('pde.teammanager');
+        $teamDeletionResult = $teamManager->deleteTeam($team);
+        if ($teamDeletionResult['success'] !== true) {
+            return new JsonResponse($teamDeletionResult);
+        }
+
+        /** @var UserManager $userManager */
+        $userManager = $this->get('pde.usermanager');
+        $userDeletionResult = $userManager->deleteUsers($team->getMembers());
+        if ($userDeletionResult['success'] !== true) {
+            return new JsonResponse($userDeletionResult);
+        }
+
         return new JsonResponse(['success' => true]);
     }
 
