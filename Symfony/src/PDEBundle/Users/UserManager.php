@@ -33,6 +33,7 @@ class UserManager
             foreach ($users as $user) {
                 $this->entityManager->remove($user);
             }
+            $this->entityManager->flush();
         } catch (\Exception $exception) {
             return ['success' => false, 'error' => 'Failed to delete one or more users ' . $exception->getMessage()];
         }
