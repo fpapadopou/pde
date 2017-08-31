@@ -1,6 +1,6 @@
 <?php
 
-namespace PDEBundle\Teams;
+namespace PDEBundle\Users;
 
 use Doctrine\ORM\EntityManager;
 use PDEBundle\Entity\User;

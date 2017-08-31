@@ -15,7 +15,7 @@ use PDEBundle\FileSystemHandler\FileHandler;
 use PDEBundle\Search\SearchManager;
 use Knp\Component\Pager\Paginator;
 use PDEBundle\Teams\TeamManager;
-use PDEBundle\Teams\UserManager;
+use PDEBundle\Users\UserManager;
 
 /**
  * Class AdminActionController
