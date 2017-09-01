@@ -4,6 +4,7 @@ $(document).ready(function () {
         var targetTeamId = $(this).attr('data-team-id');
         // change modal button target, pop-up modal
         $('#team-del-modal-btn').attr('data-team-id', targetTeamId);
+        $('#team-id').text(targetTeamId);
         $('#team-delete-modal').modal('show');
     });
 

@@ -13,7 +13,7 @@
         </div>
         <div class="col-md-4">
             <a href="{{ path('admin_editor', {'team' : team.id}) }}" target="_blank" class="btn btn-default team-editor-link">Jump to team editor</a>
-            <a data-team-id="{{ team.id }}" class="btn btn-danger delete-team-btn team-editor-link">Delete team</a>
+            <a data-team-id="{{ team.id }}" class="btn btn-danger delete-team-btn team-editor-link"> <i class="fa fa-trash-o"></i> Delete team</a>
         </div>
     </div>
     <p class="list-group-item-text"><b>Directory:</b> {{ team.teamFolder }}</p>
