@@ -1,4 +1,4 @@
-<div class="list-group-item team-list-group-item" style="display: block;">
+<div id="team-{{ team.id }}-list-group-item" class="list-group-item team-list-group-item" style="display: block;">
     <h3 class="list-group-item-heading center-heading">
         Team {{ team.id }} - <small>created at {{ team.created | date("Y-M-d") }} </small>
     </h3>
@@ -13,6 +13,7 @@
         </div>
         <div class="col-md-4">
             <a href="{{ path('admin_editor', {'team' : team.id}) }}" target="_blank" class="btn btn-default team-editor-link">Jump to team editor</a>
+            <a data-team-id="{{ team.id }}" class="btn btn-danger delete-team-btn team-editor-link">Delete team</a>
         </div>
     </div>
     <p class="list-group-item-text"><b>Directory:</b> {{ team.teamFolder }}</p>

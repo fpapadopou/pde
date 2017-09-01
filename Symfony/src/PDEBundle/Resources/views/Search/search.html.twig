@@ -41,6 +41,10 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script>
+        var deleteTeamUrl = "{{ url('admin_delete_team') }}";
+    </script>
     <!-- Functionality from parent template -->
     {{ parent() }}
+    <script src="{{ asset('js/search.js') }}"></script>
 {% endblock %}
