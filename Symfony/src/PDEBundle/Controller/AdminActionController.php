@@ -233,6 +233,40 @@ class AdminActionController extends BaseController implements SecureResourceInte
     }
 
     /**
+     * Returns a zip file containing all the files of the specified team.
+     *
+     * @Route("/backup/{team}", name="admin_team_backup", requirements={"team": "\d+"})
+     * @Method({"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function teamBackupAction(Request $request)
+    {
+        /** @var Team $team */
+        $team = $this->getTeam($request->get('team'));
+        if ($team === null) {
+            $this->addFlash('error', 'Team does not exist. No files to download');
+            return $this->redirect($this->generateUrl('account_page'));
+        }
+
+        /** @var TeamManager $teamManager */
+        $teamManager = $this->get('pde.teammanager');
+        $zipFile = $teamManager->zipTeamFolder($team);
+        if ($zipFile['success'] !== true) {
+            return new Response($zipFile['error'], 500);
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-disposition', 'attachment; filename=' . $zipFile['name']);
+        $response->headers->set('Content-Length', $zipFile['length']);
+        $response->sendHeaders();
+        $response->setContent($zipFile['content']);
+        return $response;
+    }
+
+    /**
      * Fetches a team from the database.
      *
      * @param $teamId
