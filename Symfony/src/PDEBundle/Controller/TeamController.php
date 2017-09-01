@@ -57,6 +57,12 @@ class TeamController extends Controller implements SecureResourceInterface, Team
             return new JsonResponse(['success' => false, 'error' => 'Your account has no team.']);
         }
 
+        if ($team->getMembersCount() > 1) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'The rest of the members must leave the team before it can be deleted.'
+            ]);
+        }
         /** @var TeamManager $teamManager */
         $teamManager = $this->get('pde.teammanager');
         return new JsonResponse($teamManager->deleteTeam($team));

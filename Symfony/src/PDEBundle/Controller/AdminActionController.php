@@ -14,6 +14,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use PDEBundle\FileSystemHandler\FileHandler;
 use PDEBundle\Search\SearchManager;
 use Knp\Component\Pager\Paginator;
+use PDEBundle\Teams\TeamManager;
+use PDEBundle\Users\UserManager;
 
 /**
  * Class AdminActionController
@@ -193,6 +195,75 @@ class AdminActionController extends BaseController implements SecureResourceInte
     public function getLogfileAction(Request $request)
     {
         return new JsonResponse(['success' => false, 'error' => 'Not implemented yet.']);
+    }
+
+    /**
+     * Deletes an existing team, specified by its id. First deletes the team and its files, then
+     * removes the users from the system database.
+     *
+     * @Route("/delteam", name="admin_delete_team")
+     * @Method({"DELETE"})
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteTeamAction(Request $request)
+    {
+        /** @var Team $team */
+        $team = $this->getTeam($request->get('team'));
+        if ($team === null) {
+            return new JsonResponse(['success' => false, 'error' => 'No such team found']);
+        }
+
+        /** @var TeamManager $teamManager */
+        $teamManager = $this->get('pde.teammanager');
+        $teamDeletionResult = $teamManager->deleteTeam($team);
+        if ($teamDeletionResult['success'] !== true) {
+            return new JsonResponse($teamDeletionResult);
+        }
+
+        /** @var UserManager $userManager */
+        $userManager = $this->get('pde.usermanager');
+        $userDeletionResult = $userManager->deleteUsers($team->getMembers());
+        if ($userDeletionResult['success'] !== true) {
+            return new JsonResponse($userDeletionResult);
+        }
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    /**
+     * Returns a zip file containing all the files of the specified team.
+     *
+     * @Route("/backup/{team}", name="admin_team_backup", requirements={"team": "\d+"})
+     * @Method({"GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function teamBackupAction(Request $request)
+    {
+        /** @var Team $team */
+        $team = $this->getTeam($request->get('team'));
+        if ($team === null) {
+            $this->addFlash('error', 'Team does not exist. No files to download');
+            return $this->redirect($this->generateUrl('account_page'));
+        }
+
+        /** @var TeamManager $teamManager */
+        $teamManager = $this->get('pde.teammanager');
+        $zipFile = $teamManager->zipTeamFolder($team);
+        if ($zipFile['success'] !== true) {
+            return new Response($zipFile['error'], 500);
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/zip');
+        $response->headers->set('Content-disposition', 'attachment; filename=' . $zipFile['name']);
+        $response->headers->set('Content-Length', $zipFile['length']);
+        $response->sendHeaders();
+        $response->setContent($zipFile['content']);
+        return $response;
     }
 
     /**

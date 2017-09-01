@@ -7,6 +7,7 @@ use Monolog\Logger;
 use PDEBundle\Entity\User;
 use PDEBundle\Entity\Team;
 use PDEBundle\FileSystemHandler\DirectoryHandler;
+use PDEBundle\FileSystemHandler\FileHandler;
 use VBee\SettingBundle\Manager\SettingDoctrineManager;
 
 /**
@@ -23,6 +24,9 @@ class TeamManager
     /** @var DirectoryHandler $directoryHandler */
     private $directoryHandler;
 
+    /** @var FileHandler $fileHandler */
+    private $fileHandler;
+
     /** @var Logger $logger */
     private $logger;
 
@@ -37,6 +41,7 @@ class TeamManager
      *
      * @param EntityManager $entityManager
      * @param DirectoryHandler $directoryHandler
+     * @param FileHandler $fileHandler
      * @param Logger $logger
      * @param SettingDoctrineManager $settingsManager
      * @throws \ErrorException
@@ -44,12 +49,14 @@ class TeamManager
     public function __construct(
         EntityManager $entityManager,
         DirectoryHandler $directoryHandler,
+        FileHandler $fileHandler,
         Logger $logger,
         SettingDoctrineManager $settingsManager
     )
     {
         $this->entityManager = $entityManager;
         $this->directoryHandler = $directoryHandler;
+        $this->fileHandler = $fileHandler;
         $this->logger = $logger;
         $storageRoot = $settingsManager->get('storage_root');
         // Create the directory if it does not already exist
@@ -100,12 +107,6 @@ class TeamManager
      */
     public function deleteTeam(Team $team)
     {
-        if ($team->getMembersCount() > 1) {
-            return [
-                'success' => false,
-                'error' => 'The rest of the members must leave the team before it can be deleted.'
-            ];
-        }
         try {
             $this->directoryHandler->deleteDirectory($team->getTeamFolder());
         } catch (\Exception $exception) {
@@ -177,5 +178,58 @@ class TeamManager
         }
 
         return ['success' => true];
+    }
+
+    /**
+     * Returns a zip archive containing the specified team's workspaces and their files.
+     *
+     * @param Team $team
+     * @return array
+     */
+    public function zipTeamFolder(Team $team)
+    {
+        // Create the zip name from the team members' usernames
+        $zipName = '';
+        $teamMembers = $team->getMembers();
+        foreach ($teamMembers as $user) {
+            /** @var User $user */
+            $zipName .= $user->getUsername() . '_';
+        }
+
+        // Gather all the team's workspaces
+        $teamFolder = $team->getTeamFolder();
+        $directories = $this->directoryHandler->getSubdiretoriesList($teamFolder);
+        if ($directories['success'] !== true) {
+            return $directories;
+        }
+
+        $workspaces = [];
+        foreach ($directories['list'] as $workspace) {
+            // Get the files of the workspace (base-64 encoded)
+            $files = $this->directoryHandler->getFilesContents($teamFolder . DIRECTORY_SEPARATOR . $workspace);
+            if ($files['success'] !== true) {
+                return $files;
+            }
+            $workspaces[] = $files['contents'];
+        }
+
+        // Then create an assoc array with the files (names contains parent directory too)
+        $zipFiles = [];
+        foreach ($workspaces as $workspace) {
+            foreach ($workspace['files'] as $file) {
+                $zipFiles[] = [
+                    'filename' => $workspace['name'] . DIRECTORY_SEPARATOR . $file['filename'],
+                    'content' => $file['content']
+                ];
+            }
+        }
+
+        // Last step, zip the files
+        $zipCreationResult = $this->fileHandler->createZipFromFiles($zipName, $zipFiles);
+        if ($zipCreationResult['success'] !== true) {
+            return ['success' => false, 'error' => 'Failed to create zip archive with the team\'s workspaces.'];
+        }
+
+        return $zipCreationResult;
     }
 }
