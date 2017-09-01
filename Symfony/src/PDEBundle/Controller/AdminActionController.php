@@ -207,7 +207,7 @@ class AdminActionController extends BaseController implements SecureResourceInte
      * @param Request $request
      * @return JsonResponse
      */
-    public function deleteTeam(Request $request)
+    public function deleteTeamAction(Request $request)
     {
         /** @var Team $team */
         $team = $this->getTeam($request->get('team'));
