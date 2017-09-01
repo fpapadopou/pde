@@ -1,0 +1,22 @@
+<!-- Modal used in order to confirm team deletion -->
+<div class="modal fade" id="team-delete-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Team deletion confirmation</h4>
+            </div>
+            <div class="modal-body">
+                You are about to delete team <strong><span id="team-id"></span></strong>.
+                This action is irreversible. All the team <strong>files</strong> and <strong>members</strong>
+                will be permanently deleted from the filesystem and the database.
+            </div>
+            <div class="modal-footer">
+                <button id="team-del-modal-btn" data-team-id="0" class="btn btn-danger btn-small">
+                    <i class="fa fa-trash-o"></i> Delete team
+                </button>
+                &nbsp;
+                <button class="btn btn-default btn-small" data-dismiss="modal">Cancel</button>
+            </div>
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->

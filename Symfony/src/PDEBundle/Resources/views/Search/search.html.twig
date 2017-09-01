@@ -37,10 +37,15 @@
             </div>
             <div class="col-md-1"></div>
         </div>
+        {% include 'PDEBundle:Search:team_deletion_confirmation_modal.html.twig' %}
     </div>
 {% endblock %}
 
 {% block javascripts %}
+    <script>
+        var deleteTeamUrl = "{{ url('admin_delete_team') }}";
+    </script>
     <!-- Functionality from parent template -->
     {{ parent() }}
+    <script src="{{ asset('js/search.js') }}"></script>
 {% endblock %}
