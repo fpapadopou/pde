@@ -22,11 +22,13 @@
         "docker-php/docker-php": "^1.24",
         "splitbrain/php-archive": "^1.0",
         "clue/tar-react": "^0.1.0",
-        "react/event-loop": "^0.4.2"
+        "react/event-loop": "^0.4.2",
+        "phpunit/phpunit": "^4.8"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",
-        "symfony/phpunit-bridge": "~2.7"
+        "symfony/phpunit-bridge": "~2.7",
+        "doctrine/doctrine-fixtures-bundle": "^2.3"
     },
     "scripts": {
         "post-install-cmd": [

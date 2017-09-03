@@ -2,16 +2,22 @@
 
 namespace PDEBundle\Tests\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class DefaultControllerTest extends WebTestCase
+class DefaultControllerTest extends BaseTestController
 {
-    public function testIndex()
+    /**
+     * Generic navigation tests.
+     */
+    public function testPages()
     {
-        $client = static::createClient();
+        $this->client->request('GET', '/');
+        $this->assertContains('Login', $this->client->getResponse()->getContent());
 
-        $crawler = $client->request('GET', '/');
+        $this->client->request('GET', '/about');
+        $this->assertContains('About Parser Development Environment', $this->client->getResponse()->getContent());
 
-        $this->assertContains('Hello World', $client->getResponse()->getContent());
+        $this->client->request('GET', '/help');
+        $this->assertContains('Application manual', $this->client->getResponse()->getContent());
+
     }
+
 }
